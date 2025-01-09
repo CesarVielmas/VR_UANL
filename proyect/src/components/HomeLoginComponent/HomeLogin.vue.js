@@ -51,10 +51,10 @@ export default {
         this.checkSesion = true;
         setTimeout(()=>{
             if(this.userName === "CesarVielmas" && this.userPassword === "12345678"){
-                this.statusSesion = 1
+                this.statusSesion = 1;
                 setTimeout(()=>{
                     this.checkSesion = false;
-                    this.adminLevel = 2;
+                    this.adminLevel = 1;
                     if(this.adminLevel === 2){
                         setTimeout(()=>{
                             this.statusSesion = 3;

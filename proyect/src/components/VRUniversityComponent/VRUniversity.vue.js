@@ -505,7 +505,7 @@ export default {
             }, 3000);
           }
         }, 1000);
-      },(Math.floor(Math.random() * (30 - 10 + 1)) + 10)*1000)
+      },3000)
     },
     loadingReady(){
       this.completeInformation = true
@@ -586,7 +586,7 @@ export default {
           mainCamera.removeAttribute('animation');
           mainCamera.setAttribute(
             'animation__zoom',
-            `property: position; to: ${buttonRedirect.PositionX - 0.6} ${buttonRedirect.PositionY + 0.2} ${buttonRedirect.PositionZ}; dur: 1500; easing: easeInOutQuad; startEvents: zoomIn`
+            `property: position; to: ${buttonRedirect.PositionX} ${buttonRedirect.PositionY + 0.2} ${buttonRedirect.PositionZ}; dur: 1500; easing: easeInOutQuad; startEvents: zoomIn`
           );
           mainCamera.emit('zoomIn');
           skyElement.setAttribute('material', `shader: pixelate; src: ${skyElement.getAttribute('src')}`);

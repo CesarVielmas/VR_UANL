@@ -23,7 +23,7 @@ export default {
     initializeDataEscene() {
       setInterval(()=>{
         this.completeInformationLoading = true
-      },(Math.floor(Math.random() * (30 - 10 + 1)) + 10)*1000)
+      },3000)
     },
     loadingReady(){
       this.completeInformation = true

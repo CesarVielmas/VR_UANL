@@ -79,4 +79,33 @@ public class UniversityController : ControllerBase
             return StatusCode(500, $"Error inesperado:{ex.Message}");
         }
     }
+    [HttpPut("AddScenes/{id}")]
+    public async Task<IActionResult> PutScenesUniversity(int id,[FromBody] Escene sceneToUpdate){
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            bool response = await _context.Universities.AnyAsync(u => u.IdUniversity == id);
+            if (!response)
+            {
+                return StatusCode(400, "La universidad a la que se le trata de añadir la escena no existe");
+            }
+            University universityToUpdate = await _context.Universities .Include(u => u.Scenes).FirstOrDefaultAsync(u => u.IdUniversity == id);
+            universityToUpdate.ListEscenes.Add(sceneToUpdate);
+            await _context.SaveChangesAsync();
+            return StatusCode(200,"La escena fue añadida con exito a la universidad");
+        }
+        catch (DbUpdateException ex)
+        {
+            return StatusCode(400, $"Error al actualizar la escena dentro de la universidad:{ex.Message}");
+        }
+        catch (System.Exception ex)
+        {
+            return StatusCode(500, $"Error inesperado:{ex.Message}");
+        }
+
+        
+    }
 }
