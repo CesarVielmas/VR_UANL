@@ -1,0 +1,105 @@
+@keyframes opacityAnimation {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@keyframes sliceAnimationLogo {
+    0% {
+        transform: translateY(-20vh); 
+    }
+    100% {
+        transform: translateY(3vh);
+    }
+}
+/*Vista Mobile*/
+@media (max-width: 767px) {
+    .completeInformation{
+        height: 100%;
+        width: 100%;
+        transition: background-color 1s ease-in-out;
+    }
+    .completeInformation .divImageLogoAnimation{
+        position: relative;
+        height: 20%;
+        animation: sliceAnimationLogo 3s ease-out forwards;
+    }   
+    .completeInformation .divImageLogoAnimation .imageLogoAnimation{
+        height: 100%;
+        width: 55%;
+    }
+    .completeInformation .imageLogoUniversity{
+        position: relative;
+        text-align: center;
+        top: 5%;
+        height: 28%;
+    }
+    .completeInformation .imageLogoUniversity img{
+        height: 100%;
+        width: 58%;
+    }
+    .completeInformation .imageLogoUniversity .hrDiv{
+        height: .5vw;
+        width: 70%;
+        box-shadow: none;
+        margin-top: 3vh;
+        margin-bottom: 2vh;
+        background-color: white;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .completeInformation .imageLogoUniversity .tittleText{
+        margin-top: 2vh;
+        font-family:'Poppins', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 3vh;
+    }
+}
+
+/*Vista Desktops*/
+@media (min-width: 1025px) {
+    .completeInformation{
+        height: 100%;
+        width: 100%;
+        transition: background-color 1s ease-in-out;
+    }
+    .completeInformation .divImageLogoAnimation{
+        position: relative;
+        height: 25%;
+        animation: sliceAnimationLogo 3s ease-out forwards;
+    }   
+    .completeInformation .divImageLogoAnimation .imageLogoAnimation{
+        height: 100%;
+        width: 15%;
+    }
+    .completeInformation .imageLogoUniversity{
+        position: relative;
+        text-align: center;
+        top: 5%;
+        height: 40%;
+    }
+    .completeInformation .imageLogoUniversity img{
+        height: 100%;
+        width: 20%;
+    }
+    .completeInformation .imageLogoUniversity .hrDiv{
+        height: .15vw;
+        width: 70%;
+        box-shadow: none;
+        margin-top: 1.5vw;
+        margin-bottom: 1vw;
+        background-color: white;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .completeInformation .imageLogoUniversity .tittleText{
+        margin-top: 1vw;
+        font-family:'Poppins', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 3.5vw;
+    }
+}

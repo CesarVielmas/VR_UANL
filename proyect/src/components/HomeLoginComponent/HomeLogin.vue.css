@@ -1,0 +1,980 @@
+@keyframes logoAnimationDesktop{
+    0% {
+        position: relative;
+        top: 30%;
+        width: 100%;
+        text-align: center;
+    }
+    100% {
+        position: relative;
+        top: 4%;
+        width: 100%;
+        margin-bottom: 4vw;
+        text-align: center;
+    }
+  }
+@keyframes logoAnimationMobile{
+    0% {
+        position: relative;
+        top: 30%;
+        width: 100%;
+        text-align: center;
+    }
+    100% {
+        position: relative;
+        top: 4%;
+        width: 100%;
+        margin-bottom: 7vh;
+        text-align: center;
+    }
+  }
+@keyframes logoAnimationScaler {
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(1.2);
+    }
+    100%{
+        transform: scale(1);
+    }
+}
+@keyframes sliceAnimation {
+    0% {
+      transform: translateX(0); 
+    }
+    100% {
+      transform: translateX(-100vw);
+    }
+  }
+@keyframes movementAnimation {
+    0%{
+        transform: translateX(0.1vw);
+    }
+    20%{
+        transform: translateX(0vw);
+    }
+    40%{
+        transform: translateX(-0.1vw);       
+    }
+    60%{
+        transform: translateX(0vw);
+    }
+    80%{
+        transform: translateX(0.1vw);
+    }
+    100%{
+        transform: translateX(0vw);
+    }
+}
+@keyframes animationButtonGigant {
+    0%{
+        transform: scale(1);
+    }
+    100%{
+        transform: scale(100);
+    }
+}
+@keyframes sliceAnimationLogo {
+    0% {
+        transform: translateY(-20vh); 
+    }
+    100% {
+        transform: translateY(3vh);
+    }
+}
+@keyframes opacityAnimation {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../../fonts/Poppins/Poppins-Medium.ttf') format('truetype'),
+         url('../../fonts/Poppins/Poppins-Light.ttf') format('truetype'),
+         url('../../fonts/Poppins/Poppins-Black.ttf') format('truetype'),
+         url('../../fonts/Poppins/Poppins-Regular.ttf') format('truetype'),
+         url('../../fonts/Poppins/Poppins-Thin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+/* Vist Mobile */
+@media (max-width: 767px) {
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+        display: none; 
+    }
+    input:focus {
+        outline: none; 
+        border: none; 
+        box-shadow: none; 
+        margin: 0; 
+    }
+    .buttonGigantAnimation{
+        position: absolute;
+        height: 2%;
+        width: 1.3%;
+        border: none;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        z-index: 3;
+        animation: animationButtonGigant 3s ease-out forwards;
+    }
+    .imageMovementAnimation{
+        position: relative;
+        height: 27%;
+        text-align: center;
+        animation: sliceAnimationLogo 3s ease-out forwards;
+    }
+    .imageMovementAnimation img{
+        height: 100%;
+        width: 55%;
+    }
+    .contentVRActive{
+        position: relative;
+        height: 27%;
+        margin-top: 7vh;
+        text-align: center;
+        animation: opacityAnimation 2s ease-out forwards;
+    }
+    .contentVRActive img{
+        height: 100%;
+        width: 55%;
+    }
+    .contentVRActive hr{
+        height: .5vw;
+        width: 70%;
+        box-shadow: none;
+        margin-top: 3vh;
+        margin-bottom: 2vh;
+        background-color: white;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .contentVRActive h1{
+        margin-top: 2vh;
+        font-family:'Poppins', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 3vh;
+    }
+    .addNewVR{
+        position: fixed;
+        z-index: 3;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(0, 0, 0, 0.39);
+    }
+    .addNewVR .content{
+        height: 92%;
+        width: 93%;
+        margin-top: 2%;
+        border-radius: .4vw;
+        margin-left: auto;
+        margin-right: auto;
+        overflow-y: scroll; 
+        scrollbar-width: none; 
+        scroll-padding: 0;
+        background-color: rgb(255, 255, 255);
+    }
+    .addNewVR .content .tittle{
+        position: fixed;
+        z-index: 2;
+        top: -1.3%;
+        width: 93%;
+        height: 5%;
+        font-family:'Poppins', Courier, monospace;
+        background-color: #181891;
+        color: white;
+        text-align: center;
+        font-size: 3vh;
+        border-top-left-radius: .4vw;
+        border-top-right-radius: .3vw;
+        margin-bottom: 0;
+    }
+    .addNewVR .content .division{
+        position: relative;
+        display: block;
+        text-align: center;
+        width: 100%;
+    }
+    .addNewVR .content .division .subTittle{
+        font-family:'Poppins','Poppins-Regular',monospace;
+        font-size: 2.4vh;
+        text-align: center;
+        color: #181891;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    .addNewVR .content .division .miniTittle{
+        font-family:'Poppins', Courier, monospace;
+        color: #a9a9d0;
+        text-align: center;
+        font-size: 1.3vh;
+        margin-top: 0;
+    }
+    .addNewVR .content .division .imageView{
+        width: 98%;
+        height: 80%;
+        margin-left: 1%;
+        text-align: center;
+        background-color: #bdbdd4;
+        overflow: hidden;
+    }
+    .addNewVR .content .division .imageView:active{
+        transform: translateY(-.5vw);
+        background-color: #9f9fb3;
+    }
+    .addNewVR .content .division .imageView img{
+        height: 100%;
+        width: 100%;
+        background-size:cover;
+        background-position: center;
+    }
+    .addNewVR .content .division .imageView button{
+        display: block;
+        border: none;
+        background-color: transparent;
+        color: white;
+        font-size: 5vh;
+        padding-top: 20%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .addNewVR .content .division .error{
+        font-family:'Poppins', Courier, monospace;
+        color: #7a4b4b;
+        text-align: center;
+        font-size: 1.3vh;
+        margin-top: 0;
+    }
+    .addNewVR .content .division .icon{
+        position: absolute;
+        height: 15%;
+        width: 7%;
+        top: 35%;
+        left: 7%;
+    }
+    .addNewVR .content .division .hr{
+        position: absolute;
+        top: 38%;
+        left: 13%;
+        transform: rotate(90deg);
+        width: 12%;
+        border-width: 2px;
+        border-color: white;
+    }
+    .addNewVR .content .division .inputText{
+        width: 75%;
+        height: 22%;
+        margin-top: 0;
+        border-radius: .4vw;
+        background-color: #bdbdd4;
+        border: none;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        font-size: 1.45vh;
+        color: white;
+        padding-left: 22%;
+        padding-top: .4vh;
+    }
+    .addNewVR .content .buttonSave,
+    .addNewVR .content .buttonCancel,
+    .addNewVR .content .buttonDisable{
+        position: relative;
+        display: block;
+        background-color: rgb(6, 58, 6);
+        border: none;
+        text-align: center;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        font-size: 2vh;
+        color: white;
+        border-radius: 1vw;
+        margin-left: auto;
+        margin-right: auto;
+        height: 8%;
+        width: 95%;
+    }
+    .addNewVR .content .buttonSave{
+        margin-top: -15%;
+        margin-bottom: 2%;
+        z-index: 4;
+    }
+    .addNewVR .content .buttonCancel{
+        margin-bottom: 12%;
+        z-index: 4;
+    }
+    .addNewVR .content .buttonDisable{
+        margin-top: -15%;
+        margin-bottom: 2%;
+        background-color: rgb(87, 87, 87);
+    }
+    .addNewVR .content .buttonSave:hover,
+    .addNewVR .content .buttonCancel:hover{
+        cursor: pointer;
+    }
+
+
+    .loader{
+        position: fixed;
+        z-index: 3;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(0, 0, 0, 0.39);
+    }
+    .loader .content{
+        height: 30%;
+        width: 85%;
+        margin-top: 55%;
+        border-radius: .4vw;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: rgb(255, 255, 255);
+    }
+    .loader .content .tittle{
+        padding-top: 2vh;
+        font-family:'Poppins', Courier, monospace;
+        color: #181891;
+        text-align: center;
+        font-size: 2.5vh;
+        margin-bottom: 0;
+    }
+    .loader .content .subtittle{
+        font-family:'Poppins', Courier, monospace;
+        color: #a9a9d0;
+        text-align: center;
+        font-size: 1.3vh;
+        margin-top: 0;
+        margin-bottom: 1vh;
+    }
+    .loader .content .image{
+        display: block;
+        height: 45%;
+        width: 30%;
+        margin-top: 3vh;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .principalDiv{
+        height: 100vh;
+        width: 100vw;
+        background-color: rgb(24, 24, 145);
+    }
+    .principalDiv .content{
+        height: 100%;
+        width: 100%;
+    }
+    .principalDiv .hrDiv{
+        height: .5vw;
+        width: 70%;
+        box-shadow: none;
+        margin-top: 3vh;
+        margin-bottom: 2vh;
+        background-color: white;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .principalDiv .tittleText{
+        margin-top: 2vh;
+        font-family:'Poppins', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 3vh;
+    }
+    .principalDiv .divImage{
+        animation: logoAnimationMobile 2s ease-out forwards;
+    }
+    .principalDiv .divImage .imageLogo{
+        height: 55%;
+        width: 55%;
+    } 
+    .principalDiv .inputUserName,
+    .principalDiv .inputUserPassword{
+        display: block;
+        margin-top: 0;
+        margin-bottom: 4vw;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: .8vw;
+        border: none;
+        height: 6vh;
+        width: 54.5%;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        font-size: 1.7vh;
+        color: rgb(24, 24, 145);
+        padding-left: 18%;
+        padding-top: .6vh;
+    }
+    .principalDiv .inputUserName::placeholder,
+    .principalDiv .inputUserPassword::placeholder{
+        color: rgb(94, 122, 184);
+    }
+    .principalDiv .iconInputUserName,
+    .principalDiv .iconInputUserPassword{
+        position: absolute;
+        z-index: 2;
+        height: 4vh;
+        width: 8%;
+        left: 17%;
+        top: 22%;
+    }
+    .principalDiv .hrInputUserName,
+    .principalDiv .hrInputUserPassword{
+        position: absolute;
+        transform: rotate(90deg);
+        width: 8.5%;
+        left: 24.5%;
+        top: 40%;
+        border-width: 0.1px;
+        border-color: rgb(24, 24, 145);
+    }
+    .principalDiv .buttonContinueActive,
+    .principalDiv .buttonContinueInactive{
+        display: block;
+        background-color: transparent;
+        border: thin solid white;
+        text-align: center;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        color: white;
+        font-size: 2vh;
+        border-radius: .5vw;
+        margin-left: auto;
+        margin-right: auto;
+        height: 7vh;
+        width: 60%;
+        margin-bottom: 4vh;
+        margin-top: 4vh;
+    }
+    .principalDiv .buttonContinueActive:active{
+        border: none;
+        background-color: rgb(113, 147, 220);
+        cursor: pointer;
+    }
+    .principalCards{
+        position: relative;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgb(24, 24, 145);
+        overflow-y: scroll; 
+        -ms-overflow-style: none; 
+        scrollbar-width: none; 
+    }
+    .principalCards::-webkit-scrollbar {
+        display: none; 
+      }
+      
+    .principalCards .content{
+        height: 100%;
+        width: 100%;
+    }
+    .principalCards .content .divBackContinueMobile .tittleSelect{
+        margin-top: 0;
+        margin-bottom: 3vh;
+        position: relative;
+        top: 2%;
+        font-family:'Poppins', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 3.5vh;
+    }
+    .principalCards .content .divBackContinueMobile .buttonBack{
+        position: absolute;
+        height: 7vh;
+        width: 46vw;
+        background: none;
+        left: 2vw;
+        border-radius: 2vw;
+        border: thin solid white;
+        text-align: center;
+    }
+    .principalCards .content .divBackContinueMobile .opacity-animation {
+        animation: fadeIn 1s ease-out forwards;
+    }
+    .principalCards .content .divBackContinueMobile .opacity-animation-reverse {
+        animation: fadeOut 1s ease-out forwards;
+    }
+    .principalCards .content .divBackContinueMobile .hidden {
+        opacity: 0;
+        pointer-events: none; 
+    }
+    .principalCards .content .divBackContinueMobile .buttonBack:active{
+        border: none;
+        background-color: rgb(214, 89, 89);
+    }
+    .principalCards .content .divBackContinueMobile .buttonBack span{
+        position: relative;
+        bottom:8%;
+        right: 8%;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        color: white;
+        font-size: 2vh;
+    } 
+    .principalCards .content .divBackContinueMobile .buttonBack img{
+        position:relative;
+        height: 50%;
+        width: 20%;
+        right: 14%;
+        top: 8%;
+    }
+    .principalCards .content .divBackContinueMobile .buttonNext{
+        position: absolute;
+        height: 7vh;
+        width: 46vw;
+        background: none;
+        left: 51vw;
+        border-radius: 2vw;
+        border: thin solid white;
+        text-align: center;
+    }
+    .principalCards .content .divBackContinueMobile .buttonNext:active{
+        border: none;
+        background-color: rgb(113, 147, 220);
+    }
+    .principalCards .content .divBackContinueMobile .buttonNext span{
+        position: relative;
+        bottom:8%;
+        left: 8%;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        color: white;
+        font-size: 2vh;
+    }
+    .principalCards .content .divBackContinueMobile .buttonNext img{
+        position:relative;
+        height: 50%;
+        width: 20%;
+        left: 14%;
+        top: 7.5%;
+    }
+}
+/* Vista Tablet*/
+@media (min-width: 768px) and (max-width: 1024px) {
+
+}
+/* Vista Desktop*/
+@media (min-width: 1025px) {
+    input:focus {
+        outline: none; 
+        border: none; 
+        box-shadow: none; 
+        margin: 0; 
+    }
+    .buttonGigantAnimation{
+        position: absolute;
+        height: 2%;
+        width: 1.3%;
+        border: none;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        z-index: 3;
+        animation: animationButtonGigant 3s ease-out forwards;
+    }
+    .imageMovementAnimation{
+        position: relative;
+        height: 30%;
+        text-align: center;
+        animation: sliceAnimationLogo 3s ease-out forwards;
+    }
+    .imageMovementAnimation img{
+        height: 100%;
+        width: 15%;
+    }
+    .contentVRActive{
+        position: relative;
+        height: 30%;
+        margin-top: 5vh;
+        text-align: center;
+        animation: opacityAnimation 2s ease-out forwards;
+    }
+    .contentVRActive img{
+        height: 100%;
+        width: 15%;
+    }
+    .contentVRActive hr{
+        height: .15vw;
+        width: 70%;
+        box-shadow: none;
+        margin-top: 1.5vw;
+        margin-bottom: 1vw;
+        background-color: white;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .contentVRActive h1{
+        margin-top: 1vw;
+        font-family:'Poppins', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 3.5vw;
+    }
+    .loader,
+    .addNewVR{
+        position: fixed;
+        z-index: 3;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(0, 0, 0, 0.39);
+    }
+    .addNewVR .content{
+        height: 92%;
+        width: 80%;
+        margin-top: 1%;
+        border-radius: .4vw;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: rgb(255, 255, 255);
+    }
+    .addNewVR .content .tittle{
+        width: 100%;
+        height: 10%;
+        font-family:'Poppins', Courier, monospace;
+        background-color: #181891;
+        color: white;
+        text-align: center;
+        font-size: 5.5vh;
+        border-top-left-radius: .4vw;
+        border-top-right-radius: .3vw;
+        margin-bottom: 0;
+    }
+    .addNewVR .content .division{
+        position: relative;
+        display: inline-block;
+        text-align: center;
+        width: 50%;
+    }
+    .addNewVR .content .division .subTittle{
+        font-family:'Poppins','Poppins-Regular',monospace;
+        font-size: 4vh;
+        text-align: center;
+        color: #181891;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    .addNewVR .content .division .miniTittle{
+        font-family:'Poppins', Courier, monospace;
+        color: #a9a9d0;
+        text-align: center;
+        font-size: 1.7vh;
+        margin-top: 0;
+    }
+    .addNewVR .content .division .imageView{
+        width: 98%;
+        height: 80%;
+        margin-left: 1%;
+        text-align: center;
+        background-color: #bdbdd4;
+        overflow: hidden;
+    }
+    .addNewVR .content .division .imageView:hover{
+        cursor: pointer;
+        transform: translateY(-.5vw);
+        background-color: #9f9fb3;
+    }
+    .addNewVR .content .division .imageView img{
+        height: 100%;
+        width: 100%;
+        background-size:cover;
+        background-position: center;
+    }
+    .addNewVR .content .division .imageView img:hover{
+        cursor: pointer;
+    }
+    .addNewVR .content .division .imageView button{
+        display: block;
+        border: none;
+        background-color: transparent;
+        color: white;
+        font-size: 6vh;
+        padding-top: 20%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .addNewVR .content .division .imageView button:hover{
+        cursor: pointer;
+    }
+    .addNewVR .content .division .error{
+        font-family:'Poppins', Courier, monospace;
+        color: #7a4b4b;
+        text-align: center;
+        font-size: 1.4vh;
+        margin-top: 0;
+    }
+    .addNewVR .content .division .icon{
+        position: absolute;
+        height: 20%;
+        width: 7%;
+        top: 44.5%;
+        left: 9%;
+    }
+    .addNewVR .content .division .hr{
+        position: absolute;
+        top: 50%;
+        left: 17%;
+        transform: rotate(90deg);
+        width: 7%;
+        border-width: 2px;
+        border-color: white;
+    }
+    .addNewVR .content .division .inputText{
+        width: 72%;
+        height: 30%;
+        margin-top: 0;
+        border-radius: .4vw;
+        background-color: #bdbdd4;
+        border: none;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        font-size: 2vh;
+        color: white;
+        padding-left: 18%;
+        padding-top: .4vh;
+    }
+    .addNewVR .content .buttonSave,
+    .addNewVR .content .buttonCancel,
+    .addNewVR .content .buttonDisable{
+        display: inline-block;
+        background-color: rgb(6, 58, 6);
+        border: none;
+        text-align: center;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        font-size: 1.7vw;
+        color: white;
+        border-radius: .2vw;
+        margin-left: 9%;
+        margin-right: 3%;
+        height: 7%;
+        width: 35%;
+    }
+    .addNewVR .content .buttonDisable{
+        background-color: rgb(87, 87, 87);
+    }
+    .addNewVR .content .buttonSave:hover,
+    .addNewVR .content .buttonCancel:hover{
+        cursor: pointer;
+    }
+
+
+
+
+    
+    .loader .content{
+        height: 35%;
+        width: 45%;
+        margin-top: 15%;
+        border-radius: .4vw;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: rgb(255, 255, 255);
+    }
+    .loader .content .tittle{
+        padding-top: 2vh;
+        font-family:'Poppins', Courier, monospace;
+        color: #181891;
+        text-align: center;
+        font-size: 4.5vh;
+        margin-bottom: 0;
+    }
+    .loader .content .subtittle{
+        font-family:'Poppins', Courier, monospace;
+        color: #a9a9d0;
+        text-align: center;
+        font-size: 2vh;
+        margin-top: 0;
+        margin-bottom: .5vw;
+    }
+    .loader .content .image{
+        display: block;
+        height: 45%;
+        width: 16%;
+        margin-top: 1vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .principalDiv{
+        height: 100vh;
+        width: 100vw;
+        background-color: #181891;
+    }
+    .principalDiv .content{
+        height: 100%;
+        width: 100%;
+    }
+    
+    .principalDiv .hrDiv{
+        height: .15vw;
+        width: 70%;
+        box-shadow: none;
+        margin-top: 1.5vw;
+        margin-bottom: 1vw;
+        background-color: white;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .principalDiv .tittleText{
+        margin-top: 1vw;
+        font-family:'Poppins', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 3.5vw;
+        margin-bottom: .2vw;
+    }
+    .principalDiv .divImage{
+        animation: logoAnimationDesktop 2s ease-out forwards;
+    }
+    .principalDiv .divImage .imageLogo{
+        height: 40%;
+        width: 20%;  
+    } 
+    .principalDiv .inputUserName,
+    .principalDiv .inputUserPassword{
+        display: block;
+        margin-top: 0;
+        margin-bottom: 1.4vw;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: .8vw;
+        border: none;
+        height: 8.8vh;
+        width: 43.5%;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        font-size: 2vh;
+        color: rgb(24, 24, 145);
+        padding-left: 6.5%;
+        padding-top: .4vh;
+    }
+    .principalDiv .inputUserName::placeholder,
+    .principalDiv .inputUserPassword::placeholder{
+        color: rgb(94, 122, 184);
+    }
+    .principalDiv .iconInputUserName,
+    .principalDiv .iconInputUserPassword{
+        position: absolute;
+        z-index: 2;
+        height: 5.3vh;
+        width: 2.7%;
+        left: 26%;
+        top: 25%;
+    }
+    .principalDiv .hrInputUserName,
+    .principalDiv .hrInputUserPassword{
+        position: absolute;
+        transform: rotate(90deg);
+        width: 2.8%;
+        left: 28.8%;
+        top: 42%;
+        border-width: 0.1px;
+        border-color: rgb(24, 24, 145);
+    }
+    .principalDiv .buttonContinueActive,
+    .principalDiv .buttonContinueInactive{
+        display: block;
+        background-color: transparent;
+        border: thin solid white;
+        text-align: center;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        font-size: 1.7vw;
+        color: white;
+        border-radius: .5vw;
+        margin-left: auto;
+        margin-right: auto;
+        height: 5vw;
+        width: 30%;
+        margin-bottom: 2vw;
+        margin-top: 2vw;
+    }
+    .principalDiv .buttonContinueActive:hover{
+        border: none;
+        background-color: rgb(113, 147, 220);
+        cursor: pointer;
+    }
+    .principalCards{
+        height: 100vh;
+        width: 100vw;
+        background-color: #181891;
+    }
+    .principalCards .content{
+        height: 100%;
+        width: 100%;
+    }
+    .principalCards .content .divBackContinueDesktop{
+        position: relative;
+    }
+    .principalCards .content .divBackContinueDesktop .tittleSelect{
+        margin-top: 0;
+        margin-bottom: 1vw;
+        position: relative;
+        top: 2%;
+        font-family:'Poppins', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 3vw;
+    }
+    .principalCards .content .divBackContinueDesktop .buttonBack{
+        position: absolute;
+        height: 4vw;
+        width: 18vw;
+        background: none;
+        top: .5vw;
+        left: 2.5vw;
+        z-index: 3;
+        border-radius: .2vw;
+        border: thin solid white;
+        text-align: center;
+    }
+    .principalCards .content .divBackContinueDesktop .buttonBack:hover{
+        border: none;
+        cursor: pointer;
+        background-color: rgb(214, 89, 89);
+    }
+    .principalCards .content .divBackContinueDesktop .buttonBack span{
+        position: relative;
+        bottom:8%;
+        right: 8%;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        color: white;
+        font-size: 1.2vw;
+    } 
+    .principalCards .content .divBackContinueDesktop .buttonBack img{
+        position:relative;
+        height: 50%;
+        width: 20%;
+        right: 14%;
+        top: 8%;
+    }
+    .principalCards .content .divBackContinueDesktop .buttonNext{
+        position: absolute;
+        height: 4vw;
+        width: 18vw;
+        background: none;
+        top: .5vw;
+        left: 79.5vw;
+        z-index: 3;
+        border-radius: .2vw;
+        border: thin solid white;
+        text-align: center;
+    }
+    .principalCards .content .divBackContinueDesktop .buttonNext:hover{
+        border: none;
+        cursor: pointer;
+        background-color: rgb(113, 147, 220);
+    }
+    .principalCards .content .divBackContinueDesktop .buttonNext span{
+        position: relative;
+        bottom:8%;
+        left: 8%;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        color: white;
+        font-size: 1.2vw;
+    }
+    .principalCards .content .divBackContinueDesktop .buttonNext img{
+        position:relative;
+        height: 50%;
+        width: 20%;
+        left: 14%;
+        top: 7.5%;
+    }
+    .alignCenter{
+        text-align: center;
+    }
+}

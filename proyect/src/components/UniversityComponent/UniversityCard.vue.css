@@ -1,0 +1,513 @@
+@font-face {
+    font-family: 'Poppins-Medium';
+    src: url('../../fonts/Poppins/Poppins-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family:'Poppins-Regular';
+    
+    src: url('../../fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins-Black';
+    src: url('../../fonts/Poppins/Poppins-Black.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins-Thin';
+    src: url('../../fonts/Poppins/Poppins-Thin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@keyframes animationInformationIn {
+    0% {
+        clip-path: polygon(0% 100%, 0% 100%, 0% 100%);
+        
+    }
+    100% {
+        clip-path: polygon(0% -40%, 0% 100%, 90% 100%);
+        
+    }
+  } 
+@keyframes animationInformationOut {
+    0% {
+        clip-path: polygon(0% -40%, 0% 100%, 90% 100%);
+        
+    }
+    100% {
+        clip-path: polygon(0% 100%, 0% 100%, 0% 100%);
+        
+    }
+  }
+@keyframes slideDownFadeInAnimation {
+    0% {
+        transform: translateY(-2vw); 
+        opacity: 0; 
+    }
+    100% {
+        transform: translateY(0); 
+        opacity: 1; 
+    }
+}
+@keyframes animationButtonHover {
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(1.4);
+    }
+    100%{
+        transform: scale(1);
+    }
+}
+@keyframes animationButtonGigant {
+    0%{
+        transform: scale(1);
+    }
+    100%{
+        transform: scale(100);
+    }
+}
+/*Vista Mobile*/
+@media (max-width: 767px) {
+    .divEdit,
+    .divDelete{
+        position: fixed;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.397);
+        z-index: 3;
+    }
+    .divEdit .contentEdit,
+    .divDelete .contentDelete{
+        position: relative;
+        left: 5%;
+        top: 30%;
+        height: 45%;
+        width: 90%;
+        background-color: rgba(255, 255, 255, 0.884);
+        border-radius: .5vw;
+    }
+    .divEdit .contentEdit .tittleEdit,
+    .divDelete .contentDelete .tittleDelete{
+        font-family:'Poppins-Regular';
+        color: #181891;
+        text-align: center;
+        margin:0;
+        padding-top: 5%;
+        font-size: 3.3vh;
+    }
+    .divEdit .contentEdit .buttonEdit,
+    .divDelete .contentDelete .buttonDelete,
+    .divDelete .contentDelete .buttonCancel{
+        display: block;
+        background-color: rgb(6, 58, 6);
+        border: none;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        font-size: 2.4vh;
+        color: white;
+        margin-top: 5%;
+        border-radius: .2vw;
+        height: 30%;
+        width: 90%;
+    }
+    .card{
+        display: inline-block;
+        position: relative;
+        margin-top: 2%;
+        margin-left: 2.5%;
+        height: 46vh;
+        width: 95vw;
+        border-radius: 2vw;
+        overflow: hidden;
+    }
+    .cardExitPlay{
+        overflow: visible;
+    }
+    .card .imageUniversity{
+        height: 100%;
+        width: 100%;
+        background-size: cover;
+        background-position: center;
+        transition: background 0.3s ease; 
+    }
+    .card .overlayImage {
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.35); 
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .card:hover .overlayImage {
+        opacity: 1;
+    }
+    .card:hover .playUniversity,
+    .card:hover .editUniversity,
+    .card:hover .deleteUniversity {
+        opacity: 1;
+    }
+    .card .informationCard{
+        position: absolute;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        clip-path: polygon(0% 0%, 0% 0%, 0% 0%);
+        animation-fill-mode: forwards;
+        transition: clip-path 1s ease-out;
+    }
+    
+    .card:hover .informationCard {
+        animation: animationInformationIn .7s ease-out forwards;
+    }
+    
+    .card:not(:hover) .informationCard {
+        animation: animationInformationOut .7s ease-out forwards;
+    }
+    .card .informationCard .imageUniversityLogo{
+        height: 50%;
+        width: 28%;
+        margin-top: 2%;
+        margin-left: 3%;
+    }
+    .card .informationCard .tittleUniversity{
+        font-family:'Poppins-Regular';
+        color: rgb(230, 230, 230);
+        margin-top:3.5%;
+        margin-bottom: 1.3%;
+        margin-left: 12%;
+        font-size: 3vh;
+    }
+    .card .informationCard .nameUniversity{
+        font-family:'Poppins-Regular';
+        color: rgb(230, 230, 230);
+        width: 70%;
+        margin:0;
+        margin-left: 1%;
+        text-align: center;
+        font-size: 1.5vh;
+    }
+    .card .informationCard .virtualRecord{
+        position: relative;
+        font-family:'Poppins-Medium';
+        color: rgb(230, 230, 230);
+        width: 70%;
+        margin-top: 11%;
+        margin-left: 1%;
+        text-align: center;
+        font-size: 2.5vh;
+    }
+    .card .playUniversity,
+    .card .editUniversity,
+    .card .deleteUniversity{
+        position: absolute;
+        height: 13%;
+        width: 9%;
+        border: none;
+        border-radius: 50%;
+        top: 44.5%;
+        left: 53%;
+        z-index: 3;
+        opacity:0;
+        transition: opacity 1.5s ease;
+        text-align: center;
+    }
+    .card .editUniversity{
+        top: 35%;
+        left: 47.5%;
+    }
+    .card .deleteUniversity{
+        top: 45%;
+        left: 54%;
+    }
+    .card .playUniversity:hover,
+    .card .editUniversity:hover,
+    .card .deleteUniversity:hover{
+        cursor: pointer;
+        animation: animationButtonHover .5s ease-in-out;
+    }
+    .card .playUniversity img,
+    .card .editUniversity img,
+    .card .deleteUniversity img{
+        height: 45%;
+        width: 65%;
+    }
+    .card .content{
+        height: 100%;
+        width: 100%;
+        background-color: rgb(94, 94, 94);
+        border-radius: .5vw;
+    }
+    .card .content h2{
+        font-family:'Poppins-Regular';
+        color: rgb(230, 230, 230);
+        margin:0;
+        text-align: center;
+        padding-top: 5%;
+        font-size: 3vh;
+    }
+    .card .content div{
+        position: absolute;
+        top: 42%;
+        height: 25%;
+        width: 100%;
+        background-color: rgb(163, 163, 163);
+        z-index: 1;
+    }
+    .card .content button{
+        position: absolute;
+        text-align: center;
+        background-color: rgb(163, 163, 163);
+        font-family:'Poppins-Regular';
+        color: rgb(230, 230, 230);
+        font-size: 6vw;
+        border: none;
+        left: 19%;
+        height: 50%;
+        margin-top: 15%;
+        width: 60%;
+        z-index: 2;
+        border-radius: .4vw;
+    }
+    .card .content button:active{
+        cursor: pointer;
+        color: rgb(94, 94, 94);
+        animation: animationButtonHover .5s ease-in-out;
+    }
+}
+/*Vista Tablets*/
+@media (min-width: 768px) and (max-width: 1024px) {
+
+}
+/*Vista Desktops*/
+@media (min-width: 1025px) {
+    .divEdit,
+    .divDelete{
+        position: fixed;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.397);
+        z-index: 3;
+    }
+    .divEdit .contentEdit,
+    .divDelete .contentDelete{
+        position: relative;
+        left: 12%;
+        top: 25%;
+        height: 40%;
+        width: 75%;
+        background-color: rgba(255, 255, 255, 0.884);
+        border-radius: .5vw;
+    }
+    .divEdit .contentEdit .tittleEdit,
+    .divDelete .contentDelete .tittleDelete{
+        font-family:'Poppins-Regular';
+        color: #181891;
+        text-align: center;
+        margin:0;
+        padding-top: 5%;
+        font-size: 2.5vw;
+    }
+    .divEdit .contentEdit .buttonEdit,
+    .divDelete .contentDelete .buttonDelete,
+    .divDelete .contentDelete .buttonCancel{
+        display: inline-block;
+        background-color: rgb(6, 58, 6);
+        border: none;
+        text-align: center;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        font-size: 1.7vw;
+        color: white;
+        margin-top: 5%;
+        border-radius: .2vw;
+        margin-left: 9%;
+        margin-right: 3%;
+        height: 20%;
+        width: 35%;
+    }
+    .divEdit .contentEdit .buttonEdit:hover,
+    .divDelete .contentDelete .buttonDelete:hover,
+    .divDelete .contentDelete .buttonCancel:hover{
+        cursor: pointer;
+    }
+    .card{
+        display: inline-block;
+        position: relative;
+        margin-top: 1%;
+        margin-left: 2.5%;
+        height: 40vh;
+        width: 30vw;
+        border-radius: .5vw;
+        overflow: hidden;
+    }
+    .cardExitPlay{
+        z-index: 3;
+        overflow: visible;
+    }
+    .card .imageUniversity{
+        height: 100%;
+        width: 100%;
+        background-size:cover;
+        background-position: center;
+        transition: background 0.3s ease; 
+    }
+    .card .overlayImage {
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.35); 
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .card:hover .overlayImage {
+        opacity: 1;
+    }
+    .card:hover .playUniversity,
+    .card:hover .editUniversity,
+    .card:hover .deleteUniversity{
+        opacity: 1;
+    }
+    .card .informationCard{
+        position: absolute;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        text-align: start;
+        clip-path: polygon(0% 0%, 0% 0%, 0% 0%);
+        animation-fill-mode: forwards;
+        transition: clip-path 1s ease-out;
+    }
+    
+    .card:hover .informationCard {
+        animation: animationInformationIn .7s ease-out forwards;
+    }
+    
+    .card:not(:hover) .informationCard {
+        animation: animationInformationOut .7s ease-out forwards;
+    }
+    .card .informationCard .imageUniversityLogo{
+        height: 50%;
+        width: 28%;
+        margin-top: 2%;
+        margin-left: 3%;
+    }
+    .card .informationCard .tittleUniversity{
+        font-family:'Poppins-Regular';
+        color: rgb(230, 230, 230);
+        margin:0;
+        margin-left: 12%;
+        font-size: 1.8vw;
+    }
+    .card .informationCard .nameUniversity{
+        font-family:'Poppins-Regular';
+        color: rgb(230, 230, 230);
+        width: 70%;
+        margin:0;
+        margin-left: 1%;
+        text-align: center;
+        font-size: .9vw;
+    }
+    .card .informationCard .virtualRecord{
+        position: relative;
+        font-family:'Poppins-Medium';
+        color: rgb(230, 230, 230);
+        width: 70%;
+        margin-top: 6%;
+        margin-left: 1%;
+        text-align: center;
+        font-size: 1.3vw;
+    }
+    .card .playUniversity,
+    .card .editUniversity,
+    .card .deleteUniversity{
+        position: absolute;
+        height: 13%;
+        width: 9%;
+        border: none;
+        border-radius: 50%;
+        top: 44.5%;
+        left: 53%;
+        z-index: 3;
+        opacity:0;
+        transition: opacity 1.5s ease;
+        text-align: center;
+    }
+    .card .editUniversity{
+        top: 41%;
+        left: 52%;
+    }
+    .card .deleteUniversity{
+        top: 53%;
+        left: 59%;
+    }
+    .card .playUniversity:hover,
+    .card .editUniversity:hover,
+    .card .deleteUniversity:hover{
+        cursor: pointer;
+        animation: animationButtonHover .5s ease-in-out;
+    }
+    .card .playUniversity img,
+    .card .editUniversity img,
+    .card .deleteUniversity img{
+        height: 45%;
+        width: 65%;
+    }
+    .card .content{
+        height: 100%;
+        width: 100%;
+        background-color: rgb(94, 94, 94);
+        border-radius: .5vw;
+    }
+    .card .content h2{
+        font-family:'Poppins-Regular';
+        color: rgb(230, 230, 230);
+        margin:0;
+        padding-top: 5%;
+        font-size: 1.8vw;
+    }
+    .card .content div{
+        position: absolute;
+        top: 42%;
+        height: 25%;
+        width: 100%;
+        background-color: rgb(163, 163, 163);
+        z-index: 1;
+    }
+    .card .content button{
+        position: absolute;
+        text-align: center;
+        background-color: rgb(163, 163, 163);
+        font-family:'Poppins-Regular';
+        color: rgb(230, 230, 230);
+        font-size: 6vw;
+        border: none;
+        left: 24%;
+        height: 50%;
+        margin-top: 5%;
+        width: 50%;
+        z-index: 2;
+        border-radius: .4vw;
+    }
+    .card .content button:hover{
+        cursor: pointer;
+        color: rgb(94, 94, 94);
+        animation: animationButtonHover .5s ease-in-out;
+    }
+}

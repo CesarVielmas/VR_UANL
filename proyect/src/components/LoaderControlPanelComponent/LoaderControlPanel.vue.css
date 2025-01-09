@@ -1,0 +1,116 @@
+@keyframes sliceAnimationLogo {
+    0% {
+        transform: translateY(-20vh); 
+    }
+    100% {
+        transform: translateY(3vh);
+    }
+}
+@keyframes opacityAnimation {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../../fonts/Poppins/Poppins-Medium.ttf') format('truetype'),
+         url('../../fonts/Poppins/Poppins-Light.ttf') format('truetype'),
+         url('../../fonts/Poppins/Poppins-Black.ttf') format('truetype'),
+         url('../../fonts/Poppins/Poppins-Regular.ttf') format('truetype'),
+         url('../../fonts/Poppins/Poppins-Thin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+.divLoadingComplete{
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background-color: rgb(24, 24, 145);
+    transition: background-color 1s ease-in-out;
+    text-align: center;
+}
+/*Vista Mobile*/
+@media (max-width: 767px) {
+    .divLoadingComplete .logoAnimation{
+        position: relative;
+        height: 27%;
+        text-align: center;
+        animation: sliceAnimationLogo 3s ease-out forwards;
+    }
+    .divLoadingComplete .logoAnimation img{
+        height: 100%;
+        width: 55%;
+    }
+    .divLoadingComplete .uanlAnimation{
+        transition: margin-top 2s ease-in-out;
+    }
+    .divLoadingComplete .uanlAnimation h1{
+        margin-top: 2vh;
+        font-family:'Poppins', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 3vh;
+    }
+    .divLoadingComplete .uanlAnimation hr{
+        height: .5vw;
+        width: 70%;
+        box-shadow: none;
+        margin-top: 3vh;
+        margin-bottom: 2vh;
+        background-color: white;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .divLoadingComplete .uanlAnimation img{
+        position: relative;
+        top: 25%;
+        height: 28%;
+        width: 58%;
+    }
+}
+/*Vista Tablets*/
+@media (min-width: 768px) and (max-width: 1024px) {
+
+}
+/*Vista Desktop*/
+@media (min-width: 1025px) {
+    .divLoadingComplete .logoAnimation{
+        position: relative;
+        height: 30%;
+        text-align: center;
+        animation: sliceAnimationLogo 3s ease-out forwards;
+    }
+    .divLoadingComplete .logoAnimation img{
+        height: 100%;
+        width: 15%;
+    }
+    .divLoadingComplete .uanlAnimation{
+        transition: margin-top 2s ease-in-out;
+    }
+    .divLoadingComplete .uanlAnimation h1{
+        margin-top: 1vw;
+        font-family:'Poppins', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 3.5vw;
+    }
+    .divLoadingComplete .uanlAnimation hr{
+        height: .15vw;
+        width: 70%;
+        box-shadow: none;
+        margin-top: 1.5vw;
+        margin-bottom: 1vw;
+        background-color: white;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .divLoadingComplete .uanlAnimation img{
+        position: relative;
+        top: 30%;
+        height: 40%;
+        width: 20%;
+    }
+}

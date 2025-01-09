@@ -1,0 +1,512 @@
+@keyframes logoAnimationDesktop{
+    0% {
+        position: relative;
+        top: 30%;
+        width: 100%;
+        text-align: center;
+    }
+    100% {
+        position: relative;
+        top: 4%;
+        width: 100%;
+        margin-bottom: 4vw;
+        text-align: center;
+    }
+  }
+@keyframes logoAnimationMobile{
+    0% {
+        position: relative;
+        top: 30%;
+        width: 100%;
+        text-align: center;
+    }
+    100% {
+        position: relative;
+        top: 4%;
+        width: 100%;
+        margin-bottom: 7vh;
+        text-align: center;
+    }
+  }
+@keyframes opacityAnimation {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@keyframes sliceAnimation {
+    0% {
+      transform: translateX(0); 
+    }
+    100% {
+      transform: translateX(-100vw);
+    }
+  }
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+}
+  
+@keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+}
+@keyframes sliceAnimationLogo {
+    0% {
+        transform: translateY(-20vh); 
+    }
+    100% {
+        transform: translateY(3vh);
+    }
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../../fonts/Poppins/Poppins-Medium.ttf') format('truetype'),
+         url('../../fonts/Poppins/Poppins-Light.ttf') format('truetype'),
+         url('../../fonts/Poppins/Poppins-Black.ttf') format('truetype'),
+         url('../../fonts/Poppins/Poppins-Regular.ttf') format('truetype'),
+         url('../../fonts/Poppins/Poppins-Thin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+/*Vista Mobile*/
+@media (max-width: 767px) {
+    .selectDivTransition{
+        width: 100%;
+        height: 100%;
+    }
+    .selectDivTransition .divImageLogoAnimation{
+        position: relative;
+        height: 27%;
+        animation: sliceAnimationLogo 3s ease-out forwards;
+    }
+    .selectDivTransition .divImageLogoAnimation .imageLogoAnimation{
+        height: 100%;
+        width: 55%;
+    }
+    .selectDivTransition .divImageLogoAnimation2{
+        height: 27%;
+        margin-top: 7vh;
+        opacity: 0;
+    }
+    .selectDivTransition .imageLogoAnimation2{
+        height: 100%;
+        width: 55%;
+    }
+    .principalDiv{
+        height: 100vh;
+        width: 100vw;
+        background-color: rgb(24, 24, 145);
+    }
+    .principalDiv .content{
+        height: 100%;
+        width: 100%;
+    }
+    .principalDiv .hrDiv,
+    .selectDivTransition .divImageLogoAnimation2 .hrDiv{
+        height: .5vw;
+        width: 70%;
+        box-shadow: none;
+        margin-top: 3vh;
+        margin-bottom: 2vh;
+        background-color: white;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .principalDiv .tittleText,
+    .selectDivTransition .divImageLogoAnimation2 .tittleText{
+        margin-top: 2vh;
+        font-family:'Poppins', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 3vh;
+    }
+    .principalDiv .divImage{
+        animation: logoAnimationMobile 2s ease-out forwards;
+    }
+    .principalDiv .divImage .imageLogo{
+        height: 55%;
+        width: 55%;
+    } 
+    .principalDiv .buttonContinue{
+        display: block;
+        background-color: transparent;
+        border: thin solid white;
+        border-radius: 1vh;
+        margin-left: auto;
+        margin-right: auto;
+        height: 7vh;
+        width: 60%;
+        margin-bottom: 4vh;
+        margin-top: 4vh;
+    }
+    .principalDiv .buttonContinue:active{
+        border: none;
+        background-color: rgb(113, 147, 220);
+    }
+    .principalDiv .buttonBack{
+        display: block;
+        background-color: transparent;
+        border: thin solid rgb(255, 255, 255);
+        border-radius: 1vh;
+        margin-left: auto;
+        margin-right: auto;
+        height: 7vh;
+        width: 60%;
+    }
+    .principalDiv .buttonBack:active{
+        border: none;
+        background-color: rgb(214, 89, 89);
+    }
+    .principalDiv .buttonContinue img{
+        position:relative;
+        height: 50%;
+        width: 15%;
+        left: 20%;
+        top: 7%;
+    }
+    .principalDiv .buttonBack img{
+        position:relative;
+        height: 50%;
+        width: 15%;
+        right: 20%;
+        top: 7%;
+    }
+    .principalDiv .buttonContinue span{
+        position: relative;
+        bottom:7%;
+        left: 7%;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        color: white;
+        font-size: 2vh;
+    }
+    .principalDiv .buttonBack span{
+        position: relative;
+        bottom:7%;
+        right: 8%;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        color: white;
+        font-size: 2vh;
+    }
+    .selectDiv{
+        position: relative;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgb(24, 24, 145);
+        overflow-y: scroll; 
+        -ms-overflow-style: none; 
+        scrollbar-width: none; 
+    }
+    .selectDiv::-webkit-scrollbar {
+        display: none; 
+      }
+      
+    .selectDiv .content{
+        height: 100%;
+        width: 100%;
+    }
+    .selectDiv .content .divBackContinueMobile .tittleSelect{
+        margin-top: 0;
+        margin-bottom: 3vh;
+        position: relative;
+        top: 2%;
+        font-family:'Poppins', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 3.5vh;
+    }
+    .selectDiv .content .divBackContinueMobile .buttonBack{
+        position: absolute;
+        height: 7vh;
+        width: 46vw;
+        background: none;
+        left: 2vw;
+        border-radius: 2vw;
+        border: thin solid white;
+        text-align: center;
+    }
+    .selectDiv .content .divBackContinueMobile .opacity-animation {
+        animation: fadeIn 1s ease-out forwards;
+    }
+    .selectDiv .content .divBackContinueMobile .opacity-animation-reverse {
+        animation: fadeOut 1s ease-out forwards;
+    }
+    .selectDiv .content .divBackContinueMobile .hidden {
+        opacity: 0;
+        pointer-events: none; 
+    }
+    .selectDiv .content .divBackContinueMobile .buttonBack:active{
+        border: none;
+        background-color: rgb(214, 89, 89);
+    }
+    .selectDiv .content .divBackContinueMobile .buttonBack span{
+        position: relative;
+        bottom:8%;
+        right: 8%;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        color: white;
+        font-size: 2vh;
+    } 
+    .selectDiv .content .divBackContinueMobile .buttonBack img{
+        position:relative;
+        height: 50%;
+        width: 20%;
+        right: 14%;
+        top: 8%;
+    }
+    .selectDiv .content .divBackContinueMobile .buttonNext{
+        position: absolute;
+        height: 7vh;
+        width: 46vw;
+        background: none;
+        left: 51vw;
+        border-radius: 2vw;
+        border: thin solid white;
+        text-align: center;
+    }
+    .selectDiv .content .divBackContinueMobile .buttonNext:active{
+        border: none;
+        background-color: rgb(113, 147, 220);
+    }
+    .selectDiv .content .divBackContinueMobile .buttonNext span{
+        position: relative;
+        bottom:8%;
+        left: 8%;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        color: white;
+        font-size: 2vh;
+    }
+    .selectDiv .content .divBackContinueMobile .buttonNext img{
+        position:relative;
+        height: 50%;
+        width: 20%;
+        left: 14%;
+        top: 7.5%;
+    }
+}
+/*Vista Tablets*/
+@media (min-width: 768px) and (max-width: 1024px) {
+
+}
+/*Vista Desktops*/
+@media (min-width: 1025px) {
+    .selectDivTransition{
+        width: 100%;
+        height: 100%;
+    }
+    .selectDivTransition .divImageLogoAnimation{
+        position: relative;
+        height: 30%;
+        animation: sliceAnimationLogo 3s ease-out forwards;
+    }
+    .selectDivTransition .divImageLogoAnimation .imageLogoAnimation{
+        height: 100%;
+        width: 15%;
+    }
+    .selectDivTransition .divImageLogoAnimation2{
+        height: 30%;
+        margin-top: 5vh;
+        opacity: 0;
+    }
+    .selectDivTransition .imageLogoAnimation2{
+        height: 100%;
+        width: 15%;
+    }
+    .principalDiv{
+        height: 100vh;
+        width: 100vw;
+        background-color: rgb(24, 24, 145);
+    }
+    .principalDiv .content{
+        height: 100%;
+        width: 100%;
+    }
+    .principalDiv .hrDiv,
+    .selectDivTransition .divImageLogoAnimation2 .hrDiv{
+        height: .15vw;
+        width: 70%;
+        box-shadow: none;
+        margin-top: 1.5vw;
+        margin-bottom: 1vw;
+        background-color: white;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .principalDiv .tittleText,
+    .selectDivTransition .divImageLogoAnimation2 .tittleText{
+        margin-top: 1vw;
+        font-family:'Poppins', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 3.5vw;
+    }
+    .principalDiv .divImage{
+        animation: logoAnimationDesktop 2s ease-out forwards;
+    }
+    .principalDiv .divImage .imageLogo{
+        height: 40%;
+        width: 20%;
+        
+    } 
+    .principalDiv .buttonContinue{
+        display: block;
+        background-color: transparent;
+        border: thin solid white;
+        border-radius: .5vw;
+        margin-left: auto;
+        margin-right: auto;
+        height: 5vw;
+        width: 30%;
+        margin-bottom: 2vw;
+        margin-top: 2vw;
+    }
+    .principalDiv .buttonContinue:hover{
+        border: none;
+        background-color: rgb(113, 147, 220);
+        cursor: pointer;
+    }
+    .principalDiv .buttonBack{
+        display: block;
+        background-color: transparent;
+        border: thin solid rgb(255, 255, 255);
+        border-radius: .5vw;
+        margin-left: auto;
+        margin-right: auto;
+        height: 5vw;
+        width: 30%;
+    }
+    .principalDiv .buttonBack:hover{
+        border: none;
+        background-color: rgb(214, 89, 89);
+        cursor: pointer;
+    }
+    .principalDiv .buttonContinue img{
+        position:relative;
+        height: 45%;
+        width: 12%;
+        left: 25%;
+        top: 7%;
+    }
+    .principalDiv .buttonBack img{
+        position:relative;
+        height: 45%;
+        width: 12%;
+        right: 25%;
+        top: 7%;
+    }
+    .principalDiv .buttonContinue span{
+        position: relative;
+        bottom:5%;
+        left: 7%;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        color: white;
+        font-size: 1.7vw;
+    }
+    .principalDiv .buttonBack span{
+        position: relative;
+        bottom:6%;
+        right: 8%;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        color: white;
+        font-size: 1.7vw;
+    }
+    .selectDiv{
+        height: 100vh;
+        width: 100vw;
+        background-color: rgb(24, 24, 145);
+    }
+    .selectDiv .content{
+        height: 100%;
+        width: 100%;
+    }
+    .selectDiv .content .divBackContinueDesktop{
+        position: relative;
+    }
+    .selectDiv .content .divBackContinueDesktop .tittleSelect{
+        margin-top: 0;
+        margin-bottom: 1vw;
+        position: relative;
+        top: 2%;
+        font-family:'Poppins', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 3vw;
+    }
+    .selectDiv .content .divBackContinueDesktop .buttonBack{
+        position: absolute;
+        height: 4vw;
+        width: 18vw;
+        background: none;
+        top: .5vw;
+        left: 2.5vw;
+        z-index: 3;
+        border-radius: .2vw;
+        border: thin solid white;
+        text-align: center;
+    }
+    .selectDiv .content .divBackContinueDesktop .buttonBack:hover{
+        border: none;
+        cursor: pointer;
+        background-color: rgb(214, 89, 89);
+    }
+    .selectDiv .content .divBackContinueDesktop .buttonBack span{
+        position: relative;
+        bottom:8%;
+        right: 8%;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        color: white;
+        font-size: 1.2vw;
+    } 
+    .selectDiv .content .divBackContinueDesktop .buttonBack img{
+        position:relative;
+        height: 50%;
+        width: 20%;
+        right: 14%;
+        top: 8%;
+    }
+    .selectDiv .content .divBackContinueDesktop .buttonNext{
+        position: absolute;
+        height: 4vw;
+        width: 18vw;
+        background: none;
+        top: .5vw;
+        left: 79.5vw;
+        z-index: 3;
+        border-radius: .2vw;
+        border: thin solid white;
+        text-align: center;
+    }
+    .selectDiv .content .divBackContinueDesktop .buttonNext:hover{
+        border: none;
+        cursor: pointer;
+        background-color: rgb(113, 147, 220);
+    }
+    .selectDiv .content .divBackContinueDesktop .buttonNext span{
+        position: relative;
+        bottom:8%;
+        left: 8%;
+        font-family:'Poppins','Poppins-Regular',monospace;
+        color: white;
+        font-size: 1.2vw;
+    }
+    .selectDiv .content .divBackContinueDesktop .buttonNext img{
+        position:relative;
+        height: 50%;
+        width: 20%;
+        left: 14%;
+        top: 7.5%;
+    }
+    .alignCenter{
+        text-align: center;
+    }
+}
