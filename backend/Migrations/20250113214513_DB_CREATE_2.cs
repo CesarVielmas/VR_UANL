@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class DB_CREATE_1 : Migration
+    public partial class DB_CREATE_2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -94,7 +94,7 @@ namespace backend.Migrations
                     RotationSideY = table.Column<decimal>(type: "decimal(6,3)", precision: 6, scale: 3, nullable: false),
                     RotationSideZ = table.Column<decimal>(type: "decimal(6,3)", precision: 6, scale: 3, nullable: false),
                     OptionalImage = table.Column<string>(type: "longtext", nullable: true),
-                    NameCompleteFaculty = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
+                    TextInformation = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {

@@ -64,10 +64,6 @@ namespace backend.Migrations
                         .HasPrecision(4, 3)
                         .HasColumnType("decimal(4,3)");
 
-                    b.Property<string>("NameCompleteFaculty")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
-
                     b.Property<string>("OptionalImage")
                         .HasColumnType("longtext");
 
@@ -94,6 +90,10 @@ namespace backend.Migrations
                     b.Property<decimal>("RotationSideZ")
                         .HasPrecision(6, 3)
                         .HasColumnType("decimal(6,3)");
+
+                    b.Property<string>("TextInformation")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
 
                     b.HasKey("IdButtonInformation");
 
