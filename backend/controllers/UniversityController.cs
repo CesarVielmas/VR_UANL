@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using backend.models;
 using backend.DbContextData;
 using Microsoft.AspNetCore.Authorization;
+using backend.DTO;
 [Route("api/[controller]")]
 [ApiController]
 public class UniversityController : ControllerBase
@@ -16,26 +17,47 @@ public class UniversityController : ControllerBase
     {
         _context = context;
     }
-    
+
     [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<University>>> GetUniversitys()
     {
-        return await _context.Universities.ToListAsync();
+        List<University> universitiesReturn = await _context.Universities
+            .Include(u => u.ListEscenes)
+            .ThenInclude(escene => escene.ListButtonRed)
+                .ThenInclude(buttonRedirect => buttonRedirect.PageToSender)
+            .Include(u => u.ListEscenes)
+            .ThenInclude(escene => escene.ListButtonInfo)
+            .AsSplitQuery()
+            .ToListAsync();
+        return universitiesReturn;
     }
-    
+
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<ActionResult<IEnumerable<University>>> GetUniversity(int id)
+    public async Task<ActionResult<University>> GetUniversity(int id)
     {
         bool response = await _context.Universities.AnyAsync(u => u.IdUniversity == id);
         if (!response)
         {
             return StatusCode(400, "La universidad seleccionada no existe");
         }
-        return await _context.Universities.Where(u => u.IdUniversity == id).ToListAsync();
+        University universityReturn = await _context.Universities
+        .Where(u => u.IdUniversity == id)
+        .Include(u => u.ListEscenes)
+            .ThenInclude(escene => escene.ListButtonRed)
+                .ThenInclude(buttonRedirect => buttonRedirect.PageToSender)
+        .Include(u => u.ListEscenes)
+            .ThenInclude(escene => escene.ListButtonInfo)
+        .AsSplitQuery()
+        .FirstOrDefaultAsync();
+        if (universityReturn == null)
+        {
+            return StatusCode(404, "La universidad seleccionada no existe");
+        }
+        return universityReturn;
     }
-    
+
     [Authorize(Roles = "Administrador")]
     [HttpPost]
     public async Task<ActionResult> PostUniversity([FromBody][Bind("NameFaculty,NameCompleteFaculty,LogoFaculty,ImageFaculty")] University universityPost)
@@ -47,7 +69,7 @@ public class UniversityController : ControllerBase
         try
         {
             bool response = await _context.Universities.AnyAsync(u => u.NameFaculty == universityPost.NameFaculty || u.NameCompleteFaculty == universityPost.NameCompleteFaculty);
-            if(response)
+            if (response)
             {
                 return StatusCode(400, "La universidad a agregar ya existe");
             }
@@ -64,8 +86,8 @@ public class UniversityController : ControllerBase
             return StatusCode(500, $"Error inesperado:{ex.Message}");
         }
     }
-    
-    [Authorize(Roles="Administrador")]
+
+    [Authorize(Roles = "Administrador")]
     [HttpPut("{id}")]
     public async Task<ActionResult> PutUniversity(int id, [FromBody][Bind("IdUniversity,NameFaculty,NameCompleteFaculty,LogoFaculty,ImageFaculty")] University universityPut)
     {
@@ -94,9 +116,9 @@ public class UniversityController : ControllerBase
         }
     }
 
-    [Authorize(Roles= "Administrador")]
-    [HttpPut("{id}")]
-    public async Task<ActionResult> PutUniversityScene(int id, [FromBody] Escene esceneToPut)	
+    [Authorize(Roles = "Administrador")]
+    [HttpPut("Escene/{id}")]
+    public async Task<ActionResult> PutUniversityScene(int id, [FromBody] EsceneRequestIdDTO esceneId)
     {
         if (!ModelState.IsValid)
         {
@@ -109,12 +131,13 @@ public class UniversityController : ControllerBase
             {
                 return StatusCode(400, "La universidad a la que se le agregara la escena no existe");
             }
-            bool responseEscene = await _context.Escenes.AnyAsync(e => e.IdEscene == esceneToPut.IdEscene);
+            bool responseEscene = await _context.Escenes.AnyAsync(e => e.IdEscene == esceneId.EsceneId);
             if (!responseEscene)
             {
                 return StatusCode(400, "La escena a agregar no existe");
             }
             var university = await _context.Universities.FirstAsync(u => u.IdUniversity == id);
+            var esceneToPut = await _context.Escenes.FirstAsync(e => e.IdEscene == esceneId.EsceneId);
             university.ListEscenes.Add(esceneToPut);
             _context.Universities.Update(university);
             await _context.SaveChangesAsync();

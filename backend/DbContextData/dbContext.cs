@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using backend.models;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace backend.DbContextData
 {
@@ -11,18 +12,21 @@ namespace backend.DbContextData
         public DbSet<University> Universities { get; set; }
         public DbSet<ButtonRedirect> ButtonRedirects { get; set; }
 
-        public dbContext(DbContextOptions<dbContext> options) : base(options) { }
+        public dbContext(DbContextOptions<dbContext> options) : base(options)
+        {
+
+        }
         public dbContext() { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseMySQL("Server=localhost;Database=vr_uanl;User=root;Password=vielmas@salais;");
+            optionsBuilder.ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning));
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<Escene>()
-                .HasOne(e => e.University)
+                .HasOne<University>()
                 .WithMany(u => u.ListEscenes)
                 .HasForeignKey(e => e.UniversityId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -45,16 +49,30 @@ namespace backend.DbContextData
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ButtonInformation>()
+                .Property(b => b.IdButtonInformation)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<ButtonInformation>()
                 .HasOne<Escene>()
                 .WithMany(e => e.ListButtonInfo)
-                .HasForeignKey(bi => bi.IdButtonInformation)
+                .HasForeignKey(bi => bi.EsceneId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ButtonRedirect>()
+                .Property(b => b.IdButtonRedirect)
+                .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<ButtonRedirect>()
                 .HasOne<Escene>()
                 .WithMany(e => e.ListButtonRed)
-                .HasForeignKey(br => br.IdButtonRedirect)
+                .HasForeignKey(br => br.EsceneId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ButtonRedirect>()
+                        .HasOne<Escene>()
+                        .WithMany()
+                        .HasForeignKey(br => br.TargetEsceneId)
+                        .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

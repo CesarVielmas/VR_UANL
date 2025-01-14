@@ -48,4 +48,5 @@ public class ButtonInformation
     public string? OptionalImage { get; set; }
     [StringLength(500, MinimumLength = 4, ErrorMessage = "La longitud del texto no es valido , asegurese que se encuentre en el rango entre 4 y 500 letras")]
     public string? TextInformation { get; set; }
+    public int? EsceneId { get; set; }
 }

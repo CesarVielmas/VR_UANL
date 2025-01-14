@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.models;
-public class Escene
+public class EscenePostDTO
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -18,9 +18,5 @@ public class Escene
     [Required]
     [Url(ErrorMessage = "La url proporcionada no es una url valida , asegurese de proporcionarla correctamente")]
     public required string ImageScene { get; set; }
-    [Required]
-    public int UniversityId { get; set; }
-    public List<ButtonRedirect> ListButtonRed { get; set; } = new List<ButtonRedirect>();
-    public List<ButtonInformation> ListButtonInfo { get; set; } = new List<ButtonInformation>();
-}
 
+}

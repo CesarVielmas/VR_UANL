@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using backend.DbContextData;
 
@@ -10,9 +11,11 @@ using backend.DbContextData;
 namespace backend.Migrations
 {
     [DbContext(typeof(dbContext))]
-    partial class dbContextModelSnapshot : ModelSnapshot
+    [Migration("20250114070529_DB_CREATE_3")]
+    partial class DB_CREATE_3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,9 +67,6 @@ namespace backend.Migrations
                         .HasPrecision(4, 3)
                         .HasColumnType("decimal(4,3)");
 
-                    b.Property<int?>("EsceneId")
-                        .HasColumnType("int");
-
                     b.Property<string>("OptionalImage")
                         .HasColumnType("longtext");
 
@@ -100,8 +100,6 @@ namespace backend.Migrations
 
                     b.HasKey("IdButtonInformation");
 
-                    b.HasIndex("EsceneId");
-
                     b.ToTable("ButtonInformations");
                 });
 
@@ -130,9 +128,6 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("PageToSenderIdEscene")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("PositionX")
                         .HasPrecision(5, 3)
                         .HasColumnType("decimal(5,3)");
@@ -157,16 +152,9 @@ namespace backend.Migrations
                         .HasPrecision(6, 3)
                         .HasColumnType("decimal(6,3)");
 
-                    b.Property<int?>("TargetEsceneId")
-                        .HasColumnType("int");
-
                     b.HasKey("IdButtonRedirect");
 
                     b.HasIndex("EsceneId");
-
-                    b.HasIndex("PageToSenderIdEscene");
-
-                    b.HasIndex("TargetEsceneId");
 
                     b.ToTable("ButtonRedirects");
                 });
@@ -248,25 +236,22 @@ namespace backend.Migrations
                 {
                     b.HasOne("backend.models.Escene", null)
                         .WithMany("ListButtonInfo")
-                        .HasForeignKey("EsceneId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("IdButtonInformation")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("backend.models.ButtonRedirect", b =>
                 {
-                    b.HasOne("backend.models.Escene", null)
-                        .WithMany("ListButtonRed")
-                        .HasForeignKey("EsceneId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("backend.models.Escene", "PageToSender")
                         .WithMany()
-                        .HasForeignKey("PageToSenderIdEscene");
+                        .HasForeignKey("EsceneId");
 
                     b.HasOne("backend.models.Escene", null)
-                        .WithMany()
-                        .HasForeignKey("TargetEsceneId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany("ListButtonRed")
+                        .HasForeignKey("IdButtonRedirect")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("PageToSender");
                 });

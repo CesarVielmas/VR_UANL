@@ -23,7 +23,7 @@ builder.Services
             ValidIssuer = "Backend",
             ValidAudience = "VRFronted",
             IssuerSigningKey = new SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JwtService").Get<JwtSettings>().SecretKey)
+            System.Text.Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JwtService").Get<JwtSettings>()?.SecretKey ?? throw new InvalidOperationException("JWtService no esta configurado"))
             )
         };
     });

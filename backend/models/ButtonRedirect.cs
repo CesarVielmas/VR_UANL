@@ -49,7 +49,8 @@ public class ButtonRedirect
     [RegularExpression(@"^(Left|Right|Behind|Center)$", ErrorMessage = "La horientacion de el boton de redireccion solo puede ser 'Left','Right','Behind' y 'Center'")]
     public required string HorientationButton { get; set; }
     public int? EsceneId { get; set; }
-    [ForeignKey(nameof(EsceneId))]
+    public int? TargetEsceneId { get; set; }
+    [ForeignKey(nameof(TargetEsceneId))]
     public Escene? PageToSender { get; set; }
 }
 
