@@ -17,13 +17,13 @@
         </div>
         <div class="card" :class="clickStartVR?'cardExitPlay':''" v-if="enterAnimation && dominantColor!= ''" :ref="(timerWait == 5 || lastElement) && typeDisp =='Mobile'?'CardUniversity':''" :style="lastElement && typeDisp =='Mobile' && typeVRComponent === 1?'animation: slideDownFadeInAnimation 1s ease-out forwards;':(timerWait == 5 || lastElement) && typeDisp =='Mobile'?'animation: slideDownFadeInAnimation 1s ease-out forwards;margin-bottom:50%;':'animation: slideDownFadeInAnimation 1s ease-out forwards;'">
                 <div class="informationCard" :style="styleBackground">
-                        <img :src="university.LogoFaculty" alt="university_fime_image" class="imageUniversityLogo" />
-                        <h2 class="tittleUniversity">{{ university.NameFaculty }}</h2>
-                        <h2 class="nameUniversity">{{ university.NameCompleteFaculty }}</h2>
+                        <img :src="university.logoFaculty" alt="university_fime_image" class="imageUniversityLogo" />
+                        <h2 class="tittleUniversity">{{ university.nameFaculty }}</h2>
+                        <h2 class="nameUniversity">{{ university.nameCompleteFaculty }}</h2>
                         <h3 class="virtualRecord">Recorrido Virtual</h3>
                 </div>
                 <div class="overlayImage"></div>
-                <img :src="university.ImageFaculty" alt="universityImage" class="imageUniversity" />
+                <img :src="university.imageFaculty" alt="universityImage" class="imageUniversity" />
                 <button class="playUniversity" v-if="typeVRComponent===0" :style="styleButton" v-on:click="()=>{let toneBackground = getTone(this.dominantColor,85,60);methodOnStartVR({timerWait,toneBackground,university});clickStartVR=true}"><img v-if="!clickStartVR" src="../../assets/icon_play.png" alt="imagePlay" /></button>
                 <button class="editUniversity" v-if="typeVRComponent===1" :style="styleButton" v-on:click="clickEditVR = true;"><img v-if="!clickStartVR" :src="require('@/assets/edit_icon.png')" alt="imageEdit" /></button>
                 <button class="deleteUniversity" v-if="typeVRComponent===1 && !clickStartVR" style="background-color: red;" v-on:click="clickDeleteVR = true;"><img :src="require('@/assets/delete_icon.png')" alt="imageDelete" /></button>

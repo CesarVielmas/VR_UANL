@@ -61,7 +61,8 @@ export default {
     methods: {
     getDominantColor() {
       const image = new Image(); 
-      image.src = this.university.LogoFaculty; 
+      image.crossOrigin = 'Anonymous';
+      image.src = this.university.logoFaculty; 
       image.onload = () => {
         this.extractColor(image);
       };

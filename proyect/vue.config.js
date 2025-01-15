@@ -44,8 +44,20 @@ module.exports = {
     },
     plugins: [
       // Si necesitas otros plugins, puedes añadirlos aquí
-    ]
-  },
+        ]
+      },
+      devServer: {
+        https: false,
+        port: 8080,
+        proxy: {
+          '/images/FIME': {
+            target: 'http://localhost:5299',
+            changeOrigin: true,
+            secure: false,
+            pathRewrite: { '^/images/FIME': '/images/FIME' },
+          },
+        },
+      },      
   // Configuración opcional para el servidor de desarrollo
   // devServer: {
   //   host: '0.0.0.0', // Permite acceso desde cualquier IP

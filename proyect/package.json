@@ -10,6 +10,7 @@
   "dependencies": {
     "@vibrant/core": "^4.0.0-alpha.1",
     "aframe": "^1.6.0",
+    "axios": "^1.7.9",
     "core-js": "^3.8.3",
     "node-vibrant": "^4.0.0-alpha.1",
     "three": "^0.171.0",

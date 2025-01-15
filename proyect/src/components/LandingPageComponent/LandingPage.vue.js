@@ -28,7 +28,7 @@ export default {
       };
     },
     created(){
-        this.arrayExampleCards = this.$store.state.allDataScenes[0]
+        this.arrayExampleCards = this.$store.state.allDataScenes
         setTimeout(()=>{
             this.componentCreated = true
         },2000)  
