@@ -137,6 +137,58 @@ public class AuthUserController : ControllerBase
 
     }
     [Authorize(Roles = "Administrador")]
+    [HttpPut("AddUniversitys/{id}")]
+    public async Task<ActionResult<AuthUser>> PutUniversitysUser(int id, [FromQuery] string[] namesUniversitys)
+    {
+        if (namesUniversitys == null || namesUniversitys.Length == 0)
+        {
+            return StatusCode(400, "No se han enviado universidades para agregar al usuario");
+        }
+
+        var universitys = await _context.Universities.Where(u => namesUniversitys.Contains(u.NameFaculty)).ToListAsync();
+        if (universitys.Count != namesUniversitys.Length)
+        {
+            return StatusCode(400, "Algunas universidades no existen en la base de datos");
+        }
+        foreach (var university in universitys)
+        {
+            bool responseUniversity = _context.AuthUsers.Any(u => u.ListUniversitys.Any(u => u.NameFaculty == university.NameFaculty));
+            if (responseUniversity)
+            {
+                return StatusCode(400, "Algunas universidades ya estan agregadas a un usuario");
+            }
+        }
+
+        var userNameClaim = User.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name);
+        if (userNameClaim == null)
+        {
+            return Unauthorized("No se pudo determinar el nombre de usuario en el token");
+        }
+
+        bool response = await _context.AuthUsers.AnyAsync(u => u.UserName == userNameClaim.Value);
+        if (!response)
+        {
+            return StatusCode(400, "El usuario perteneciente al token ya no existe");
+        }
+
+        bool responseIdUser = await _context.AuthUsers.AnyAsync(u => u.IdAuthUser == id);
+        if (!responseIdUser)
+        {
+            return StatusCode(400, "El usuario perteneciente al id no coincide con ninguno");
+        }
+
+        AuthUser userSend = await _context.AuthUsers.FirstAsync(u => u.IdAuthUser == id);
+        if (userSend.ListUniversitys == null)
+        {
+            userSend.ListUniversitys = new List<University>();
+        }
+        List<University> universitysSend = await _context.Universities.Where(u => namesUniversitys.Contains(u.NameFaculty)).ToListAsync();
+        userSend.ListUniversitys.AddRange(universitysSend);
+        _context.AuthUsers.Update(userSend);
+        await _context.SaveChangesAsync();
+        return StatusCode(200, new { Message = "Universidades añadidas con exito al usuario" });
+    }
+    [Authorize(Roles = "Administrador")]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteAuthUser(int id)
     {

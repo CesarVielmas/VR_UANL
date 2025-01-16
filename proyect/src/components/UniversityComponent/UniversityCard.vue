@@ -30,7 +30,7 @@
         </div>
         <div class="card" :ref="(timerWait == 5 || lastElement) && typeDisp =='Mobile'?'CardUniversity':''" v-if="lastElement && typeVRComponent === 1 && enterAnimation" :style="typeDisp == 'Mobile'?'margin-bottom:50%;animation: slideDownFadeInAnimation 1s ease-out forwards;':'animation: slideDownFadeInAnimation 1s ease-out forwards;'">
                 <div class="content">
-                        <h2 >Añadir Nueva Facultad</h2>
+                        <h2 :style="typeDisp === 'Desktop'?'text-align:center;':''">Añadir Nueva Facultad</h2>
                         <div></div>
                         <button v-on:click="()=>{let toneBackground = getTone(this.dominantColor,85,60);methodOnAddVR();}">+</button>
                 </div>

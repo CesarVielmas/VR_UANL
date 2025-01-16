@@ -6,7 +6,7 @@
         <button v-if="editNowScene === 1" class="buttonGigantAnimation" :style="`background-color:${this.backgroundNewVR};`"></button>
         <div v-if="editNowScene > 1" style="height: 100%;width: 100%;" :style="editNowScene === 4?`animation: opacityAnimation 2s ease-out reverse forwards;background-color:${this.backgroundNewVR};`:`background-color:${this.backgroundNewVR};`">
             <div v-if="editNowScene >= 2" class="imageMovementAnimation" >
-                <img :src="addNewLogoFaculty" alt="newLogoFaculty"/>
+                <img :src="addNewLogoFaculty[0]" alt="newLogoFaculty"/>
             </div>
             <div v-if="editNowScene >= 3" class="contentVRActive">
                 <img :src="require('@/assets/uanl_logo.png')" alt="imageLogoAnimation2" />
@@ -22,7 +22,7 @@
                 <h2 class="subTittle">Imagen De La Facultad</h2>
                 <h3 class="miniTittle">Trate de hacer que la facultad tenga un buen angulo y sea visible</h3>
                 <div class="imageView" v-on:click="onClickImageFaculty">
-                    <img v-if="addNewImageFaculty != ''" :src="addNewImageFaculty" alt="imageFaculty" />
+                    <img v-if="addNewImageFaculty.length != 0" :src="addNewImageFaculty[0]" alt="imageFaculty" />
                     <button v-if="addNewImageFaculty === ''" v-on:click="onClickImageFaculty">+</button>
                     <input ref="fileFaculty" type="file" @change="handleFileUploadFaculty" accept="image" style="visibility: hidden;"/>
                 </div>
@@ -32,7 +32,7 @@
                 <h2 class="subTittle">Logo De La Facultad</h2>
                 <h3 class="miniTittle">Trate de seleccionar un logo alusivo a la facultad y sin fondo</h3>
                 <div class="imageView" v-on:click="onClickImageLogo">
-                    <img v-if="addNewLogoFaculty != ''" :src="addNewLogoFaculty" alt="imageLogoFaculty" ref="iconLogoPng" />
+                    <img v-if="addNewLogoFaculty.length != 0" :src="addNewLogoFaculty[0]" alt="imageLogoFaculty" ref="iconLogoPng" />
                     <button v-if="addNewLogoFaculty === ''" v-on:click="onClickImageLogo">+</button>
                     <input ref="fileLogo" type="file" @change="handleFileUploadLogo" accept="image/png" style="visibility: hidden;"/>
                 </div>
@@ -60,26 +60,26 @@
         </div>
     </div>
     <div v-if="checkSesion" class="loader">
-        <div class="content" v-if="statusSesion === 0">
-            <p class="tittle">Validando Usuario</p>
+        <div class="content" v-if="statusSesion === 0 || statusSesion === 1">
+            <p class="tittle">{{ textValidUser }}</p>
             <p class="subtittle">Esto Puede Tardar Un Momento</p>
             <img class="image" :src="require('@/assets/loader_icon.gif')"/>
         </div>
 
-        <div class="content" v-if="statusSesion === 1">
+        <div class="content" v-if="statusSesion === 2">
             <p class="tittle">Bienvenido {{ userName }}</p>
             <p class="subtittle">Validado Con Exito</p>
             <img class="image" style="animation: logoAnimationScaler .7s ease-out;" :src="require('@/assets/sucess_icon.png')"/>
         </div>
 
-        <div class="content" v-if="statusSesion === 2">
-            <p class="tittle">Usuario Invalido</p>
+        <div class="content" v-if="statusSesion === 3">
+            <p class="tittle">{{ textErrorUser }}</p>
             <p class="subtittle">Intentelo De Nuevo</p>
             <img class="image" style="animation: logoAnimationScaler .7s ease-out;" :src="require('@/assets/cross_icon.png')"/>
         </div>
     </div>
-    <div class="principalDiv" v-if="statusSesion != 3">
-        <div class="content" :style="adminLevel != 0?'animation: sliceAnimation 1s ease-out forwards;':''">
+    <div class="principalDiv" v-if="statusSesion != 4">
+        <div class="content" :style="adminLevel != 0?'animation: sliceAnimation 1s ease-out forwards;':adminLevel === 0 && statusSesion === -1?'animation: sliceAnimationReverse 1s ease-out forwards;':''">
             <div class="divImage">
                 <img src="../../assets/uanl_logo.png" class="imageLogo"/>
             </div>
@@ -101,8 +101,8 @@
             </div>
         </div>
     </div>
-    <div class="principalCards" v-if="statusSesion === 3 && editNowScene <= 1">
-        <div class="content" v-if="adminLevel === 2" style="animation: opacityAnimation 2s ease-out forwards;">
+    <div class="principalCards" v-if="statusSesion === 4 && editNowScene <= 1">
+        <div class="content" style="animation: opacityAnimation 2s ease-out forwards;">
             <div class="divBackContinueDesktop" v-if="deviceType=='Desktop'">
                 <button class="buttonBack" v-on:click="onButtonBack"><img alt="image_arrow_back" src="../../assets/icon_left.png"/> <span>{{ textBack }}</span></button>
                 <h1 class="tittleSelect">Seleccione La Facultad</h1>

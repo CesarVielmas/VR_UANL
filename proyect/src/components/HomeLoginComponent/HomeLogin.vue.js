@@ -1,4 +1,5 @@
 import UniversityCard from '../UniversityComponent/UniversityCard.vue';
+import axios from 'axios';
 
 export default {
   name: 'HomeLogin',
@@ -7,6 +8,8 @@ export default {
   },
   data() {
     return {
+        textValidUser:"Validando Usuario",
+        textErrorUser:"Usuario Invalido",
         componentCreated:false,
         checkSesion:false,
         cardsApper:true,
@@ -21,14 +24,14 @@ export default {
         deviceType:'',
         textBack:"Regresar",
         topButtonsAlign:0,
-        textNext:"Siguiente",
+        textNext:"",
         adminLevel:0,
         pageCardsActual:[],
         arrayExampleCards:[],
         addNewNameFaculty: '',
         addNewNameCompleteFaculty: '',
-        addNewLogoFaculty: '',
-        addNewImageFaculty: '',
+        addNewLogoFaculty: [],
+        addNewImageFaculty: [],
         nameFacultyError:false,
         nameCompleteFacultyError:false,
         logoFacultyError:false,
@@ -40,128 +43,158 @@ export default {
     };
   },
   created() {
-    setTimeout(()=>{
         this.componentCreated = true
         this.deviceType = this.detectDevice()
         console.log(this.deviceType)
-    },2000)
+        let token = localStorage.getItem('token');
+        let userId = localStorage.getItem('userId');
+        if(token != null && userId != null){
+          axios.get(`http://localhost:5028/api/AuthUser/${userId}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          })
+          .then(response => {
+              if(response.data.listUniversitys == null || response.data.listUniversitys.length === 0){
+                throw new Error("El usuario no tiene universidades asignadas dentro");
+              }
+              this.statusSesion = 4;
+              if(response.data.listUniversitys.length === 1){
+                this.getDominantColor(response.data.listUniversitys[0].logoFaculty);
+                setTimeout(()=>{
+                    this.addNewLogoFaculty = response.data.listUniversitys[0].logoFaculty;
+                    this.backgroundNewVR = this.getTone(this.dominantColorNewVR,85,60)
+                    this.editNowScene = 1;
+                    setTimeout(()=>{
+                      this.editNowScene = 2;
+                      setTimeout(()=>{
+                        this.editNowScene = 3;
+                        setTimeout(()=>{
+                          this.editNowScene = 4;
+                          setTimeout(()=>{
+                            this.editNowScene = 5;
+                          },2000)
+                        },4000)
+                      },2000)
+                    },3000)
+                },1000)
+              }
+              else{
+                setTimeout(()=>{
+                  this.arrayExampleCards = response.data.listUniversitys;
+                  this.pageCardsActual = response.data.listUniversitys.slice(0, 6);
+                  if(this.pageCardsActual > 6)
+                    this.textNext = "Siguiente";
+                  else
+                    this.textNext = "";
+                },1000)
+              }
+          })
+          .catch(error => {
+            console.log(error);
+            setTimeout(()=>{
+              localStorage.setItem('token',null);
+              localStorage.setItem('userId',null);
+            },2000)
+          });
+        }
+        else{
+          setTimeout(()=>{
+            localStorage.setItem('token',null);
+            localStorage.setItem('userId',null);
+            this.componentCreated = true
+            this.deviceType = this.detectDevice()
+            console.log(this.deviceType)
+          },2000)
+        }
   },
   methods: {
     onClickCheckSesion(){
         this.checkSesion = true;
-        setTimeout(()=>{
-            if(this.userName === "CesarVielmas" && this.userPassword === "12345678"){
-                this.statusSesion = 1;
-                setTimeout(()=>{
-                    this.checkSesion = false;
-                    this.adminLevel = 1;
-                    if(this.adminLevel === 2){
-                        setTimeout(()=>{
-                            this.statusSesion = 3;
-                            this.arrayExampleCards =[ {
-                                Id:0,
-                                NameFaculty: "FIME",
-                                NameCompleteFaculty: "Facultad de Ingeniería Mecánica y Eléctrica",
-                                LogoFaculty: require('@/assets/example_university_card_image.png'),
-                                ImageFaculty: require('@/assets/example_university_card.jpg'),
-                              },
-                              {
-                                Id:1,
-                                NameFaculty: "FCFM",
-                                NameCompleteFaculty: "Facultad de Ciencias Físico Matemáticas",
-                                LogoFaculty: require('@/assets/example_university_card_image_2.png'),
-                                ImageFaculty: require('@/assets/example_university_card_2.jpg'),
-                              },
-                              {
-                                Id:2,
-                                NameFaculty: "FACDYC",
-                                NameCompleteFaculty: "Facultad de Derecho y Criminología",
-                                LogoFaculty: require('@/assets/example_university_card_image_3.png'),
-                                ImageFaculty: require('@/assets/example_university_card_3.jpg'),
-                              },
-                              {
-                                Id:3,
-                                NameFaculty: "FACPYA",
-                                NameCompleteFaculty: "Facultad de Contaduría Pública y Administración",
-                                LogoFaculty: require('@/assets/example_university_card_image_4.png'),
-                                ImageFaculty: require('@/assets/example_university_card_4.jpg'),
-                              },
-                              {
-                                Id:4,
-                                NameFaculty: "FARQ",
-                                NameCompleteFaculty: "Facultad de Arquitectura",
-                                LogoFaculty: require('@/assets/example_university_card_image_5.png'),
-                                ImageFaculty: require('@/assets/example_university_card_5.jpg'),
-                              },
-                              {
-                                Id:5,
-                                NameFaculty: "FIC",
-                                NameCompleteFaculty: "Facultad de Ingeniería Civil",
-                                LogoFaculty: require('@/assets/example_university_card_image_6.png'),
-                                ImageFaculty: require('@/assets/example_university_card_6.jpg'),
-                              },
-                              {
-                                Id:6,
-                                NameFaculty: "FOD",
-                                NameCompleteFaculty: "Facultad de Odontología",
-                                LogoFaculty: require('@/assets/example_university_card_image_7.png'),
-                                ImageFaculty: require('@/assets/example_university_card_7.jpg'),
-                              },
-                              {
-                                Id:7,
-                                NameFaculty: "FAPSI",
-                                NameCompleteFaculty: "Facultad de Psicología",
-                                LogoFaculty: require('@/assets/example_university_card_image_8.png'),
-                                ImageFaculty: require('@/assets/example_university_card_8.jpg'),
-                              },
-                              {
-                                Id:8,
-                                NameFaculty: "FCPyRI",
-                                NameCompleteFaculty: "Facultad de Ciencias Políticas y Relaciones Internacionales",
-                                LogoFaculty: require('@/assets/example_university_card_image_9.png'),
-                                ImageFaculty: require('@/assets/example_university_card_9.jpg'),
-                              },
-                              {
-                                Id:9,
-                                NameFaculty: "FACSA",
-                                NameCompleteFaculty: "Facultad de Ciencias de la Salud",
-                                LogoFaculty: require('@/assets/example_university_card_image_10.png'),
-                                ImageFaculty: require('@/assets/example_university_card_10.jpg'),
-                              }]
-                            this.pageCardsActual = this.arrayExampleCards.slice(0, 6);
-                        },1000)
-                    }
-                    else{
-                        this.getDominantColor();
-                        setTimeout(()=>{
-                            this.statusSesion = 3;
-                            this.addNewLogoFaculty = require('@/assets/example_university_card_image.png');
-                            this.backgroundNewVR = this.getTone(this.dominantColorNewVR,85,60)
-                            this.editNowScene = 1;
-                            setTimeout(()=>{
-                              this.editNowScene = 2;
-                              setTimeout(()=>{
-                                this.editNowScene = 3;
-                                setTimeout(()=>{
-                                  this.editNowScene = 4;
-                                  setTimeout(()=>{
-                                    this.editNowScene = 5;
-                                  },2000)
-                                },4000)
-                              },2000)
-                            },3000)
-                        },1000)
-                    }
-                },5000)
+        axios.post('http://localhost:5028/api/AuthUser/VerifyUser',{userName:this.userName,userPassword:this.userPassword})
+        .then(response => {
+          this.textValidUser = "Cargando Informacion";
+          this.statusSesion = 1;
+          localStorage.setItem('token', response.data.token);
+          localStorage.setItem('userId', response.data.id);
+          axios.get(`http://localhost:5028/api/AuthUser/${response.data.id}`, {
+            headers: {
+              'Authorization': `Bearer ${response.data.token}`
             }
-            else{
-                this.statusSesion = 2
+          })
+          .then(response => {
+              if(response.data.listUniversitys == null || response.data.listUniversitys.length === 0){
+                this.textErrorUser = "El usuario no tiene permisos";
+                throw new Error("El usuario no tiene universidades asignadas dentro");
+              }
+              this.statusSesion = 2;
+              this.checkSesion = false;
+              this.adminLevel = response.data.userLevel;
+              if(response.data.listUniversitys.length === 1){
+                this.getDominantColor(response.data.listUniversitys[0].logoFaculty);
                 setTimeout(()=>{
-                    this.checkSesion = false;
-                    this.statusSesion = 0;
-                },5000)
+                    this.statusSesion = 4;
+                    this.addNewLogoFaculty = response.data.listUniversitys[0].logoFaculty;
+                    this.backgroundNewVR = this.getTone(this.dominantColorNewVR,85,60)
+                    this.editNowScene = 1;
+                    setTimeout(()=>{
+                      this.editNowScene = 2;
+                      setTimeout(()=>{
+                        this.editNowScene = 3;
+                        setTimeout(()=>{
+                          this.editNowScene = 4;
+                          setTimeout(()=>{
+                            this.editNowScene = 5;
+                          },2000)
+                        },4000)
+                      },2000)
+                    },3000)
+                },1000)
+              }
+              else{
+                setTimeout(()=>{
+                  this.statusSesion = 4;
+                  this.arrayExampleCards = response.data.listUniversitys;
+                  this.pageCardsActual = response.data.listUniversitys.slice(0, 6);
+                  if(this.pageCardsActual > 6)
+                    this.textNext = "Siguiente";
+                  else
+                    this.textNext = "";
+                },1000)
+              }
+          })
+          .catch(error => {
+            console.log(error);
+            this.statusSesion = 3
+            setTimeout(()=>{
+              this.checkSesion = false;
+              this.statusSesion = 0;
+            },5000)
+          });
+  
+        })
+        .catch(error => {
+          console.log(error)
+            if (error.response && error.response.data && error.response.data.errors) {
+            const errors = error.response.data.errors;
+            if (errors.userName && errors.userPassword) {
+              this.textErrorUser = "Usuario y Contraseña Invalidos";
+            } else if (errors.userName) {
+              this.textErrorUser = "Usuario Invalido";
+            } else if (errors.userPassword) {
+              this.textErrorUser = "Contraseña Invalida";
+            } else {
+              this.textErrorUser = "Credenciales Invalidas";
             }
-        },5000)
+            } else {
+            this.textErrorUser = "Error en la autenticación";
+            }
+          this.statusSesion = 3
+          setTimeout(()=>{
+              this.checkSesion = false;
+              this.statusSesion = 0;
+          },5000)
+        });
     },
     detectDevice() {
         const userAgent = navigator.userAgent;
@@ -201,6 +234,12 @@ export default {
             }
     },
     onButtonBack(){
+            if(this.textBack === "Regresar"){
+              this.statusSesion = -1;
+              this.adminLevel = 0;
+              localStorage.setItem('token',null);
+              localStorage.setItem('userId',null);
+            }
             setTimeout(() => {
               this.isLastElement = false;
             }, 1000);
@@ -297,6 +336,15 @@ export default {
     onClickImageLogo(){
         this.$refs.fileLogo.click();
     },
+    base64ToBlob(base64, mimeType) {
+      const byteCharacters = atob(base64.split(',')[1]);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      return new Blob([byteArray], { type: mimeType });
+    },
     handleFileUploadFaculty(event){
         const file = event.target.files[0];
         if (file) {
@@ -304,7 +352,7 @@ export default {
             this.imageFacultyError = false;
             const reader = new FileReader();
             reader.onload = (e) => {
-              this.addNewImageFaculty = e.target.result; // Guardar para previsualización
+              this.addNewImageFaculty = [e.target.result,file.type];
             };
             reader.readAsDataURL(file);
           } else {
@@ -319,7 +367,7 @@ export default {
             this.logoFacultyError = false;
             const reader = new FileReader();
             reader.onload = (e) => {
-              this.addNewLogoFaculty = e.target.result; // Guardar para previsualización
+              this.addNewLogoFaculty = [e.target.result,file.type];
             };
             reader.readAsDataURL(file);
           } else {
@@ -339,7 +387,71 @@ export default {
     },
     onSaveNewVRComplete(){
       if(!this.imageFacultyError && !this.logoFacultyError && !this.nameCompleteFacultyError && !this.nameFacultyError && this.addNewNameFaculty != '' && this.addNewNameCompleteFaculty != '' && this.addNewLogoFaculty != '' && this.addNewImageFaculty != ''){
-        //Agregacion al sistema
+        const formImages = new FormData();
+        formImages.append('files', this.base64ToBlob(this.addNewLogoFaculty[0],this.addNewLogoFaculty[1]),'LogoFaculty.png');
+        formImages.append('files', this.base64ToBlob(this.addNewImageFaculty[0],this.addNewImageFaculty[1]),'ImageFaculty.jpg');
+
+        axios.post(`http://localhost:5299/api/Images/upload/${this.addNewNameFaculty}`, formImages, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then(response => {
+          axios.post('http://localhost:5028/api/University',{NameFaculty:this.addNewNameFaculty,NameCompleteFaculty:this.addNewNameCompleteFaculty,LogoFaculty:response.data.paths[0],ImageFaculty:response.data.paths[1]},{
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            }
+          })
+          .then(response => {
+            console.log(response)
+            axios.put(`http://localhost:5028/api/AuthUser/AddUniversitys/${localStorage.getItem('userId')}?namesUniversitys=${this.addNewNameFaculty}`,{},{
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              }
+            })
+            .then(response => {
+              console.log(response)
+            })
+            .catch(error => {
+              console.log(error);
+              if(this.addNewNameFaculty === '')
+                this.nameFacultyError = true;
+              if(this.addNewNameCompleteFaculty === '')
+                this.nameCompleteFacultyError = true;
+              if(this.addNewLogoFaculty === '')
+                this.logoFacultyError = true;
+              if(this.addNewImageFaculty === '')
+                this.imageFacultyError = true;
+              return;
+            });
+          })
+          .catch(error => {
+            console.log(error);
+            if(this.addNewNameFaculty === '')
+              this.nameFacultyError = true;
+            if(this.addNewNameCompleteFaculty === '')
+              this.nameCompleteFacultyError = true;
+            if(this.addNewLogoFaculty === '')
+              this.logoFacultyError = true;
+            if(this.addNewImageFaculty === '')
+              this.imageFacultyError = true;
+            return;
+          });
+        })
+        .catch(error => {
+          console.log(error);
+          if(this.addNewNameFaculty === '')
+            this.nameFacultyError = true;
+          if(this.addNewNameCompleteFaculty === '')
+            this.nameCompleteFacultyError = true;
+          if(this.addNewLogoFaculty === '')
+            this.logoFacultyError = true;
+          if(this.addNewImageFaculty === '')
+            this.imageFacultyError = true;
+          return;
+        });
+
         if(this.addNewVR){
           this.addNewVR = false;
           this.getDominantColor();
@@ -381,8 +493,8 @@ export default {
       this.addNewVR = false;
       this.editNewVR = false;
     },
-    getDominantColor() {
-        if(this.adminLevel === 2){
+    getDominantColor(imageSend = null) {
+        if(imageSend == null){
           const image = this.$refs.iconLogoPng; 
           if (image.complete) {
             this.extractColor(image);
@@ -395,9 +507,10 @@ export default {
             };
           }
         }
-      else if(this.adminLevel === 1){
+      else if(imageSend != null){
           const image = new Image(); 
-          image.src = require('@/assets/example_university_card_image.png');
+          image.crossOrigin = 'Anonymous';
+          image.src = imageSend,
           image.onload = () => {
             this.extractColor(image);
           };

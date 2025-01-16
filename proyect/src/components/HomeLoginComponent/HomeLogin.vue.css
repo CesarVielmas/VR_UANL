@@ -47,6 +47,15 @@
       transform: translateX(-100vw);
     }
   }
+  @keyframes sliceAnimationReverse {
+    0% {
+        transform: translateX(-100vw);
+    }
+    100% {
+      
+      transform: translateX(0); 
+    }
+  }
 @keyframes movementAnimation {
     0%{
         transform: translateX(0.1vw);
