@@ -2,6 +2,8 @@
 import { registerShader } from 'aframe';
 import LoadingApart from '../LoadingApartComponent/LoadingApart.vue';
 import VRInformationPanel from '../VRInformationPanelComponent/VRInformationPanel.vue';
+import axios from "axios";
+
 registerShader('pixelate', {
   schema: {
     src: {type: 'map', is: 'uniform'},
@@ -36,8 +38,7 @@ export default {
   props: ['facultyAbbreviation'],
   data() {
     return {
-      allDataScenes:[],
-      allScenes:[],
+      actualUniversity: {},
       actualScene:{},
       deviceType:"",
       dominantColor:"",
@@ -52,38 +53,21 @@ export default {
     };
   },
   async created() {
-    this.allDataScenes = this.$store.state.allDataScenes;
+    this.actualUniversity = this.$store.state.universitySelect;
     this.deviceType = await this.detectDevice()
     console.log(this.deviceType)
-    if(this.allDataScenes.length === 0){
+    if(Object.keys(this.actualUniversity).length === 0){
       this.initializeDataEscene();
     }
     else{
-      if(Object.keys(this.actualScene).length === 0 ){
-        let logoFaculty = this.allDataScenes[0].find(university => university.NameFaculty === this.facultyAbbreviation).LogoFaculty
-        this.getDominantColor(logoFaculty);
-        const scenes = this.allDataScenes[1].filter(scene => scene.NamePositionScene.startsWith(`VR_${this.facultyAbbreviation}`)); 
-        this.allScenes = scenes.map(scene => {
-        const updatedRedirectButtons = scene.ListButtonsRedirect.map(id => 
-            this.allDataScenes[2].find(button => button.Id === id)
-        );
-        const updatedInformationButtons = scene.ListButtonsInformation.map(id => 
-          this.allDataScenes[3].find(button => button.Id === id)
-        );
-        return {
-            ...scene,
-            ListButtonsRedirect: updatedRedirectButtons,
-            ListButtonsInformation: updatedInformationButtons
-        };
-        });
-      
-        this.actualScene = this.allScenes.filter(scene=> scene.NamePositionScene == `VR_${this.facultyAbbreviation}_1`)[0];
-      }
+      this.actualScene = this.actualUniversity.listEscenes[0];
+      this.getDominantColor(this.actualUniversity.logoFaculty);
     }
   },
   methods: {
     getDominantColor(imageLogo) {
       const image = new Image(); 
+      image.crossOrigin = 'Anonymous';
       image.src = imageLogo;
       image.onload = () => {
         this.extractColor(image);
@@ -207,311 +191,38 @@ export default {
       return temp1;
     },
     initializeDataEscene() {
-      setTimeout(()=>{
-        const dataUniversitys = [ {
-          Id:0,
-          NameFaculty: "FIME",
-          NameCompleteFaculty: "Facultad de Ingeniería Mecánica y Eléctrica",
-          LogoFaculty: require('@/assets/example_university_card_image.png'),
-          ImageFaculty: require('@/assets/example_university_card.jpg'),
-        },
-        {
-          Id:1,
-          NameFaculty: "FCFM",
-          NameCompleteFaculty: "Facultad de Ciencias Físico Matemáticas",
-          LogoFaculty: require('@/assets/example_university_card_image_2.png'),
-          ImageFaculty: require('@/assets/example_university_card_2.jpg'),
-        },
-        {
-          Id:2,
-          NameFaculty: "FACDYC",
-          NameCompleteFaculty: "Facultad de Derecho y Criminología",
-          LogoFaculty: require('@/assets/example_university_card_image_3.png'),
-          ImageFaculty: require('@/assets/example_university_card_3.jpg'),
-        },
-        {
-          Id:3,
-          NameFaculty: "FACPYA",
-          NameCompleteFaculty: "Facultad de Contaduría Pública y Administración",
-          LogoFaculty: require('@/assets/example_university_card_image_4.png'),
-          ImageFaculty: require('@/assets/example_university_card_4.jpg'),
-        },
-        {
-          Id:4,
-          NameFaculty: "FARQ",
-          NameCompleteFaculty: "Facultad de Arquitectura",
-          LogoFaculty: require('@/assets/example_university_card_image_5.png'),
-          ImageFaculty: require('@/assets/example_university_card_5.jpg'),
-        },
-        {
-          Id:5,
-          NameFaculty: "FIC",
-          NameCompleteFaculty: "Facultad de Ingeniería Civil",
-          LogoFaculty: require('@/assets/example_university_card_image_6.png'),
-          ImageFaculty: require('@/assets/example_university_card_6.jpg'),
-        },
-        {
-          Id:6,
-          NameFaculty: "FOD",
-          NameCompleteFaculty: "Facultad de Odontología",
-          LogoFaculty: require('@/assets/example_university_card_image_7.png'),
-          ImageFaculty: require('@/assets/example_university_card_7.jpg'),
-        },
-        {
-          Id:7,
-          NameFaculty: "FAPSI",
-          NameCompleteFaculty: "Facultad de Psicología",
-          LogoFaculty: require('@/assets/example_university_card_image_8.png'),
-          ImageFaculty: require('@/assets/example_university_card_8.jpg'),
-        },
-        {
-          Id:8,
-          NameFaculty: "FCPyRI",
-          NameCompleteFaculty: "Facultad de Ciencias Políticas y Relaciones Internacionales",
-          LogoFaculty: require('@/assets/example_university_card_image_9.png'),
-          ImageFaculty: require('@/assets/example_university_card_9.jpg'),
-        },
-        {
-          Id:9,
-          NameFaculty: "FACSA",
-          NameCompleteFaculty: "Facultad de Ciencias de la Salud",
-          LogoFaculty: require('@/assets/example_university_card_image_10.png'),
-          ImageFaculty: require('@/assets/example_university_card_10.jpg'),
-        }]
-        const dataScenes = [{
-            Id:0,
-            NamePositionScene:"VR_FIME_1",
-            NameScene:"Pasillo Principal",
-            ImageScene:require('@/assets/example_hallway.jpg'),
-            ListButtonsRedirect:[0,1,2],
-            ListButtonsInformation:[0,1,2]
-        },{
-            Id:1,
-            NamePositionScene:"VR_FIME_2",
-            NameScene:"Oficina",
-            ImageScene:require('@/assets/example_office.jpg'),
-            ListButtonsRedirect:[3,4,5],
-            ListButtonsInformation:[3,4,5]
-        }]
-        //scale="largo , alto , ancho" 
-        //position="tomar automaticamente dependiendo de donde lo quiera" 
-        //rotation="rotacion hacia un lado,rotacion hacia los lados,rotacion hacia las puntas"
-        const dataButtonsRedirect = [{
-          Id: 0,
-          ButtonLarge: 0.430,
-          ButtonHigh: 0.480,
-          ButtonWidth: 0.340,
-          PositionX: -2.880,
-          PositionY: 0.820,
-          PositionZ: -1.170,
-          RotationSideY: 0,
-          RotationSideX: 190,
-          RotationSideZ: 0,
-          HorientationButton:"Left",
-          PageToSender:"VR_FIME_2"
-        },
-        {
-          Id: 1,
-          ButtonLarge: 0.620,
-          ButtonHigh: 0.600,
-          ButtonWidth: 0.340,
-          PositionX: 4,
-          PositionY: 1.340,
-          PositionZ: 0.800,
-          RotationSideY: 0,
-          RotationSideX: 0,
-          RotationSideZ: 5,
-          HorientationButton:"Right",
-          PageToSender:"VR_FIME_2"
-        },
-        {
-          Id: 2,
-          ButtonLarge: 0.360,
-          ButtonHigh: 0.340,
-          ButtonWidth: 0.2,
-          PositionX: -0.010,
-          PositionY: 0.940,
-          PositionZ: 3,
-          RotationSideY: 0,
-          RotationSideX: -90.000,
-          RotationSideZ: 5,
-          HorientationButton:"Behind",
-          PageToSender:"VR_FIME_2"
-        },
-        {
-          Id: 3,
-          ButtonLarge: 0.3,
-          ButtonHigh: 0.2,
-          ButtonWidth: 0.3,
-          PositionX: 0.5,
-          PositionY: 1.0,
-          PositionZ: -2.0,
-          RotationSideY: -15,
-          RotationSideX: 95,
-          RotationSideZ: 20,
-          HorientationButton:"Behind",
-          PageToSender:"VR_FIME_1"
-        },
-        {
-          Id: 4,
-          ButtonLarge: 0.25,
-          ButtonHigh: 0.18,
-          ButtonWidth: 0.22,
-          PositionX: -0.5,
-          PositionY: 1.4,
-          PositionZ: -1.0,
-          RotationSideY: 45,
-          RotationSideX: 70,
-          RotationSideZ: 0,
-          HorientationButton:"Left",
-          PageToSender:"VR_FIME_1"
-        },
-        {
-          Id: 5,
-          ButtonLarge: 0.5,
-          ButtonHigh: 0.3,
-          ButtonWidth: 0.4,
-          PositionX: 0,
-          PositionY: 1.5,
-          PositionZ: -2.5,
-          RotationSideY: 0,
-          RotationSideX: 90,
-          RotationSideZ: 45,
-          HorientationButton:"Right",
-          PageToSender:"NONE"
-        },]
-        const dataButtonsInformation = [
-          {
-            Id: 0,
-            ButtonLarge: 0.1,
-            ButtonHigh: 0.1,
-            ButtonWidth: 0.1,
-            PositionX: 0,
-            PositionY: 1.5,
-            PositionZ: -1.7,
-            RotationSideY: 0,
-            RotationSideX: -90,
-            RotationSideZ: 0,
-            OptionalImage: require('@/assets/example_university_card.jpg'),
-            TextInformation: "Este es un texto de información para el botón de información 1."
-          },
-          {
-            Id: 1,
-            ButtonLarge: 0.1,
-            ButtonHigh: 0.1,
-            ButtonWidth: 0.1,
-            PositionX: 1.8,
-            PositionY: 1.5,
-            PositionZ: 1,
-            RotationSideY: 90,
-            RotationSideX: 0,
-            RotationSideZ: 0,
-            OptionalImage: require('@/assets/example_university_card_2.jpg'),
-            TextInformation: "Este es un texto de información para el botón de información 2."
-          },
-          {
-            Id: 2,
-            ButtonLarge: 0.1,
-            ButtonHigh: 0.1,
-            ButtonWidth: 0.1,
-            PositionX: 2,
-            PositionY: 2,
-            PositionZ: 2,
-            RotationSideY: 0,
-            RotationSideX: -90,
-            RotationSideZ: 0,
-            OptionalImage: require('@/assets/example_university_card_3.jpg'),
-            TextInformation: "Este es un texto de información para el botón de información 3."
-          },
-          {
-            Id: 3,
-            ButtonLarge: 0.3,
-            ButtonHigh: 0.2,
-            ButtonWidth: 0.2,
-            PositionX: 0.5,
-            PositionY: 1.4,
-            PositionZ: -1.6,
-            RotationSideY: 30,
-            RotationSideX: 90,
-            RotationSideZ: 0,
-            OptionalImage: require('@/assets/example_university_card_4.jpg'),
-            TextInformation: "Este es un texto de información para el botón de información 4."
-          },
-          {
-            Id: 4,
-            ButtonLarge: 0.35,
-            ButtonHigh: 0.25,
-            ButtonWidth: 0.25,
-            PositionX: -0.5,
-            PositionY: 1.5,
-            PositionZ: -1.4,
-            RotationSideY: -30,
-            RotationSideX: 90,
-            RotationSideZ: 0,
-            OptionalImage: require('@/assets/example_university_card_5.jpg'),
-            TextInformation: "Este es un texto de información para el botón de información 5."
-          },
-          {
-            Id: 5,
-            ButtonLarge: 0.35,
-            ButtonHigh: 0.25,
-            ButtonWidth: 0.25,
-            PositionX: 0.5,
-            PositionY: 1.6,
-            PositionZ: -1.7,
-            RotationSideY: 45,
-            RotationSideX: 90,
-            RotationSideZ: 0,
-            OptionalImage: require('@/assets/example_university_card_6.jpg'),
-            TextInformation: "Este es un texto de información para el botón de información 6."
-          }
-        ];        
-        this.$store.commit('setAllDataScenes', [dataUniversitys,dataScenes,dataButtonsRedirect,dataButtonsInformation]);
-        this.completeInformationLoading = true
+      axios.get(`http://localhost:5028/api/University/${this.facultyAbbreviation}`)
+      .then(response => {
+        this.$store.commit('setUniversitySelect',response.data);
+        this.completeInformationLoading = true;
         setTimeout(() => {
-          let university = this.$store.state.allDataScenes[0].find(university => university.NameFaculty === this.facultyAbbreviation);
-          if (!university || !university.LogoFaculty) {
-              this.$router.push({
-              name: 'NotFound',
-              params: { itemFound: 'VR' },
-            });
-          } 
-          else {
-            this.imageLoader = university.LogoFaculty
-            this.getDominantColor(university.LogoFaculty);
-            setTimeout(() => {
-              this.opacityLoading = true
-              setTimeout(() => {
-                this.changeEnd = true
-                setTimeout(() => {
-                  this.allDataScenes = this.$store.state.allDataScenes;
-                  const scenes = this.allDataScenes[1].filter(scene => scene.NamePositionScene.startsWith(`VR_${this.facultyAbbreviation}`)); 
-                  this.allScenes = scenes.map(scene => {
-                      const updatedRedirectButtons = scene.ListButtonsRedirect.map(id => 
-                        this.allDataScenes[2].find(button => button.Id === id)
-                      );
-                      const updatedInformationButtons = scene.ListButtonsInformation.map(id => 
-                        this.allDataScenes[3].find(button => button.Id === id)
-                      );
-                      return {
-                        ...scene,
-                        ListButtonsRedirect: updatedRedirectButtons,
-                        ListButtonsInformation: updatedInformationButtons
-                      };
-                  });
-                  this.actualScene = this.allScenes.filter(scene=> scene.NamePositionScene == `VR_${this.facultyAbbreviation}_1`)[0];
-                }, 1500);
-              }, 2000);
-            }, 3000);
-          }
-        }, 1000);
-      },3000)
+          this.imageLoader = response.data.logoFaculty;
+          this.getDominantColor(response.data.logoFaculty);
+          setTimeout(() => {
+            this.opacityLoading = true;
+            setTimeout(()=>{
+              this.changeEnd = true;
+              setTimeout(()=>{
+                this.actualUniversity = response.data;
+                this.actualScene = this.actualUniversity.listEscenes[0];
+              },1500)
+            },2000)
+          },3000);
+        },1000);
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        this.$router.push({
+          name: 'NotFound',
+          params: { itemFound: 'VR' },
+        });
+      });
     },
     loadingReady(){
       this.completeInformation = true
     },
     loadModelsButtonsRedirect(index) {
-      if(index === this.actualScene.ListButtonsRedirect.length-1){
+      if(index === this.actualScene.listButtonRed.length-1){
         Object.keys(this.$refs).forEach(refKey => {
           if (refKey.startsWith('arrowModel-')) {
             const modelRef = this.$refs[refKey][0];
@@ -576,7 +287,7 @@ export default {
     },
     changeScene(buttonRedirect) {
       this.counterEnterAnimation += 1
-      let newScene = this.allScenes.find(scene => scene.NamePositionScene === buttonRedirect.PageToSender) || {};
+      let newScene = this.actualUniversity.listEscenes.find(scene => scene.idEscene === buttonRedirect.pageToSender.idEscene);
       if (Object.keys(newScene).length > 0) {
         let mainCamera = document.getElementById('mainCamera');
         const skyElement = document.getElementById('skyElement');
@@ -586,7 +297,7 @@ export default {
           mainCamera.removeAttribute('animation');
           mainCamera.setAttribute(
             'animation__zoom',
-            `property: position; to: ${buttonRedirect.PositionX} ${buttonRedirect.PositionY + 0.2} ${buttonRedirect.PositionZ}; dur: 1500; easing: easeInOutQuad; startEvents: zoomIn`
+            `property: position; to: ${buttonRedirect.positionX} ${buttonRedirect.positionY + 0.2} ${buttonRedirect.positionZ}; dur: 1500; easing: easeInOutQuad; startEvents: zoomIn`
           );
           mainCamera.emit('zoomIn');
           skyElement.setAttribute('material', `shader: pixelate; src: ${skyElement.getAttribute('src')}`);

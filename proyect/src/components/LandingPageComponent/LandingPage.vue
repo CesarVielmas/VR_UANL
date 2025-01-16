@@ -3,7 +3,7 @@
 <template>
 <div v-if="!startVR[0]">
     <div class="principalDiv" v-if="!toSelectUniversity">
-        <div class="content" :style="clickContinue == 1?'animation: opacityAnimation 2s ease-out forwards;':clickContinue== 2?'animation: sliceAnimation 1s ease-out forwards;':''">
+        <div class="content" :style="clickContinue == 1?'animation: opacityAnimation 2s ease-out forwards;':clickContinue== 2?'animation: sliceAnimation 1s ease-out forwards;':clickContinue ==3?'animation: sliceAnimationReverse 1s ease-out forwards;':''">
             <div class="divImage">
                 <img src="../../assets/uanl_logo.png" class="imageLogo"/>
             </div>

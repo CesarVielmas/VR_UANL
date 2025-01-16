@@ -83,20 +83,21 @@ export default {
         }
     },
     openPanel() {
-      const panelCloseEntity = this.$refs.PanelClose?.object3D;
-      if (panelCloseEntity) {
-        const worldPosition = new THREE.Vector3();
-        const worldQuaternion = new THREE.Quaternion();
-        panelCloseEntity.getWorldPosition(worldPosition);
-        panelCloseEntity.getWorldQuaternion(worldQuaternion);
-        this.panelPosition = `${worldPosition.x} ${worldPosition.y} ${worldPosition.z}`;
-        const euler = new THREE.Euler().setFromQuaternion(worldQuaternion);
-        this.panelRotation = `${THREE.MathUtils.radToDeg(euler.x)} ${THREE.MathUtils.radToDeg(euler.y)} ${THREE.MathUtils.radToDeg(euler.z)}`;
-      } else {
-        console.error('No se pudo abrir el panel: entidad o cámara no encontrada.');
+      if(this.imageOptional != null && this.imageOptional != '' && this.textInformation != null && this.textInformation != ''){
+        const panelCloseEntity = this.$refs.PanelClose?.object3D;
+        if (panelCloseEntity) {
+          const worldPosition = new THREE.Vector3();
+          const worldQuaternion = new THREE.Quaternion();
+          panelCloseEntity.getWorldPosition(worldPosition);
+          panelCloseEntity.getWorldQuaternion(worldQuaternion);
+          this.panelPosition = `${worldPosition.x} ${worldPosition.y} ${worldPosition.z}`;
+          const euler = new THREE.Euler().setFromQuaternion(worldQuaternion);
+          this.panelRotation = `${THREE.MathUtils.radToDeg(euler.x)} ${THREE.MathUtils.radToDeg(euler.y)} ${THREE.MathUtils.radToDeg(euler.z)}`;
+        } else {
+          console.error('No se pudo abrir el panel: entidad o cámara no encontrada.');
+        }
+        this.isPanelOpen = true;
       }
-    
-      this.isPanelOpen = true;
     },
     closePanel(){
         this.isPanelOpen = false

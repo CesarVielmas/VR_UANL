@@ -29,6 +29,9 @@ export default {
     },
     created(){
         this.arrayExampleCards = this.$store.state.allDataScenes
+        if(this.arrayExampleCards.length < 6){
+          this.textNext = "";
+        }
         setTimeout(()=>{
             this.componentCreated = true
         },2000)  
@@ -80,6 +83,11 @@ export default {
         }
       },
       onButtonBack(){
+        if(this.textBack == "Regresar"){
+          this.toSelectUniversity = false;
+          this.clickContinue = 3;
+          return;
+        }
         setTimeout(() => {
           this.isLastElement = false;
         }, 1000);
@@ -129,14 +137,15 @@ export default {
       onClickStartVR({timerWait,toneBackground,university}){
         setTimeout(() => {
           // console.log(toneBackground,timerWait)
-          this.startVR = [true,timerWait,toneBackground,university.LogoFaculty]
+          this.startVR = [true,timerWait,toneBackground,university.logoFaculty]
           setTimeout(() => {
             this.enterAnimationVRStart = true
             setTimeout(() => {
               this.enterAnimationVRStartOut = true
               setTimeout(() => {
                 this.enterVRComponent = true
-                this.changeRoute(university.NameFaculty)
+                this.$store.commit('setUniversitySelect',university);
+                this.changeRoute(university.nameFaculty)
               }, 2000);
             }, 5000);
           }, 3500);

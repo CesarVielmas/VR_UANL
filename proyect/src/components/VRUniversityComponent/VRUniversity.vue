@@ -2,7 +2,7 @@
 <style src="./VRUniversity.vue.css"></style>
 
 <template>
-  <div v-if="allDataScenes.length === 0" style="height:100vh;width:100vw;">
+  <div v-if="Object.keys(this.actualUniversity).length === 0" style="height:100vh;width:100vw;">
     <LoadingApart v-if="!completeInformation" :completeInformation="completeInformationLoading" :completeInformationFunction="loadingReady"/>
     <div v-if="completeInformation" class="completeInformation" :style="changeEnd?`animation: opacityAnimation 2s reverse ease-out;background-color:${backgroundColorLoader};`:`background-color:${backgroundColorLoader};`">
       <div class="divImageLogoAnimation" style="margin-left: auto;margin-right: auto;text-align: center;">
@@ -15,27 +15,27 @@
       </div>
     </div>
   </div>
-  <div v-if="allDataScenes.length != 0 && Object.keys(this.actualScene).length > 0">
+  <div v-if="Object.keys(this.actualUniversity).length != 0 && Object.keys(this.actualScene).length > 0">
     <div id="sceneContainer" v-if="!changeSceneBool">
        <!-- Configuración para Desktop -->
-    <a-scene v-if="deviceType === 'Desktop'" :key="actualScene.NameScene" vr-mode-ui="enabled: true" style="position: relative; width: 100vw; height: 100vh">
+    <a-scene v-if="deviceType === 'Desktop'" :key="actualScene.nameScene" vr-mode-ui="enabled: true" style="position: relative; width: 100vw; height: 100vh">
       <a-entity id="cameraRig" position="0 0 0">
         <a-camera id="mainCamera" look-controls="enabled:true;" wasd-controls="enabled:false;">
           <a-cursor raycaster="objects: .clickable" fuse="false" material="color: white; shader: flat" geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"></a-cursor>
         </a-camera>
       </a-entity>
-      <a-sky id="skyElement" :src="actualScene.ImageScene" rotation="0 0 0" animation__pixelate="property: material.pixelSize; to: 100; dur: 1500; easing: easeInOutQuad; startEvents: pixelate"></a-sky>
+      <a-sky id="skyElement" :src="actualScene.imageScene" rotation="0 0 0" animation__pixelate="property: material.pixelSize; to: 100; dur: 1500; easing: easeInOutQuad; startEvents: pixelate"></a-sky>
 
-      <a-entity id="areaButtons" raycaster="objects: .clickable" v-if="actualScene.ListButtonsRedirect.length > 0">
+      <a-entity id="areaButtons" raycaster="objects: .clickable" v-if="actualScene.listButtonRed.length > 0">
         <a-entity raycaster="objects: .clickable" cursor="fuse: false; rayOrigin: mouse"></a-entity>
         <a-entity
-          v-for="(element, index) in actualScene.ListButtonsRedirect"
-          :key="element.Id"
+          v-for="(element, index) in actualScene.listButtonRed"
+          :key="element.idButtonRedirect"
           :ref="'arrowModel-' + index"
           gltf-model="url(/direction_arrow/scene.gltf)"
-          :scale="`${element.ButtonLarge} ${element.ButtonHigh} ${element.ButtonWidth}`"
-          :position="`${element.PositionX} ${element.PositionY} ${element.PositionZ}`"
-          :rotation="`${element.RotationSideY} ${element.RotationSideX} ${element.RotationSideZ}`"
+          :scale="`${element.buttonLarge} ${element.buttonHigh} ${element.buttonWidth}`"
+          :position="`${element.positionX} ${element.positionY} ${element.positionZ}`"
+          :rotation="`${element.rotationSideY} ${element.rotationSideX} ${element.rotationSideZ}`"
           class="clickable"
           v-on:click="() => changeScene(element)"
           @model-loaded="()=>loadModelsButtonsRedirect(index)"
@@ -44,12 +44,12 @@
         </a-entity>
 
         <a-image 
-          v-for="(element, index) in actualScene.ListButtonsRedirect" 
-          :key="'tooltip-' + element.Id" 
+          v-for="(element, index) in actualScene.listButtonRed" 
+          :key="'tooltip-' + element.idButtonRedirect" 
           :id="'tooltip-' + index" 
-          :position="`${element.PositionX} ${element.PositionY + 1.1} ${element.PositionZ}`" 
-          :rotation="element.HorientationButton === 'Right'?'0 -90 0':element.HorientationButton === 'Left'?'0 90 0':element.HorientationButton === 'Behind'?'0 -180 0':'0 0 0'"
-          v-bind:src="allScenes.find(scene => scene.NamePositionScene === element.PageToSender)?.ImageScene || require('@/assets/not_found_scene.png')"
+          :position="`${element.positionX} ${element.positionY + 1.1} ${element.positionZ}`" 
+          :rotation="element.horientationButton === 'Right'?'0 -90 0':element.horientationButton === 'Left'?'0 90 0':element.horientationButton === 'Behind'?'0 -180 0':'0 0 0'"
+          v-bind:src="element.pageToSender?.imageScene || require('@/assets/not_found_scene.png')"
           width="2" 
           height="1.3" 
           opacity="0"
@@ -57,12 +57,12 @@
         </a-image>
 
         <a-text 
-          v-for="(element, index) in actualScene.ListButtonsRedirect" 
-          :key="'tooltip-text-' + element.Id" 
+          v-for="(element, index) in actualScene.listButtonRed" 
+          :key="'tooltip-text-' + element.idButtonRedirect" 
           :id="'tooltip-text-' + index" 
-          :position="`${element.PositionX} ${element.PositionY + 0.75} ${element.PositionZ}`" 
-          :rotation="element.HorientationButton === 'Right'?'0 -90 0':element.HorientationButton === 'Left'?'0 90 0':element.HorientationButton === 'Behind'?'0 -180 0':'0 0 0'"
-          v-bind:value="allScenes.find(scene => scene.NamePositionScene === element.PageToSender)?.NameScene || 'Lo sentimos parece que no existe una escena siguiente aqui'" 
+          :position="`${element.positionX} ${element.positionY + 0.75} ${element.positionZ}`" 
+          :rotation="element.horientationButton === 'Right'?'0 -90 0':element.horientationButton === 'Left'?'0 90 0':element.horientationButton === 'Behind'?'0 -180 0':'0 0 0'"
+          v-bind:value="element.pageToSender?.nameScene || 'Lo sentimos parece que no existe una escena siguiente aqui'" 
           color="#FFF" 
           align="center" 
           width="2" 
@@ -73,11 +73,11 @@
 
       </a-entity>
       
-      <VRInformationPanel v-for="(element,index) in actualScene.ListButtonsInformation" v-bind:key="index" :scale="`${element.ButtonLarge} ${element.ButtonHigh} ${element.ButtonWidth}`" :position="`${element.PositionX} ${element.PositionY} ${element.PositionZ}`" :rotation="`${element.RotationSideY} ${element.RotationSideX} ${element.RotationSideZ}`" :methodClick="changeInformation" :typeColorOpen="backgroundColorLoader" :typeColorClose="dominantColor" :textInformation="element.TextInformation" :imageOptional="element.OptionalImage" />
+      <VRInformationPanel v-for="(element,index) in actualScene.listButtonInfo" v-bind:key="index" :scale="`${element.buttonLarge} ${element.buttonHigh} ${element.buttonWidth}`" :position="`${element.positionX} ${element.positionY} ${element.positionZ}`" :rotation="`${element.rotationSideY} ${element.rotationSideX} ${element.rotationSideZ}`" :methodClick="changeInformation" :typeColorOpen="backgroundColorLoader" :typeColorClose="dominantColor" :textInformation="element.textInformation" :imageOptional="element.optionalImage" />
     </a-scene>
 
     <!-- Configuración para Mobile y Tablet -->
-    <a-scene v-if="deviceType === 'Mobile' || deviceType === 'Tablet'" :key="actualScene.NameScene" vr-mode-ui="enabled: false" style="position: relative; width: 100vw; height: 100vh">
+    <a-scene v-if="deviceType === 'Mobile' || deviceType === 'Tablet'" :key="actualScene.nameScene" vr-mode-ui="enabled: false" style="position: relative; width: 100vw; height: 100vh">
       <a-entity id="cameraRig" position="0 0 0">
       <!-- Cámara con look-controls habilitados para mover la vista con el dispositivo -->
         <a-camera id="mainCamera" look-controls="enabled: true; magicWindowTrackingEnabled: true;" wasd-controls="enabled: false;">
@@ -89,18 +89,18 @@
           </a-cursor>
         </a-camera>
       </a-entity>
-      <a-sky id="skyElement" :src="actualScene.ImageScene" rotation="0 0 0" animation__pixelate="property: material.pixelSize; to: 100; dur: 1500; easing: easeInOutQuad; startEvents: pixelate"></a-sky>
+      <a-sky id="skyElement" :src="actualScene.imageScene" rotation="0 0 0" animation__pixelate="property: material.pixelSize; to: 100; dur: 1500; easing: easeInOutQuad; startEvents: pixelate"></a-sky>
 
-      <a-entity id="areaButtons" raycaster="objects: .clickable" v-if="actualScene.ListButtonsRedirect.length > 0">
+      <a-entity id="areaButtons" raycaster="objects: .clickable" v-if="actualScene.listButtonRed.length > 0">
         <a-entity raycaster="objects: .clickable"></a-entity>
         <a-entity
-          v-for="(element, index) in actualScene.ListButtonsRedirect"
-          :key="element.Id"
+          v-for="(element, index) in actualScene.listButtonRed"
+          :key="element.idButtonRedirect"
           :ref="'arrowModel-' + index"
           gltf-model="url(/direction_arrow/scene.gltf)"
-          :scale="`${element.ButtonLarge} ${element.ButtonHigh} ${element.ButtonWidth}`"
-          :position="`${element.PositionX} ${element.PositionY} ${element.PositionZ}`"
-          :rotation="`${element.RotationSideY} ${element.RotationSideX} ${element.RotationSideZ}`"
+          :scale="`${element.buttonLarge} ${element.buttonHigh} ${element.buttonWidth}`"
+          :position="`${element.positionX} ${element.positionY} ${element.positionZ}`"
+          :rotation="`${element.rotationSideY} ${element.rotationSideX} ${element.rotationSideZ}`"
           class="clickable"
           v-on:click="() => changeScene(element)"
           @model-loaded="()=>loadModelsButtonsRedirect(index)"
@@ -109,12 +109,12 @@
         </a-entity>
 
         <a-image 
-          v-for="(element, index) in actualScene.ListButtonsRedirect" 
-          :key="'tooltip-' + element.Id" 
+          v-for="(element, index) in actualScene.listButtonRed" 
+          :key="'tooltip-' + element.idButtonRedirect" 
           :id="'tooltip-' + index" 
-          :position="`${element.PositionX} ${element.PositionY + 1.1} ${element.PositionZ}`" 
-          :rotation="element.HorientationButton === 'Right'?'0 -90 0':element.HorientationButton === 'Left'?'0 90 0':element.HorientationButton === 'Behind'?'0 -180 0':'0 0 0'"
-          v-bind:src="allScenes.find(scene => scene.NamePositionScene === element.PageToSender)?.ImageScene || require('@/assets/not_found_scene.png')"
+          :position="`${element.positionX} ${element.positionY + 1.1} ${element.positionZ}`" 
+          :rotation="element.horientationButton === 'Right'?'0 -90 0':element.horientationButton === 'Left'?'0 90 0':element.horientationButton === 'Behind'?'0 -180 0':'0 0 0'"
+          v-bind:src="element.pageToSender?.imageScene || require('@/assets/not_found_scene.png')"
           width="2" 
           height="1.3" 
           opacity="0"
@@ -122,12 +122,12 @@
         </a-image>
 
         <a-text 
-          v-for="(element, index) in actualScene.ListButtonsRedirect" 
-          :key="'tooltip-text-' + element.Id" 
+          v-for="(element, index) in actualScene.listButtonRed" 
+          :key="'tooltip-text-' + element.idButtonRedirect" 
           :id="'tooltip-text-' + index" 
-          :position="`${element.PositionX} ${element.PositionY + 0.75} ${element.PositionZ}`" 
-          :rotation="element.HorientationButton === 'Right'?'0 -90 0':element.HorientationButton === 'Left'?'0 90 0':element.HorientationButton === 'Behind'?'0 -180 0':'0 0 0'"
-          v-bind:value="allScenes.find(scene => scene.NamePositionScene === element.PageToSender)?.NameScene || 'Lo sentimos parece que no existe una escena siguiente aqui'" 
+          :position="`${element.positionX} ${element.positionY + 0.75} ${element.positionZ}`" 
+          :rotation="element.horientationButton === 'Right'?'0 -90 0':element.horientationButton === 'Left'?'0 90 0':element.horientationButton === 'Behind'?'0 -180 0':'0 0 0'"
+          v-bind:value="element.pageToSender?.nameScene || 'Lo sentimos parece que no existe una escena siguiente aqui'"  
           color="#FFF" 
           align="center" 
           width="2" 
@@ -138,7 +138,7 @@
 
       </a-entity>
       
-      <VRInformationPanel v-for="(element,index) in actualScene.ListButtonsInformation" v-bind:key="index" :scale="`${element.ButtonLarge} ${element.ButtonHigh} ${element.ButtonWidth}`" :position="`${element.PositionX} ${element.PositionY} ${element.PositionZ}`" :rotation="`${element.RotationSideY} ${element.RotationSideX} ${element.RotationSideZ}`" :methodClick="changeInformation" :typeColorOpen="backgroundColorLoader" :typeColorClose="dominantColor" :textInformation="element.TextInformation" :imageOptional="element.OptionalImage" />
+      <VRInformationPanel v-for="(element,index) in actualScene.listButtonInfo" v-bind:key="index" :scale="`${element.buttonLarge} ${element.buttonHigh} ${element.buttonWidth}`" :position="`${element.positionX} ${element.positionY} ${element.positionZ}`" :rotation="`${element.rotationSideY} ${element.rotationSideX} ${element.rotationSideZ}`" :methodClick="changeInformation" :typeColorOpen="backgroundColorLoader" :typeColorClose="dominantColor" :textInformation="element.textInformation" :imageOptional="element.optionalImage" />
     </a-scene>
 
 

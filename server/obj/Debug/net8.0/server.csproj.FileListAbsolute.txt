@@ -40,3 +40,45 @@ C:\Users\PC Edición 1\Documents\VR\VR_UANL\server\obj\Debug\net8.0\refint\serve
 C:\Users\PC Edición 1\Documents\VR\VR_UANL\server\obj\Debug\net8.0\server.pdb
 C:\Users\PC Edición 1\Documents\VR\VR_UANL\server\obj\Debug\net8.0\server.genruntimeconfig.cache
 C:\Users\PC Edición 1\Documents\VR\VR_UANL\server\obj\Debug\net8.0\ref\server.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\appsettings.json
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\server.exe
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\server.deps.json
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\server.runtimeconfig.json
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\server.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\server.pdb
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\Microsoft.AspNetCore.OpenApi.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\server.csproj.AssemblyReference.cache
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\server.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\server.AssemblyInfoInputs.cache
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\server.AssemblyInfo.cs
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\server.csproj.CoreCompileInputs.cache
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\server.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\server.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\server.sourcelink.json
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\staticwebassets\msbuild.server.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\staticwebassets\msbuild.build.server.props
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.server.props
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.server.props
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\scopedcss\bundle\server.styles.css
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\server.csproj.Up2Date
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\server.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\refint\server.dll
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\server.pdb
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\server.genruntimeconfig.cache
+C:\Users\vielm\OneDrive\Documentos\VirtualRecord\server\obj\Debug\net8.0\ref\server.dll

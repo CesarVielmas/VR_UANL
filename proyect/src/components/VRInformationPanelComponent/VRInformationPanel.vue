@@ -29,7 +29,6 @@
 
       <!-- Imagen del panel (si la hay) -->
       <a-entity 
-        v-if="imageOptional.length != 0"
         :geometry="'primitive: plane; width: 1.1; height: 0.7;'"
         :material="'src: ' + imageOptional" 
         rotation="0 90 0"

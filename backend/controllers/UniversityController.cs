@@ -34,16 +34,16 @@ public class UniversityController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet("{id}")]
-    public async Task<ActionResult<University>> GetUniversity(int id)
+    [HttpGet("{FacultyName}")]
+    public async Task<ActionResult<University>> GetUniversity(string FacultyName)
     {
-        bool response = await _context.Universities.AnyAsync(u => u.IdUniversity == id);
+        bool response = await _context.Universities.AnyAsync(u => u.NameFaculty == FacultyName);
         if (!response)
         {
             return StatusCode(400, "La universidad seleccionada no existe");
         }
         University universityReturn = await _context.Universities
-        .Where(u => u.IdUniversity == id)
+        .Where(u => u.NameFaculty == FacultyName)
         .Include(u => u.ListEscenes)
             .ThenInclude(escene => escene.ListButtonRed)
                 .ThenInclude(buttonRedirect => buttonRedirect.PageToSender)

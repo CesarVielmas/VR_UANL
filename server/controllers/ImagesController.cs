@@ -27,39 +27,39 @@ public class ImagesController : ControllerBase
     [HttpGet("list/{FacultyName}")]
     public IActionResult ListImages(string FacultyName)
     {
-        if(string.IsNullOrEmpty(FacultyName))
+        if (string.IsNullOrEmpty(FacultyName))
             return BadRequest("No se ha mandado el nombre de la facultad");
         var facultyPath = Path.Combine(_imagePath, FacultyName);
         if (!Directory.Exists(facultyPath))
         {
             return BadRequest("La facultad a la que se le intenta obtener las imagenes no existe");
         }
-        var baseUrl = $"https://localhost:5299/images/{FacultyName}/";
+        var baseUrl = $"http://localhost:5299/images/{FacultyName}/";
         var files = Directory.GetFiles(facultyPath)
                     .Select(file => baseUrl + Path.GetFileName(file))
                     .ToList();
-        return StatusCode(200,new {Message = "Archivos obtenidos con exito", Paths = files });
+        return StatusCode(200, new { Message = "Archivos obtenidos con exito", Paths = files });
     }
     [Authorize(Roles = "Administrador")]
     [HttpPost("upload/{FacultyName}")]
-    public IActionResult UploadImage([FromForm] IFormFile[] files,string FacultyName)
+    public IActionResult UploadImage([FromForm] IFormFile[] files, string FacultyName)
     {
         string[] permittedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
-        string[] permittedExtensionsFirstImage = {"LogoFaculty.png"};
-        string[] permittedExtensionsSecondImage = {"ImageFaculty.jpg","ImageFaculty.jpeg","ImageFaculty.webp"};
+        string[] permittedExtensionsFirstImage = { "LogoFaculty.png" };
+        string[] permittedExtensionsSecondImage = { "ImageFaculty.jpg", "ImageFaculty.jpeg", "ImageFaculty.webp" };
         List<string> filesPaths = new List<string>();
-        if(files == null || files.Length == 0)
+        if (files == null || files.Length == 0)
             return BadRequest("No hay ningun archivo mandado");
-        if(string.IsNullOrEmpty(FacultyName))
+        if (string.IsNullOrEmpty(FacultyName))
             return BadRequest("No se ha mandado el nombre de la facultad");
-        if(files.Length > 2)
+        if (files.Length > 2)
             return BadRequest("solo se pueden subir 2 imagenes como maximo");
-        if(!permittedExtensionsFirstImage.Contains(files[0].FileName))
-            return BadRequest(new {Message = $"Asegurese que el primer archivo coincida con alguno de los formatos establecidos",formats = permittedExtensionsFirstImage});
-        if(files.Length > 1)
-            if(!permittedExtensionsSecondImage.Contains(files[1].FileName))
-                return BadRequest(new {Message = $"Asegurese que el segundo archivo coincida con alguno de los formatos establecidos",formats = permittedExtensionsSecondImage});
-       
+        if (!permittedExtensionsFirstImage.Contains(files[0].FileName))
+            return BadRequest(new { Message = $"Asegurese que el primer archivo coincida con alguno de los formatos establecidos", formats = permittedExtensionsFirstImage });
+        if (files.Length > 1)
+            if (!permittedExtensionsSecondImage.Contains(files[1].FileName))
+                return BadRequest(new { Message = $"Asegurese que el segundo archivo coincida con alguno de los formatos establecidos", formats = permittedExtensionsSecondImage });
+
         var facultyPath = Path.Combine(_imagePath, FacultyName);
         if (!Directory.Exists(facultyPath))
         {
@@ -77,8 +77,8 @@ public class ImagesController : ControllerBase
             {
                 file.CopyTo(stream);
             }
-            filesPaths.Add($"https://localhost:5299/images/{FacultyName}/{file.FileName}");
+            filesPaths.Add($"http://localhost:5299/images/{FacultyName}/{file.FileName}");
         }
-        return StatusCode(200,new { Message = "Los archivos se subieron con exito", paths = filesPaths });
+        return StatusCode(200, new { Message = "Los archivos se subieron con exito", paths = filesPaths });
     }
 }
