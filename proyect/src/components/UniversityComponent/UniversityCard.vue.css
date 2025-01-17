@@ -74,6 +74,19 @@
 }
 /*Vista Mobile*/
 @media (max-width: 767px) {
+    .absoluteTextScenes{
+        position: absolute;
+        top: 40%;
+        left: 2.5%;
+        width: 95%;
+        text-align: center;
+        font-family:'Poppins-Regular';
+        border-radius: .4vw;
+        background-color: rgb(158, 35, 35);
+        color: white;
+        margin:0;
+        font-size: 3vh;
+    }
     .divEdit,
     .divDelete{
         position: fixed;
@@ -293,6 +306,19 @@
 }
 /*Vista Desktops*/
 @media (min-width: 1025px) {
+    .absoluteTextScenes{
+        position: absolute;
+        top: 40%;
+        left: 2.5%;
+        width: 95%;
+        text-align: center;
+        font-family:'Poppins-Regular';
+        border-radius: .4vw;
+        background-color: rgb(158, 35, 35);
+        color: white;
+        margin:0;
+        font-size: 1.8vw;
+    }
     .divEdit,
     .divDelete{
         position: fixed;

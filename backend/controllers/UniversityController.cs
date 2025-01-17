@@ -75,7 +75,7 @@ public class UniversityController : ControllerBase
             }
             await _context.Universities.AddAsync(universityPost);
             await _context.SaveChangesAsync();
-            return StatusCode(200, new {Message= "Universidad Agregada Con Exito", id = universityPost.IdUniversity});
+            return StatusCode(200, new { Message = "Universidad Agregada Con Exito", id = universityPost.IdUniversity });
         }
         catch (DbUpdateException ex)
         {
@@ -104,7 +104,7 @@ public class UniversityController : ControllerBase
             }
             _context.Universities.Update(universityPut);
             await _context.SaveChangesAsync();
-            return StatusCode(200, "Universidad Actualizada Con Exito");
+            return StatusCode(200, new { Message = "Universidad Actualizada Con Exito", university = universityPut });
         }
         catch (DbUpdateException ex)
         {

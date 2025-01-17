@@ -81,4 +81,18 @@ public class ImagesController : ControllerBase
         }
         return StatusCode(200, new { Message = "Los archivos se subieron con exito", paths = filesPaths });
     }
+    [Authorize(Roles = "Administrador")]
+    [HttpDelete("delete/{FacultyName}")]
+    public IActionResult DeleteImages(string FacultyName)
+    {
+        if (string.IsNullOrEmpty(FacultyName))
+            return BadRequest("No se ha mandado el nombre de la facultad");
+        var facultyPath = Path.Combine(_imagePath, FacultyName);
+        if (!Directory.Exists(facultyPath))
+        {
+            return BadRequest("La facultad a la que se le intenta eliminar las imagenes no existe");
+        }
+        Directory.Delete(facultyPath, true);
+        return StatusCode(200, new { Message = "La carpeta y todos los archivos se eliminaron con exito" });
+    }
 }

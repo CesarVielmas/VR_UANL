@@ -27,7 +27,9 @@
                 <button class="playUniversity" v-if="typeVRComponent===0" :style="styleButton" v-on:click="()=>{let toneBackground = getTone(this.dominantColor,85,60);methodOnStartVR({timerWait,toneBackground,university});clickStartVR=true}"><img v-if="!clickStartVR" src="../../assets/icon_play.png" alt="imagePlay" /></button>
                 <button class="editUniversity" v-if="typeVRComponent===1" :style="styleButton" v-on:click="clickEditVR = true;"><img v-if="!clickStartVR" :src="require('@/assets/edit_icon.png')" alt="imageEdit" /></button>
                 <button class="deleteUniversity" v-if="typeVRComponent===1 && !clickStartVR" style="background-color: red;" v-on:click="clickDeleteVR = true;"><img :src="require('@/assets/delete_icon.png')" alt="imageDelete" /></button>
+                <p v-if="typeVRComponent === 1 && (university.listEscenes.length === 0 || university.listEscenes === null)" class="absoluteTextScenes">Universidad Vacia De Escenas</p>
         </div>
+        
         <div class="card" :ref="(timerWait == 5 || lastElement) && typeDisp =='Mobile'?'CardUniversity':''" v-if="lastElement && typeVRComponent === 1 && enterAnimation" :style="typeDisp == 'Mobile'?'margin-bottom:50%;animation: slideDownFadeInAnimation 1s ease-out forwards;':'animation: slideDownFadeInAnimation 1s ease-out forwards;'">
                 <div class="content">
                         <h2 :style="typeDisp === 'Desktop'?'text-align:center;':''">Añadir Nueva Facultad</h2>

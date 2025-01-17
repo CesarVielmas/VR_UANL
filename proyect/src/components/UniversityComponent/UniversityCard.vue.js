@@ -200,6 +200,9 @@ export default {
       },
       clickStartVR(){
         this.styleButton = `background-color:${this.getTone(this.dominantColor,85,60)};animation: animationButtonGigant 3s ease-out forwards;`
+      },
+      university(){
+        this.getDominantColor();
       }
     }
   };

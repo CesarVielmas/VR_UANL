@@ -28,7 +28,7 @@ export default {
       };
     },
     created(){
-        this.arrayExampleCards = this.$store.state.allDataScenes
+        this.arrayExampleCards = this.$store.state.allDataScenes.filter(element => element.listEscenes != null && element.listEscenes.length > 0);
         if(this.arrayExampleCards.length < 6){
           this.textNext = "";
         }

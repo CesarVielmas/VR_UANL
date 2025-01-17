@@ -62,7 +62,7 @@ export default {
               if(response.data.listUniversitys.length === 1){
                 this.getDominantColor(response.data.listUniversitys[0].logoFaculty);
                 setTimeout(()=>{
-                    this.addNewLogoFaculty = response.data.listUniversitys[0].logoFaculty;
+                    this.addNewLogoFaculty = [response.data.listUniversitys[0].logoFaculty, "image/" + response.data.listUniversitys[0].logoFaculty.split('.').pop()];
                     this.backgroundNewVR = this.getTone(this.dominantColorNewVR,85,60)
                     this.editNowScene = 1;
                     setTimeout(()=>{
@@ -73,6 +73,7 @@ export default {
                           this.editNowScene = 4;
                           setTimeout(()=>{
                             this.editNowScene = 5;
+                            console.log("Cambiar a la escena de panel de control");
                           },2000)
                         },4000)
                       },2000)
@@ -134,7 +135,7 @@ export default {
                 this.getDominantColor(response.data.listUniversitys[0].logoFaculty);
                 setTimeout(()=>{
                     this.statusSesion = 4;
-                    this.addNewLogoFaculty = response.data.listUniversitys[0].logoFaculty;
+                    this.addNewLogoFaculty = [response.data.listUniversitys[0].logoFaculty, "image/" + response.data.listUniversitys[0].logoFaculty.split('.').pop()];
                     this.backgroundNewVR = this.getTone(this.dominantColorNewVR,85,60)
                     this.editNowScene = 1;
                     setTimeout(()=>{
@@ -145,6 +146,7 @@ export default {
                           this.editNowScene = 4;
                           setTimeout(()=>{
                             this.editNowScene = 5;
+                            console.log("Cambiar a la escena de panel de control");
                           },2000)
                         },4000)
                       },2000)
@@ -289,7 +291,7 @@ export default {
     onClickEditVR({timerWait,toneBackground,university}){
         console.log(timerWait)
         this.backgroundNewVR = toneBackground
-        this.addNewLogoFaculty = university.LogoFaculty
+        this.addNewLogoFaculty = [university.logoFaculty, "image/" + university.logoFaculty.split('.').pop()];
         this.editNowScene = 1;
         setTimeout(()=>{
           this.editNowScene = 2;
@@ -299,15 +301,44 @@ export default {
               this.editNowScene = 4;
               setTimeout(()=>{
                 this.editNowScene = 5;
+                console.log("Cambiar a la escena de panel de control");
               },2000)
             },4000)
           },2000)
         },3000)
     },
     onClickDeleteVR({timerWait,toneBackground,university}){
-        console.log(timerWait)
-        console.log(toneBackground)
-        console.log(university)
+      axios.delete(`http://localhost:5028/api/University/${university.idUniversity}`,{
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then((response) => {
+        axios.delete(`http://localhost:5299/api/Images/delete/${university.nameFaculty}`,{
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(()=>{
+          console.log(timerWait)
+          console.log(toneBackground)
+          console.log(response)
+          const indexPageCards = this.pageCardsActual.findIndex(pageUniversity => pageUniversity.idUniversity === university.idUniversity);
+          if (indexPageCards !== -1) {
+            this.pageCardsActual.splice(indexPageCards, 1);
+          }
+          const indexArrayExampleCards = this.arrayExampleCards.findIndex(exampleUniversity => exampleUniversity.idUniversity === university.idUniversity);
+          if (indexArrayExampleCards !== -1) {
+            this.arrayExampleCards.splice(indexArrayExampleCards, 1);
+          }
+        })
+        .catch((error)=>{
+          console.log(error)
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      })
     },
     onAddNewVR(element = null){
         this.addNewNameFaculty = ''
@@ -322,10 +353,23 @@ export default {
           this.addNewVR = true;
         }
         else if(element != null){
-          this.addNewNameFaculty = element.NameFaculty
-          this.addNewNameCompleteFaculty = element.NameCompleteFaculty
-          this.addNewLogoFaculty = element.LogoFaculty
-          this.addNewImageFaculty = element.ImageFaculty
+          this.addNewNameFaculty = element.nameFaculty
+          this.addNewNameCompleteFaculty = element.nameCompleteFaculty
+          const toBase64 = url => fetch(url)
+            .then(response => response.blob())
+            .then(blob => new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result);
+              reader.onerror = reject;
+              reader.readAsDataURL(blob);
+            }));
+          toBase64(element.logoFaculty).then(base64 => {
+            this.addNewLogoFaculty = [base64, "image/" + element.logoFaculty.split('.').pop()];
+          });
+
+          toBase64(element.imageFaculty).then(base64 => {
+            this.addNewImageFaculty = [base64, "image/" + element.imageFaculty.split('.').pop()];
+          });
           this.elementEdit = element;
           this.editNewVR = true;
         }
@@ -387,7 +431,8 @@ export default {
     },
     onSaveNewVRComplete(){
       if(!this.imageFacultyError && !this.logoFacultyError && !this.nameCompleteFacultyError && !this.nameFacultyError && this.addNewNameFaculty != '' && this.addNewNameCompleteFaculty != '' && this.addNewLogoFaculty != '' && this.addNewImageFaculty != ''){
-        const formImages = new FormData();
+        if(!this.editNewVR){
+          const formImages = new FormData();
         formImages.append('files', this.base64ToBlob(this.addNewLogoFaculty[0],this.addNewLogoFaculty[1]),'LogoFaculty.png');
         formImages.append('files', this.base64ToBlob(this.addNewImageFaculty[0],this.addNewImageFaculty[1]),'ImageFaculty.jpg');
 
@@ -412,6 +457,23 @@ export default {
             })
             .then(response => {
               console.log(response)
+              this.addNewVR = false;
+              this.getDominantColor();
+              this.backgroundNewVR = this.getTone(this.dominantColorNewVR,85,60)
+              this.editNowScene = 1;
+              setTimeout(()=>{
+                this.editNowScene = 2;
+                setTimeout(()=>{
+                  this.editNowScene = 3;
+                  setTimeout(()=>{
+                    this.editNowScene = 4;
+                    setTimeout(()=>{
+                      this.editNowScene = 5;
+                      console.log("Cambiar a la escena de panel de control");
+                    },2000)
+                  },4000)
+                },2000)
+              },3000)
             })
             .catch(error => {
               console.log(error);
@@ -451,30 +513,69 @@ export default {
             this.imageFacultyError = true;
           return;
         });
-
-        if(this.addNewVR){
-          this.addNewVR = false;
-          this.getDominantColor();
-          this.backgroundNewVR = this.getTone(this.dominantColorNewVR,85,60)
-          this.editNowScene = 1;
-          setTimeout(()=>{
-            this.editNowScene = 2;
-            setTimeout(()=>{
-              this.editNowScene = 3;
-              setTimeout(()=>{
-                this.editNowScene = 4;
-                setTimeout(()=>{
-                  this.editNowScene = 5;
-                },2000)
-              },4000)
-            },2000)
-          },3000)
-        }
+        } 
         else if(this.editNewVR){
           if(this.addNewNameFaculty != this.elementEdit.NameFaculty ||  this.addNewNameCompleteFaculty != this.elementEdit.NameCompleteFaculty || this.addNewLogoFaculty != this.elementEdit.LogoFaculty || this.addNewImageFaculty != this.elementEdit.ImageFaculty){
             //Agregar Edicion Del Elemento
-            console.log("Edicion del elemento")
+            const formImages = new FormData();
+            console.log(this.addNewLogoFaculty)
+            console.log(this.addNewImageFaculty)
+            formImages.append('files', this.base64ToBlob(this.addNewLogoFaculty[0],this.addNewLogoFaculty[1]),'LogoFaculty.png');
+            formImages.append('files', this.base64ToBlob(this.addNewImageFaculty[0],this.addNewImageFaculty[1]),'ImageFaculty.jpg');
+            axios.post(`http://localhost:5299/api/Images/upload/${this.addNewNameFaculty}`, formImages, {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'multipart/form-data'
+              }
+            })
+        .then(response => {
+          axios.put(`http://localhost:5028/api/University/${this.elementEdit.idUniversity}`,{IdUniversity:this.elementEdit.idUniversity,NameFaculty:this.addNewNameFaculty,NameCompleteFaculty:this.addNewNameCompleteFaculty,LogoFaculty:response.data.paths[0],ImageFaculty:response.data.paths[1]},{
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            }
+          })
+          .then(response => {
+            const indexPageCards = this.pageCardsActual.findIndex(university => university.idUniversity === response.data.university.idUniversity);
+            if (indexPageCards !== -1) {
+              response.data.university.logoFaculty += `?t=${new Date().getTime()}`;
+              response.data.university.imageFaculty += `?t=${new Date().getTime()}`;
+              this.pageCardsActual.splice(indexPageCards, 1, response.data.university);
+            }
+
+            const indexArrayExampleCards = this.arrayExampleCards.findIndex(university => university.idUniversity === response.data.university.idUniversity);
+            if (indexArrayExampleCards !== -1) {
+              response.data.university.logoFaculty += `?t=${new Date().getTime()}`;
+              response.data.university.imageFaculty += `?t=${new Date().getTime()}`;
+              this.arrayExampleCards.splice(indexArrayExampleCards, 1, response.data.university);
+            }
             this.editNewVR = false;
+          })
+          .catch(error => {
+            console.log(error);
+            if(this.addNewNameFaculty === '')
+              this.nameFacultyError = true;
+            if(this.addNewNameCompleteFaculty === '')
+              this.nameCompleteFacultyError = true;
+            if(this.addNewLogoFaculty === '')
+              this.logoFacultyError = true;
+            if(this.addNewImageFaculty === '')
+              this.imageFacultyError = true;
+            return;
+          });
+        })
+        .catch(error => {
+          console.log(error);
+          if(this.addNewNameFaculty === '')
+            this.nameFacultyError = true;
+          if(this.addNewNameCompleteFaculty === '')
+            this.nameCompleteFacultyError = true;
+          if(this.addNewLogoFaculty === '')
+            this.logoFacultyError = true;
+          if(this.addNewImageFaculty === '')
+            this.imageFacultyError = true;
+          return;
+        });
+            
           }
         }
       }
