@@ -26,7 +26,8 @@ export default {
     data() {
       return {
           enterToAddSceneBool:false,
-          newNameScene:''
+          newNameScene:'',
+          stateChangeIcons:{ editScene: 0, editNameScene:0, voidScene:0, deleteScene:0, stateScene:0}
       };
     },
     created() {
@@ -81,12 +82,31 @@ export default {
       enterToAddScene(){
         this.enterToAddSceneBool = true;
       },
+      enterToEditScene(){
+        console.log("Entro para editar la escena")
+      },
+      enterEditNameScene(){
+        console.log("Entro para editar el nombre de la escena")
+      },
+      enterToVoidScene(){
+        console.log("Entro para vaciar la escena")
+      },
+      enterToDeleteScene(){
+        console.log("Entro para eliminar la escena")
+      },
+      enterToStateScene(){
+        console.log("Entro para el estado")
+        
+      },
       enterToSceneToEdit(){
         console.log("Aqui hara le procedimiento para editar la escena dentro:"+this.newNameScene);
         this.enterToAddSceneBool = false;
       },
       cancelToAddScene(){
         this.enterToAddSceneBool = false;
+      },
+      onEsceneLoaded(index){
+        console.log("Universidad cargada: "+index)
       }
     },
     mounted() {
@@ -104,7 +124,7 @@ export default {
               let valueYInit = 0;
               let positionCamera = { x: 0, y: 0, z: 0 };
               let onMoveCamera = false;
-              let stateObjectsRay = { plane: false, planeHover:false,object: false, planeNew:false};
+              let stateObjectsRay = { plane: false, planeHover:false,object: false, planeNew:false, editScene:false, editNameScene:false,voidScene:false,deleteScene:false,stateScene:false};
           
               const handleMouseDownBackground = () => {
                 if(stateObjectsRay.planeHover){
@@ -117,6 +137,21 @@ export default {
                 }
                 else if (stateObjectsRay.planeNew && !stateObjectsRay.planeHover) {
                   vueComponent.enterToAddScene();
+                }
+                else if (vueComponent.stateChangeIcons.editScene != 0 && !stateObjectsRay.planeHover){
+                  vueComponent.enterToEditScene();
+                }
+                else if (vueComponent.stateChangeIcons.editNameScene != 0 && !stateObjectsRay.planeHover){
+                  vueComponent.enterEditNameScene();
+                }
+                else if (vueComponent.stateChangeIcons.voidScene != 0 && !stateObjectsRay.planeHover){
+                  vueComponent.enterToVoidScene();
+                }
+                else if (vueComponent.stateChangeIcons.deleteScene != 0 && !stateObjectsRay.planeHover){
+                  vueComponent.enterToDeleteScene();
+                }
+                else if (vueComponent.stateChangeIcons.stateScene != 0 && !stateObjectsRay.planeHover){
+                  vueComponent.enterToStateScene();
                 }
               };
           
@@ -178,10 +213,30 @@ export default {
                         planeChangeColor.setAttribute('color',"#4dd51e")
                         stateObjectsRay.planeNew = false;
                       }
+                      if(stateObjectsRay.editScene){
+                        vueComponent.stateChangeIcons.editScene = 0;
+                        stateObjectsRay.editScene = false;
+                      }
+                      if(stateObjectsRay.editNameScene){
+                        vueComponent.stateChangeIcons.editNameScene = 0;
+                        stateObjectsRay.editNameScene = false;
+                      }
+                      if(stateObjectsRay.voidScene){
+                        vueComponent.stateChangeIcons.voidScene = 0;
+                        stateObjectsRay.voidScene = false;
+                      }
+                      if(stateObjectsRay.deleteScene){
+                        vueComponent.stateChangeIcons.deleteScene = 0;
+                        stateObjectsRay.deleteScene = false;
+                      }
+                      if(stateObjectsRay.stateScene){
+                        vueComponent.stateChangeIcons.stateScene = 0;
+                        stateObjectsRay.stateScene = false;
+                      }
                       } 
                       else if (
                       intersection.object.el &&
-                      intersection.object.el.classList.contains('clickable') &&
+                      intersection.object.el.classList.contains('hover') &&
                       intersection.object.el.id.includes("object")
                       ) {
                       if (!stateObjectsRay.object) {
@@ -190,6 +245,116 @@ export default {
                         stateObjectsRay.planeNew = false;
                         stateObjectsRay.planeHover = false;
                         onMoveCamera = false;
+                        if(stateObjectsRay.editScene){
+                          vueComponent.stateChangeIcons.editScene = 0;
+                          stateObjectsRay.editScene = false;
+                        }
+                        if(stateObjectsRay.editNameScene){
+                          vueComponent.stateChangeIcons.editNameScene = 0;
+                          stateObjectsRay.editNameScene = false;
+                        }
+                        if(stateObjectsRay.voidScene){
+                          vueComponent.stateChangeIcons.voidScene = 0;
+                          stateObjectsRay.voidScene = false;
+                        }
+                        if(stateObjectsRay.deleteScene){
+                          vueComponent.stateChangeIcons.deleteScene = 0;
+                          stateObjectsRay.deleteScene = false;
+                        }
+                        if(stateObjectsRay.stateScene){
+                          vueComponent.stateChangeIcons.stateScene = 0;
+                          stateObjectsRay.stateScene = false;
+                        }
+                      }
+                    }
+                    else if (
+                    intersection.object.el &&
+                    intersection.object.el.classList.contains('clickable') &&
+                    intersection.object.el.id.includes("editScene")
+                    ){
+                        if(!stateObjectsRay.editScene){
+                          vueComponent.stateChangeIcons.editScene = intersection.object.el.id.split("-")[1];
+                          document.body.style.cursor = "pointer";
+                          stateObjectsRay.object = false;
+                          stateObjectsRay.planeHover = false;
+                          stateObjectsRay.planeNew = false;
+                          stateObjectsRay.editScene = true;
+                          stateObjectsRay.editNameScene = false;
+                          stateObjectsRay.voidScene = false;
+                          stateObjectsRay.deleteScene = false;
+                          stateObjectsRay.stateScene = false;
+                        }
+                    }
+                    else if (
+                    intersection.object.el &&
+                    intersection.object.el.classList.contains('clickable') &&
+                    intersection.object.el.id.includes("editNameScene")
+                    ){
+                      if(!stateObjectsRay.editNameScene){
+                          vueComponent.stateChangeIcons.editNameScene = intersection.object.el.id.split("-")[1];
+                          document.body.style.cursor = "pointer";
+                          stateObjectsRay.object = false;
+                          stateObjectsRay.planeHover = false;
+                          stateObjectsRay.planeNew = false;
+                          stateObjectsRay.editScene = true;
+                          stateObjectsRay.editNameScene = true;
+                          stateObjectsRay.voidScene = false;
+                          stateObjectsRay.deleteScene = false;
+                          stateObjectsRay.stateScene = false;
+                      }
+                    }
+                    else if (
+                    intersection.object.el &&
+                    intersection.object.el.classList.contains('clickable') &&
+                    intersection.object.el.id.includes("voidScene")
+                    ){
+                      if(!stateObjectsRay.voidScene){
+                        vueComponent.stateChangeIcons.voidScene = intersection.object.el.id.split("-")[1];
+                        document.body.style.cursor = "pointer";
+                        stateObjectsRay.object = false;
+                        stateObjectsRay.planeHover = false;
+                        stateObjectsRay.planeNew = false;
+                        stateObjectsRay.editScene = true;
+                        stateObjectsRay.editNameScene = false;
+                        stateObjectsRay.voidScene = true;
+                        stateObjectsRay.deleteScene = false;
+                        stateObjectsRay.stateScene = false;
+                      }
+                    }
+                    else if (
+                    intersection.object.el &&
+                    intersection.object.el.classList.contains('clickable') &&
+                    intersection.object.el.id.includes("deleteScene")
+                    ){
+                        if(!stateObjectsRay.deleteScene){
+                          vueComponent.stateChangeIcons.deleteScene = intersection.object.el.id.split("-")[1];
+                          document.body.style.cursor = "pointer";
+                          stateObjectsRay.object = false;
+                          stateObjectsRay.planeHover = false;
+                          stateObjectsRay.planeNew = false;
+                          stateObjectsRay.editScene = true;
+                          stateObjectsRay.editNameScene = false;
+                          stateObjectsRay.voidScene = false;
+                          stateObjectsRay.deleteScene = true;
+                          stateObjectsRay.stateScene = false;
+                        }
+                    }
+                    else if (
+                    intersection.object.el &&
+                    intersection.object.el.classList.contains('clickable') &&
+                    intersection.object.el.id.includes("stateScene")
+                    ){
+                      if(!stateObjectsRay.stateScene){
+                        vueComponent.stateChangeIcons.stateScene = intersection.object.el.id.split("-")[1];
+                        document.body.style.cursor = "pointer";
+                        stateObjectsRay.object = false;
+                        stateObjectsRay.planeHover = false;
+                        stateObjectsRay.planeNew = false;
+                        stateObjectsRay.editScene = true;
+                        stateObjectsRay.editNameScene = false;
+                        stateObjectsRay.voidScene = false;
+                        stateObjectsRay.deleteScene = false;
+                        stateObjectsRay.stateScene = true;
                       }
                     }
                     else if(

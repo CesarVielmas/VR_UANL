@@ -42,67 +42,82 @@
         <a-entity v-if="universitySelected.listEscenes.length >= 1" position="0 1 0">
             <!-- Fondo con la imagen -->
             <a-plane
-            id="object"
+            v-for="escenes in universitySelected.listEscenes"
+            :key="escenes.idEscene"
             color="white"
             rotation="-90 0 0"
             position="0 0 0"
             width="0.35"
             height="0.2"
-            class="clickable"
+            @loaded="()=>onEsceneLoaded(escenes.idEscene)"
             mouse-interaction>
             <!-- Imagen de fondo -->
             <a-image
-                :src="universitySelected.listEscenes[0].imageScene"
+                :src="escenes.imageScene"
                 width="0.35"
                 height="0.2"
                 position="0 0 0.001">
             </a-image>
             <!-- Capa negra semitransparente -->
             <a-plane
+                :id="`object-${escenes.idEscene}`"
                 color="black"
                 opacity="0.45"
                 width="0.35"
                 height="0.2"
-                position="0 0 0.002">
+                position="0 0 0.002"
+                class="hover">
             </a-plane>
             <!-- Texto -->
             <a-text
-                :value="universitySelected.listEscenes[0].nameScene"
+                :id="`object-${escenes.idEscene}`"
+                :value="escenes.nameScene"
                 color="white"
                 align="center"
                 position="0 0 0.003"
-                width="0.65">
+                width="0.65"
+                class="hover">
             </a-text>
             <!-- Iconos en la parte superior (editar escena, editar nombre ,vaciar escena, eliminar escena,estado de la escena)-->
             <a-entity position="0 0.08 0.004">
                 <a-image
-                :src="require('@/assets/icon_edit_scene.png')"
+                :id="`editScene-${escenes.idEscene}`"
+                :src="stateChangeIcons.editScene != escenes.idEscene?require('@/assets/icon_edit_scene.png'):require('@/assets/icon_edit_scene_hover.png')"
                 width="0.025"
                 height="0.025"
-                position="0.005 -0.005 0">
+                position="0.005 -0.005 0"
+                class="clickable">
                 </a-image>
                 <a-image
-                :src="require('@/assets/icon_edit_name_scene.png')"
+                :id="`editNameScene-${escenes.idEscene}`"
+                :src="stateChangeIcons.editNameScene != escenes.idEscene?require('@/assets/icon_edit_name_scene.png'):require('@/assets/icon_edit_name_scene_hover.png')"
                 width="0.027"
                 height="0.027"
-                position="0.045 -0.005 0">
+                position="0.045 -0.005 0"
+                class="clickable">
                 </a-image>
                 <a-image
-                :src="require('@/assets/icon_void_scene.png')"
+                :id="`voidScene-${escenes.idEscene}`"
+                :src="stateChangeIcons.voidScene != escenes.idEscene?require('@/assets/icon_void_scene.png'):require('@/assets/icon_void_scene_hover.png')"
                 width="0.027"
                 height="0.025"
-                position="0.085 -0.005 0">
+                position="0.085 -0.005 0"
+                class="clickable">
                 </a-image>
                 <a-image
-                :src="require('@/assets/icon_delete_scene.png')"
+                :id="`deleteScene-${escenes.idEscene}`"
+                :src="stateChangeIcons.deleteScene != escenes.idEscene?require('@/assets/icon_delete_scene.png'):require('@/assets/icon_delete_scene_hover.png')"
                 width="0.025"
                 height="0.025"
-                position="0.127 -0.006 0">
+                position="0.127 -0.006 0"
+                class="clickable">
                 </a-image>
                 <a-circle
-                    :color="universitySelected.listEscenes[0].imageScene != '' && universitySelected.listEscenes[0].listButtonRed.length != 0 ? 'rgb(88, 255, 88)':universitySelected.listEscenes[0].imageScene != ''? 'rgb(255, 251, 41)' : 'rgb(255, 101, 101)'"
+                    :id="`stateScene-${escenes.idEscene}`"
+                    :color="escenes.imageScene != '' && escenes.listButtonRed.length != 0 ? 'rgb(88, 255, 88)':escenes.imageScene != ''? 'rgb(255, 251, 41)' : 'rgb(255, 101, 101)'"
                     radius="0.005"
-                    position="0.16 0.003 0">
+                    position="0.16 0.003 0"
+                    class="clickable">
 
                 </a-circle>
             </a-entity>
