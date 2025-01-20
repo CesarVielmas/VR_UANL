@@ -5,7 +5,7 @@
     <LoadingApart v-if="!completeInformation" :completeInformation="completeInformationLoading" :completeInformationFunction="loadingReady"/>
     <div v-if="completeInformation" class="divLoadingComplete" :style="onOpacityAll?`background-color:${backgroundColor};animation: opacityAnimation 2s reverse ease-out forwards;`:backgroundColor != ''?`background-color:${backgroundColor};`:''">
         <div class="logoAnimation">
-            <img :src="require('@/assets/example_university_card_image.png')" alt="logoUniversity" />
+            <img :src="universitySelect.logoFaculty" alt="logoUniversity" />
         </div>
 
         <div class="uanlAnimation" :style="backgroundColor != ''?`margin-top: 5vh;`:''">

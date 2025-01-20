@@ -1,0 +1,94 @@
+@font-face {
+    font-family: 'Poppins-Medium';
+    src: url('../../../fonts/Poppins/Poppins-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family:'Poppins-Regular';
+    
+    src: url('../../../fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins-Black';
+    src: url('../../../fonts/Poppins/Poppins-Black.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins-Thin';
+    src: url('../../../fonts/Poppins/Poppins-Thin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/*Vista Mobile*/
+@media (max-width: 767px) {
+    
+}
+
+/*Vista Tablets*/
+@media (min-width: 768px) and (max-width: 1024px) {
+
+}
+
+/*Vista Desktop*/
+@media (min-width: 1025px) {
+    .addNewScene{
+        position: fixed;
+        top: 0;
+        background-color: rgba(0, 0, 0, 0.541);
+        height: 100%;
+        width: 100%;
+        z-index: 2;
+    }
+    .addNewScene .content{
+        height: 40%;
+        width: 60%;
+        margin-top: 13%;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: white;
+        border-radius: .3vw;
+    }
+    .addNewScene .content h2{
+        position: relative;
+        display: block;
+        font-family:'Poppins-Medium', Courier, monospace;
+        color: rgb(255, 255, 255);
+        border-top-left-radius: .3vw;
+        border-top-right-radius: .3vw;
+        text-align: center;
+        font-size: 2.8vw;
+    }
+    .addNewScene .content input{
+        display: block;
+        height: 25%;
+        margin-left: auto;
+        margin-right: auto;
+        font-family:'Poppins-Medium', Courier, monospace;
+        color: rgb(255, 255, 255);
+        font-size: 2vw;
+        border: none;
+        text-align: center;
+        border-radius: 1vw;
+        width: 80%;
+    }
+    .addNewScene .content button{
+        height: 20%;
+        width: 30%;
+        margin-left: 13%;
+        margin-top: 3%;
+        border: none;
+        border-radius: .5vw;
+        background-color: rgb(5, 65, 5);
+        font-family:'Poppins-Regular', Courier, monospace;
+        color: rgb(255, 255, 255);
+        font-size: 1.3vw;
+    }
+    .addNewScene .content button:hover{
+        cursor: pointer;
+    }
+}

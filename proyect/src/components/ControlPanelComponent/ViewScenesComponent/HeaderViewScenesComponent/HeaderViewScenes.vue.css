@@ -1,0 +1,227 @@
+@font-face {
+    font-family: 'Poppins-Medium';
+    src: url('../../../../fonts/Poppins/Poppins-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family:'Poppins-Regular';
+    
+    src: url('../../../../fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins-Black';
+    src: url('../../../../fonts/Poppins/Poppins-Black.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins-Thin';
+    src: url('../../../../fonts/Poppins/Poppins-Thin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+/*Vista Mobile*/
+@media (max-width: 767px) {
+    .header{
+
+    }
+    .buttonsDirection{
+    
+    }
+}
+
+/*Vista Tablets*/
+@media (min-width: 768px) and (max-width: 1024px) {
+
+}
+
+/*Vista Desktop*/
+@media (min-width: 1025px) {
+    .header{
+        position: fixed;
+        top: 0;
+        z-index: 1;
+        height: 15%;
+        width: 100%;
+    }
+    .header .logoFaculty{
+        display: inline-block;
+        position: relative;
+        height: 100%;
+        width: 30%;
+        text-align: center;
+    }
+    .header .logoFaculty img{
+        position: relative;
+        top: 7%;
+        height: 100%;
+        width: 37%;
+    }
+    .header .logoFaculty h2{
+        position: relative;
+        top: -28%;
+        left: 4%;
+        display: inline-block;
+        font-family:'Poppins-Medium', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 2.5vw;
+    }
+    .header .buttonsActions{
+        display: inline-block;
+        width: 59.8%;
+        margin-left: 10%;
+        height: 100%;
+        text-align: center;
+    }
+    .header .buttonsActions .buttonsZoom,
+    .header .buttonsActions .buttonsDesp{
+        display: inline-block;
+        width: 20%;
+        height: 100%;
+        margin-left: 2%;
+        overflow: hidden;
+    }
+    .header .buttonsActions .buttonsZoom{
+        margin-left: 0%;
+    }
+    .header .buttonsActions .buttonsZoom h2,
+    .header .buttonsActions .buttonsDesp h2{
+        position: relative;
+        display: block;
+        font-family:'Poppins-Regular', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 2vw;
+        margin-bottom: 15%;
+        margin-top: 7%;
+    }
+    .header .buttonsActions .buttonsZoom .plus,
+    .header .buttonsActions .buttonsZoom .rest,
+    .header .buttonsActions .buttonsDesp .plus,
+    .header .buttonsActions .buttonsDesp .rest{
+        position: relative;
+        top: -20%;
+        display: inline-block;
+        background-color: rgb(128, 8, 8);
+        width: 19%;
+        height: 30%;
+        border-radius: 50%;
+        margin-left: 30%;
+        text-align: center;
+    }
+    .header .buttonsActions .buttonsZoom .plus,
+    .header .buttonsActions .buttonsDesp .plus{
+        margin-left: 0%;
+        background-color: rgb(7, 68, 7);
+    }
+    .header .buttonsActions .buttonsZoom .plus h2,
+    .header .buttonsActions .buttonsZoom .rest h2,
+    .header .buttonsActions .buttonsDesp .plus h2,
+    .header .buttonsActions .buttonsDesp .rest h2{
+        position: relative;
+        display: block;
+        font-family:'Poppins-Regular', Courier, monospace;
+        color: rgb(255, 255, 255);
+        text-align: center;
+        font-size: 1.5vw;
+        margin-top: 0%;
+    }
+    .header .buttonsActions .buttonsZoom .plus h2:hover,
+    .header .buttonsActions .buttonsZoom .rest h2:hover,
+    .header .buttonsActions .buttonsDesp .plus h2:hover,
+    .header .buttonsActions .buttonsDesp .rest h2:hover {
+        cursor: pointer;
+        color: rgb(200, 200, 200);
+    }
+    .header .buttonsActions .buttonsResponse{
+        display: inline-block;
+        width: 58%;
+        height: 100%;
+        overflow: hidden;
+    }
+    .header .buttonsActions .buttonsResponse button{
+        position: relative;
+        height: 52%;
+        width: 31%;
+        top: 30%;
+        font-family:'Poppins-Medium', Courier, monospace;
+        border-radius: .6vw;
+        color: white;
+        font-size: 1vw;
+        background-color: transparent;
+        border: thin solid white;
+        margin-left: 1.5%;
+    }
+    .header .buttonsActions .buttonsResponse .reset:hover{
+        cursor: pointer;
+        background-color: rgb(190, 75, 29);
+        border: none;
+    }
+    .header .buttonsActions .buttonsResponse .return:hover{
+        cursor: pointer;
+        background-color: rgb(80, 8, 8);
+        border: none;
+    }
+    .header .buttonsActions .buttonsResponse .save:hover{
+        cursor: pointer;
+        background-color: rgb(5, 53, 5);
+        border: none;
+    }
+    .information{
+        position: fixed;
+        z-index: 1;
+        top: 15%;
+        left: 85%;
+    }
+    .information .infoOne,
+    .information .infoTwo,
+    .information .infoThree{
+        font-family:'Poppins-Regular', Courier, monospace;
+        font-size: 1vw;
+        color: rgb(255, 101, 101);
+    }
+    .information ul li::marker {
+        font-size: 1.1vw; 
+    }
+    .information .infoOne{
+        color: rgb(88, 255, 88);
+    }
+    .information .infoTwo{
+        color: rgb(255, 251, 41);
+    }
+    .information .infoOne p,
+    .information .infoTwo p,
+    .information .infoThree p{
+        color: white;
+    }
+    .buttonsDirection{
+        position: fixed;
+        z-index: 1;
+        top: 40%;
+    }
+    .buttonsDirection .directionLeft,
+    .buttonsDirection .directionRight{
+        position: absolute;
+        height: 15vh;
+        width: 8vw;
+        left: 2vw;
+    }
+    .buttonsDirection .directionRight{
+        left: 90vw;
+    }
+    .buttonsDirection .directionLeft img,
+    .buttonsDirection .directionRight img{
+        height: 100%;
+        width: 100%;
+        text-align: center;
+    }
+    .buttonsDirection .directionLeft img:hover,
+    .buttonsDirection .directionRight img:hover{
+        cursor: pointer;
+        transform: translateY(-.5vw);
+    }
+}

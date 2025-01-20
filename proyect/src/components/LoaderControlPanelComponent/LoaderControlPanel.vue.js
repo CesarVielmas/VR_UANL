@@ -1,4 +1,5 @@
 import LoadingApart from "../LoadingApartComponent/LoadingApart.vue";
+import axios from "axios";
 
 export default {
     name: 'LoaderControlPanel',
@@ -9,6 +10,10 @@ export default {
         methodExitOn: {
           type: Function, 
           required: true
+        },
+        facultyName:{
+          type: String,
+          required:true
         }
       },
     data() {
@@ -16,14 +21,50 @@ export default {
         completeInformation:false,
         completeInformationLoading:false,
         onOpacityAll:false,
+        universitysObtain:[],
+        universitySelect:{},
         backgroundColor:'',
         dominantColor:''
       };
     },
     created() {
-     setTimeout(()=>{
-        this.completeInformationLoading = true
-     },(Math.floor(Math.random() * (30 - 10 + 1)) + 10)*1000)
+      axios.get(`http://localhost:5028/api/AuthUser/${localStorage.getItem("userId")}`,{
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      .then((response)=>{
+        if(response.data.listUniversitys.length != 0){
+          this.universitysObtain = response.data.listUniversitys;
+          const university = this.universitysObtain.find(university => university.nameFaculty === this.facultyName);
+          if (university) {
+            this.universitySelect = university;
+            this.completeInformationLoading = true;
+          } 
+          else {
+            this.$router.push({
+              name: 'NotFound',
+              params: { itemFound: 'VR Panel De Control' },
+            });  
+          }
+        }
+        else{
+          console.log("Usuario Sin Autorizacion");
+          localStorage.setItem("userId",null);
+          localStorage.setItem("token",null);
+          this.$router.push({
+            name: 'HomeLogin'
+          });
+        }      
+      })
+      .catch((error)=>{
+        console.log(error);
+        localStorage.setItem("userId",null);
+        localStorage.setItem("token",null);
+        this.$router.push({
+          name: 'HomeLogin'
+        });
+      });
     },
     methods: {
         loadingReady(){
@@ -32,13 +73,14 @@ export default {
             setTimeout(()=>{
                 this.onOpacityAll = true;
                 setTimeout(()=>{
-                    this.methodExitOn();
+                    this.methodExitOn({listUniversitys:this.universitysObtain,universitySelect:this.universitySelect});
                 },2000)
             },5000)
         },
         getDominantColor() {
             const image = new Image(); 
-            image.src = require('@/assets/example_university_card_image.png'); 
+            image.crossOrigin = 'Anonymous';
+            image.src = this.universitySelect.logoFaculty;
             image.onload = () => {
               this.extractColor(image);
             };

@@ -73,7 +73,11 @@ export default {
                           this.editNowScene = 4;
                           setTimeout(()=>{
                             this.editNowScene = 5;
-                            console.log("Cambiar a la escena de panel de control");
+                            this.$store.commit('setAllUniversitysUser',response.data.listUniversitys);
+                            this.$router.push({
+                              name: 'HomeControlPanel',
+                              params: { facultyAbbreviation: response.data.listUniversitys[0].nameFaculty },
+                            }); 
                           },2000)
                         },4000)
                       },2000)
@@ -146,7 +150,11 @@ export default {
                           this.editNowScene = 4;
                           setTimeout(()=>{
                             this.editNowScene = 5;
-                            console.log("Cambiar a la escena de panel de control");
+                            this.$store.commit('setAllUniversitysUser',response.data.listUniversitys);
+                            this.$router.push({
+                              name: 'HomeControlPanel',
+                              params: { facultyAbbreviation: response.data.listUniversitys[0].nameFaculty },
+                            }); 
                           },2000)
                         },4000)
                       },2000)
@@ -301,7 +309,11 @@ export default {
               this.editNowScene = 4;
               setTimeout(()=>{
                 this.editNowScene = 5;
-                console.log("Cambiar a la escena de panel de control");
+                this.$store.commit('setAllUniversitysUser',this.arrayExampleCards);
+                this.$router.push({
+                  name: 'HomeControlPanel',
+                  params: { facultyAbbreviation: university.nameFaculty },
+                }); 
               },2000)
             },4000)
           },2000)
@@ -442,21 +454,20 @@ export default {
             'Content-Type': 'multipart/form-data'
           }
         })
-        .then(response => {
-          axios.post('http://localhost:5028/api/University',{NameFaculty:this.addNewNameFaculty,NameCompleteFaculty:this.addNewNameCompleteFaculty,LogoFaculty:response.data.paths[0],ImageFaculty:response.data.paths[1]},{
+        .then(responsePaths => {
+          axios.post('http://localhost:5028/api/University',{NameFaculty:this.addNewNameFaculty,NameCompleteFaculty:this.addNewNameCompleteFaculty,LogoFaculty:responsePaths.data.paths[0],ImageFaculty:responsePaths.data.paths[1]},{
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('token')}`,
             }
           })
-          .then(response => {
-            console.log(response)
+          .then(responseUniversity => {
             axios.put(`http://localhost:5028/api/AuthUser/AddUniversitys/${localStorage.getItem('userId')}?namesUniversitys=${this.addNewNameFaculty}`,{},{
               headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
               }
             })
-            .then(response => {
-              console.log(response)
+            .then(responseUser => {
+              console.log(responseUser)
               this.addNewVR = false;
               this.getDominantColor();
               this.backgroundNewVR = this.getTone(this.dominantColorNewVR,85,60)
@@ -469,7 +480,20 @@ export default {
                     this.editNowScene = 4;
                     setTimeout(()=>{
                       this.editNowScene = 5;
-                      console.log("Cambiar a la escena de panel de control");
+                      const universityOnAdd = {
+                        idUniversity: responseUniversity.data.id,
+                        nameFaculty: this.addNewNameFaculty,
+                        nameCompleteFaculty: this.addNewNameCompleteFaculty,
+                        logoFaculty: responsePaths.data.paths[0],
+                        imageFaculty: responsePaths.data.paths[1],
+                        listEscenes: [] 
+                      };
+                      this.arrayExampleCards.push(universityOnAdd);
+                      this.$store.commit('setAllUniversitysUser',this.arrayExampleCards);
+                      this.$router.push({
+                        name: 'HomeControlPanel',
+                        params: { facultyAbbreviation: this.addNewNameFaculty },
+                      }); 
                     },2000)
                   },4000)
                 },2000)

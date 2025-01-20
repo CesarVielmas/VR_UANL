@@ -1,0 +1,138 @@
+@keyframes rotateButtonOpen {
+    0% {
+        transform: rotate(0deg) scale(1.2);
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+@keyframes rotateButtonClose {
+    0% {
+        transform: rotate(360deg) scale(1.2);
+    }
+    100% {
+        transform: rotate(0deg) scale(1);
+    }
+}
+@keyframes incrementWidth {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 92%;
+    }
+}
+@keyframes decrementWidth {
+    0% {
+        width: 92%;
+    }
+    100% {
+        width: 0;
+    }
+}
+@font-face {
+    font-family: 'Poppins-Medium';
+    src: url('../../../../fonts/Poppins/Poppins-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family:'Poppins-Regular';
+    
+    src: url('../../../../fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins-Black';
+    src: url('../../../../fonts/Poppins/Poppins-Black.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins-Thin';
+    src: url('../../../../fonts/Poppins/Poppins-Thin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/*Vista Mobile*/
+@media (max-width: 767px) {
+    
+}
+
+/*Vista Tablets*/
+@media (min-width: 768px) and (max-width: 1024px) {
+
+}
+
+/*Vista Desktop*/
+@media (min-width: 1025px) {
+    .footer{
+        position: fixed;
+        z-index: 1;
+        top: 85%;
+        transition: left 0.5s ease;
+        width: 45%;
+        height: 7%;
+    }
+    .footer .buttonOpen{
+        display: inline-block;
+        position: relative;
+        height: 100%;
+        width: 8%;
+        border-radius: 50%;
+        transition: background-color 0.5s ease;
+        text-align: center;
+        z-index: 2;
+    }
+    .footer .buttonOpen:hover{
+        cursor: pointer;
+        color: rgb(155, 155, 155);
+    }
+    .footer .buttonOpen h2{
+        position: relative;
+        font-family:'Poppins-Medium', Courier, monospace;
+        color: white;
+        text-align: center;
+        font-size: 2.2vw;
+        top: -50%;
+    }
+    .footer .content{
+        position: relative;
+        display: inline-block;
+        background-color: rgb(0, 0, 0);
+        z-index: 1;
+        top: -30%;
+        left: -7%;
+        height: 90%;
+        overflow: hidden;
+        border-radius: 1.4vw;
+    }
+    .footer .content div{
+        display: inline-block;
+        height: 95%;
+        width: 18%;
+        text-align: center;
+    }
+    .footer .content div:hover{
+        cursor: pointer;
+        transform: scale(1.1);
+    }
+    .footer .content div img{
+        height: 38%;
+        width: 25%;
+        margin-top: 6%;
+        margin-bottom: 0;
+    }
+    .footer .content div h2{
+        position: relative;
+        margin-top: 0;
+        top: 8%;
+        width: 100%;
+        font-family:'Poppins-Regular', Courier, monospace;
+        font-size: .6vw;
+        text-align: center;
+        color: white;
+    }
+}

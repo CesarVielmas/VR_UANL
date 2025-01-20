@@ -2,7 +2,7 @@
 <style src="./ControlPanel.vue.css"></style>
 
 <template>
-    <div>
-        
+    <div style="width: 100vw;height: 100vh;">
+         <ViewScenes :colorBackground="dominantColor" :device="deviceType" :universitySelected="university"/>
     </div>
 </template>

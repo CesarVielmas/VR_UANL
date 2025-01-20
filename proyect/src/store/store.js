@@ -6,7 +6,8 @@ const store = createStore({
     return {
       // Aquí puedes agregar cualquier dato que quieras almacenar globalmente
       allDataScenes:[],
-      universitySelect:{}
+      universitySelect:{},
+      allUniversitysUser:[]
     };
   },
   
@@ -17,6 +18,9 @@ const store = createStore({
     },
     setUniversitySelect(state,university){
       state.universitySelect = university;
+    },
+    setAllUniversitysUser(state,dataUniversitys){
+      state.allUniversitysUser = dataUniversitys;
     }
   },
   
@@ -27,6 +31,9 @@ const store = createStore({
     },
     updateUniversitySelect({ commit }, university){
       commit('setUniversitySelect',university)
+    },
+    updateAllUniversitysUser({commit},dataUniversitys){
+      commit('setAllUniversitysUser',dataUniversitys)
     }
   },
   
@@ -37,6 +44,9 @@ const store = createStore({
     },
     universitySelect(state){
       return state.universitySelect;
+    },
+    allUniversitysUser(state){
+      return state.allUniversitysUser;
     }
   },
 });
