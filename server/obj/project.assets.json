@@ -797,24 +797,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\PC Edición 1\\.nuget\\packages\\": {}
+    "C:\\Users\\vielm\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\PC Edición 1\\Documents\\VR\\VR_UANL\\server\\server.csproj",
+      "projectUniqueName": "C:\\Users\\vielm\\OneDrive\\Documentos\\VirtualRecord\\server\\server.csproj",
       "projectName": "server",
-      "projectPath": "C:\\Users\\PC Edición 1\\Documents\\VR\\VR_UANL\\server\\server.csproj",
-      "packagesPath": "C:\\Users\\PC Edición 1\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\PC Edición 1\\Documents\\VR\\VR_UANL\\server\\obj\\",
+      "projectPath": "C:\\Users\\vielm\\OneDrive\\Documentos\\VirtualRecord\\server\\server.csproj",
+      "packagesPath": "C:\\Users\\vielm\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\vielm\\OneDrive\\Documentos\\VirtualRecord\\server\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\PC Edición 1\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\vielm\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -878,7 +879,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.404/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

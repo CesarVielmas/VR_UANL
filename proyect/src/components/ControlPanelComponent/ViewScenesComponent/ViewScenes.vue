@@ -4,10 +4,17 @@
 <template>
     <div class="addNewScene" v-if="enterToAddSceneBool">
         <div class="content">
-            <h2 :style="`background-color:${colorBackground};`">Nombre De La Escena</h2>
+            <h2 :style="`background-color:${colorBackground};`">{{ isEditNameScene!=0?"Nuevo Nombre De Escena":"Nombre De La Escena" }}</h2>
             <input :style="`background-color:${colorBackground};`" v-model="newNameScene" type="text" />
-            <button v-on:click="enterToSceneToEdit">Continuar</button>
-            <button v-on:click="cancelToAddScene" style="background-color: rgb(75, 6, 6);">Cancelar</button>
+            <button v-on:click="isEditNameScene === 0?enterToSceneToEdit():editNameSceneChange()">{{isEditNameScene?"Guardar":"Continuar"}}</button>
+            <button v-on:click="isEditNameScene === 0?cancelToAddScene():enterToAddSceneBool=false;" style="background-color: rgb(75, 6, 6);">Cancelar</button>
+        </div>
+    </div>
+    <div class="deleteVoidScene" v-if="deleteVoidScene">
+        <div class="content">
+            <h2 :style="`background-color:${colorBackground};`">{{ stateVoidDelete === 0?"¿Esta Seguro De Vaciar La Escena?":"¿Esta Seguro De Eliminar La Escena?" }}</h2>
+            <button v-on:click="stateVoidDelete === 0?enterToVoidCompleteScene():enterToDeleteCompleteScene()">{{stateVoidDelete === 0?"Vaciar":"Eliminar"}}</button>
+            <button v-on:click="this.deleteVoidScene = false;" style="background-color: rgb(5, 65, 5);">Cancelar</button>
         </div>
     </div>
     <HeaderViewScenes :logoUrl="universitySelected.logoFaculty" :nameFaculty="universitySelected.nameFaculty" :aumentVist="incrementCameraY" :dismissVist="decrementCameraY" :aumentDesp="incrementCameraZ" :dismissDesp="decrementCameraZ" :resetCamera="resetCamera" />
@@ -40,25 +47,24 @@
         </a-entity>
 
         <a-entity v-if="universitySelected.listEscenes.length >= 1" position="0 1 0">
-            <!-- Fondo con la imagen -->
             <a-plane
             v-for="escenes in universitySelected.listEscenes"
+            :id="`object-scene-${escenes.idEscene}`"
             :key="escenes.idEscene"
+            :ref="`entityRef-${escenes.idEscene}`"
             color="white"
             rotation="-90 0 0"
-            position="0 0 0"
+            :position="positionsScenes.idScene === escenes.idEscene?positionsScenes.position:'0 0 0'"
             width="0.35"
             height="0.2"
-            @loaded="()=>onEsceneLoaded(escenes.idEscene)"
+            @loaded="()=>onEsceneLoaded(escenes)"
             mouse-interaction>
-            <!-- Imagen de fondo -->
             <a-image
                 :src="escenes.imageScene"
                 width="0.35"
                 height="0.2"
                 position="0 0 0.001">
             </a-image>
-            <!-- Capa negra semitransparente -->
             <a-plane
                 :id="`object-${escenes.idEscene}`"
                 color="black"
@@ -68,7 +74,6 @@
                 position="0 0 0.002"
                 class="hover">
             </a-plane>
-            <!-- Texto -->
             <a-text
                 :id="`object-${escenes.idEscene}`"
                 :value="escenes.nameScene"
@@ -78,11 +83,49 @@
                 width="0.65"
                 class="hover">
             </a-text>
-            <!-- Iconos en la parte superior (editar escena, editar nombre ,vaciar escena, eliminar escena,estado de la escena)-->
-            <a-entity position="0 0.08 0.004">
+            <a-entity v-if="escenes.listButtonRed.length >= 1">
+                <a-entity 
+                        v-for="buttonRed in escenes.listButtonRed" 
+                        :key="`red-${buttonRed.idButtonRedirect}`" 
+                        :position="buttonRed.horientationButton === 'Left'?'-0.9 0 0':buttonRed.horientationButton === 'Right'?'0.56 0 0':buttonRed.horientationButton === 'Center'?'0.5 -0.03 0':buttonRed.horientationButton === 'Behind'?'0.5 -0.03 0':''">
+                    <a-plane
+                        color="white"
+                        width="0.05"
+                        height="0.15"
+                        :position="buttonRed.horientationButton === 'Left'?'0.56 0 0':buttonRed.horientationButton === 'Right'?'0.56 0 0':buttonRed.horientationButton === 'Center'?'0.5 -0.03 0':buttonRed.horientationButton === 'Behind'?'0.5 -0.03 0':''"
+                        :rotation="buttonRed.horientationButton === 'Left'?'0 0 90':buttonRed.horientationButton === 'Right'?'0 0 -90':buttonRed.horientationButton === 'Center'?'0 0 0':buttonRed.horientationButton === 'Behind'?'0 0 0':''">
+                    </a-plane>
+                    <a-triangle
+                        color="white"
+                        vertex-a="0 0.1 0"
+                        vertex-b="-0.05 0 0"
+                        vertex-c="0.05 0 0"
+                        position="0.5 0 0"
+                        :rotation="buttonRed.horientationButton === 'Left'?'0 0 90':buttonRed.horientationButton === 'Right'?'0 0 -90':buttonRed.horientationButton === 'Center'?'0 0 0':buttonRed.horientationButton === 'Behind'?'0 0 0':''">
+                    </a-triangle>
+                    <a-circle
+                        :id="`addInButtonRed-${buttonRed.idButtonRedirect}`"
+                        v-if="Object.keys(buttonRed.pageToSender).length === 0"
+                        color="rgb(5, 65, 5)"
+                        radius="0.05"
+                        position="0.28 -0.004 0"
+                        class="clickable">
+                        <a-text
+                            :id="`addInButtonRed-${buttonRed.idButtonRedirect}`"
+                            value="+"
+                            position="0 -0 0"
+                            color="white"
+                            align="center"
+                            scale="0.35 0.35 0.35">
+                        </a-text>
+                    </a-circle>
+                </a-entity>
+            </a-entity>
+            <a-entity position="0 0.08 0.004" v-if="universitySelected.listEscenes.length >= 1" :key="`images-${escenes.idEscene}`">
                 <a-image
                 :id="`editScene-${escenes.idEscene}`"
-                :src="stateChangeIcons.editScene != escenes.idEscene?require('@/assets/icon_edit_scene.png'):require('@/assets/icon_edit_scene_hover.png')"
+                :key="`editScene-${escenes.idEscene}`"
+                :src="require('@/assets/icon_edit_scene.png')"
                 width="0.025"
                 height="0.025"
                 position="0.005 -0.005 0"
@@ -90,7 +133,8 @@
                 </a-image>
                 <a-image
                 :id="`editNameScene-${escenes.idEscene}`"
-                :src="stateChangeIcons.editNameScene != escenes.idEscene?require('@/assets/icon_edit_name_scene.png'):require('@/assets/icon_edit_name_scene_hover.png')"
+                :key="`editNameScene-${escenes.idEscene}`"
+                :src="require('@/assets/icon_edit_name_scene.png')"
                 width="0.027"
                 height="0.027"
                 position="0.045 -0.005 0"
@@ -98,7 +142,8 @@
                 </a-image>
                 <a-image
                 :id="`voidScene-${escenes.idEscene}`"
-                :src="stateChangeIcons.voidScene != escenes.idEscene?require('@/assets/icon_void_scene.png'):require('@/assets/icon_void_scene_hover.png')"
+                :key="`voidScene-${escenes.idEscene}`"
+                :src="require('@/assets/icon_void_scene.png')"
                 width="0.027"
                 height="0.025"
                 position="0.085 -0.005 0"
@@ -106,7 +151,8 @@
                 </a-image>
                 <a-image
                 :id="`deleteScene-${escenes.idEscene}`"
-                :src="stateChangeIcons.deleteScene != escenes.idEscene?require('@/assets/icon_delete_scene.png'):require('@/assets/icon_delete_scene_hover.png')"
+                :key="`deleteScene-${escenes.idEscene}`"
+                :src="require('@/assets/icon_delete_scene.png')"
                 width="0.025"
                 height="0.025"
                 position="0.127 -0.006 0"
@@ -118,11 +164,11 @@
                     radius="0.005"
                     position="0.16 0.003 0"
                     class="clickable">
-
                 </a-circle>
             </a-entity>
             </a-plane>
         </a-entity>
+
         <a-plane 
             id="plane"
             :color="colorBackground" 

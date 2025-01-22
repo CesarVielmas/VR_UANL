@@ -4393,24 +4393,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\PC Edición 1\\.nuget\\packages\\": {}
+    "C:\\Users\\vielm\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\PC Edición 1\\Documents\\VR\\VR_UANL\\backend\\backend.csproj",
+      "projectUniqueName": "C:\\Users\\vielm\\OneDrive\\Documentos\\VirtualRecord\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "C:\\Users\\PC Edición 1\\Documents\\VR\\VR_UANL\\backend\\backend.csproj",
-      "packagesPath": "C:\\Users\\PC Edición 1\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\PC Edición 1\\Documents\\VR\\VR_UANL\\backend\\obj\\",
+      "projectPath": "C:\\Users\\vielm\\OneDrive\\Documentos\\VirtualRecord\\backend\\backend.csproj",
+      "packagesPath": "C:\\Users\\vielm\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\vielm\\OneDrive\\Documentos\\VirtualRecord\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\PC Edición 1\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\vielm\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4492,7 +4493,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.404/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
