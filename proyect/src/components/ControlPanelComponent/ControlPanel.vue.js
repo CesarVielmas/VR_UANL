@@ -1,9 +1,11 @@
+import ViewScene from "./ViewSceneComponent/ViewScene.vue";
 import ViewScenes from "./ViewScenesComponent/ViewScenes.vue";
 
 export default {
   name: 'ControlPanel',
   components: {
-    ViewScenes
+    ViewScenes,
+    ViewScene
   },
   props:{ 
     uniqueUniversity: {
@@ -18,7 +20,9 @@ export default {
   data() {
     return {
         dominantColor:'',
-        deviceType:''
+        deviceType:'',
+        isEditVR:false,
+        sceneToEdit:{}
     };
   },
   created() {
@@ -161,6 +165,10 @@ export default {
           return 'Desktop';
         }
     },
+    changeToEditVR({scene}){
+      this.isEditVR = true;
+      this.sceneToEdit = scene;
+    }
   },
   mounted() {
     

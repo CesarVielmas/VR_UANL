@@ -3,6 +3,7 @@
 
 <template>
     <div style="width: 100vw;height: 100vh;">
-         <ViewScenes :colorBackground="dominantColor" :device="deviceType" :universitySelected="university"/>
+         <ViewScenes v-if="!isEditVR" :colorBackground="dominantColor" :device="deviceType" :universitySelected="university" :onChangeEditVR="changeToEditVR"/>
+         <ViewScene v-if="isEditVR" :scene="sceneToEdit" :device="deviceType" :colorBackground="dominantColor" :facultyName="university.nameFaculty"/>
     </div>
 </template>

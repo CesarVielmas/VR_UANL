@@ -82,6 +82,32 @@ public class ImagesController : ControllerBase
         return StatusCode(200, new { Message = "Los archivos se subieron con exito", paths = filesPaths });
     }
     [Authorize(Roles = "Administrador")]
+    [HttpPost("upload/Escene/{FacultyName}")]
+    public IActionResult UploadEscene([FromForm] IFormFile file, string FacultyName)
+    {
+        string[] permittedExtensions = { ".jpg", ".jpeg", ".webp" };
+        if (file == null)
+            return BadRequest("No hay ningun archivo mandado");
+        if (string.IsNullOrEmpty(FacultyName))
+            return BadRequest("No se ha mandado el nombre de la facultad");
+        var escenePath = Path.Combine(Path.Combine(_imagePath, FacultyName), "Escenes");
+        if (!Directory.Exists(escenePath))
+        {
+            Directory.CreateDirectory(escenePath);
+        }
+        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
+        {
+            return BadRequest($"El archivo {file.FileName} no es una imagen válida, asegurese de enviar imagenes validas");
+        }
+        var filePath = Path.Combine(escenePath, file.FileName);
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            file.CopyTo(stream);
+        }
+        return StatusCode(200, new { Message = "El archivo de escena se subio con exito", path = $"http://localhost:5299/images/{FacultyName}/Escenes/{file.FileName}" });
+    }
+    [Authorize(Roles = "Administrador")]
     [HttpDelete("delete/{FacultyName}")]
     public IActionResult DeleteImages(string FacultyName)
     {

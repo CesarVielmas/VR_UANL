@@ -21,6 +21,10 @@ export default {
         universitySelected:{
           type:Object,
           required:true
+        },
+        onChangeEditVR:{
+          type:Function,
+          required:true
         }
     },
     data() {
@@ -33,8 +37,7 @@ export default {
           isEditNameScene:0,
           newNameScene:'',
           stateChangeIcons:{ editScene: 0, editNameScene:0, voidScene:0, deleteScene:0, stateScene:0,addInButtonRed:0},
-          positionsScenes:{ idScene:0, position:"0 0 0" },
-
+          positionsScenes:{ idScene:0, position:"0 0 0" }
       };
     },
     created() {
@@ -114,7 +117,33 @@ export default {
       },
       enterToEditScene(sceneToEdit){
         let zoomInElement = document.querySelector(`#object-scene-${sceneToEdit.idEscene}`);
-        console.log(zoomInElement.getAttribute('position'));
+        if (zoomInElement) {
+          let objectPosition = zoomInElement.getAttribute('position');
+          let targetPosition = {
+            x: objectPosition.x,
+            y: 1.1,
+            z: objectPosition.z, 
+          };
+          let camera = document.querySelector('#camera');
+          if (camera) {
+            camera.setAttribute('animation', {
+              property: 'position',
+              to: `${targetPosition.x} ${targetPosition.y} ${targetPosition.z}`,
+              dur: 1000,
+              easing: 'easeInOutQuad',
+            });
+            setTimeout(()=>{
+              delete components['mouse-interaction'];
+              this.onChangeEditVR({scene:sceneToEdit});
+            },1000)
+          } 
+          else {
+            console.error('No se encontró la cámara con el ID #camera');
+          }
+        } 
+        else {
+          console.error('No se encontró el objeto con el ID especificado');
+        }
       },
       enterEditNameScene(){
         this.isEditNameScene = this.stateChangeIcons.editNameScene;
@@ -200,6 +229,7 @@ export default {
           this.universitySelected.listEscenes.push(newScene);
           this.enterToAddSceneBool = false;
           setTimeout(()=>{
+            delete components['mouse-interaction'];
             this.enterToEditScene(newScene);
           },500)
         }
@@ -249,61 +279,23 @@ export default {
             let positionCamera = { x: 0, y: 0, z: 0 };
             let onMoveCamera = false;
             let stateObjectsRay = { plane: false, planeHover:false,object: false, planeNew:false, editScene:false,editSceneImage:false, editNameScene:false,editNameSceneImage:false,voidScene:false,voidSceneImage:false,deleteScene:false,deleteSceneImage:false,stateScene:false,addInButtonRed:false};
-        
-            const handleMouseDownBackground = () => {
-              if(stateObjectsRay.planeHover){
-                document.body.style.cursor = 'grabbing';
-                cameraView = document.querySelector('#camera');
-                positionCamera = cameraView.getAttribute('position');
-                valueXInit = mouse.x;
-                valueYInit = mouse.y;
-                onMoveCamera = true;
-              }
-              else if (stateObjectsRay.planeNew && !stateObjectsRay.planeHover) {
-                vueComponent.enterToAddScene();
-              }
-              else if (vueComponent.stateChangeIcons.editScene != 0 && !stateObjectsRay.planeHover){
-                const esceneToEdit = vueComponent.universitySelected.listEscenes.find(escene => escene.idEscene === vueComponent.stateChangeIcons.editScene);
-                vueComponent.enterToEditScene(esceneToEdit);
-              }
-              else if (vueComponent.stateChangeIcons.editNameScene != 0 && !stateObjectsRay.planeHover){
-                
-                vueComponent.enterEditNameScene();
-              }
-              else if (vueComponent.stateChangeIcons.voidScene != 0 && !stateObjectsRay.planeHover){
-                vueComponent.enterToVoidScene();
-              }
-              else if (vueComponent.stateChangeIcons.deleteScene != 0 && !stateObjectsRay.planeHover){
-                vueComponent.enterToDeleteScene();
-              }
-              else if (vueComponent.stateChangeIcons.stateScene != 0 && !stateObjectsRay.planeHover){
-                vueComponent.enterToStateScene();
-              }
-              else if( vueComponent.stateChangeIcons.addInButtonRed != 0){
-                vueComponent.enterToAddScene();
-                onMoveCamera = false;
-              }
-            };
-        
             const handleMouseUpBackground = () => {
               document.body.style.cursor = 'grab';
               onMoveCamera = false;
             };
-        
-            window.addEventListener('wheel', (event) => {
-              if (!onMoveCamera) {
-                cameraView = document.querySelector('#camera');
-                positionCamera = cameraView.getAttribute('position');
-                if (event.deltaY > 0) {
-                  if (positionCamera.y < 29.2) positionCamera.y += 0.1;
-                } else if (event.deltaY < 0) {
-                  if (positionCamera.y > 1.2) positionCamera.y -= 0.1;
+            const handleWheel = (event) =>{
+                if (!onMoveCamera) {
+                  cameraView = document.querySelector('#camera');
+                  positionCamera = cameraView.getAttribute('position');
+                  if (event.deltaY > 0) {
+                    if (positionCamera.y < 29.2) positionCamera.y += 0.1;
+                  } else if (event.deltaY < 0) {
+                    if (positionCamera.y > 1.2) positionCamera.y -= 0.1;
+                  }
+                  cameraView.setAttribute('position', positionCamera);
                 }
-                cameraView.setAttribute('position', positionCamera);
-              }
-            });
-        
-            window.addEventListener('mousemove', (event) => {
+            };
+            const handleMouseMove = (event) =>{
               mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
               mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
         
@@ -660,7 +652,62 @@ export default {
                     }
                 }
               });
-            });
+            };
+            const handleMouseDownBackground = () => {
+              if(stateObjectsRay.planeHover){
+                document.body.style.cursor = 'grabbing';
+                cameraView = document.querySelector('#camera');
+                positionCamera = cameraView.getAttribute('position');
+                valueXInit = mouse.x;
+                valueYInit = mouse.y;
+                onMoveCamera = true;
+              }
+              else if (stateObjectsRay.planeNew && !stateObjectsRay.planeHover) {
+                window.removeEventListener('mousedown', handleMouseDownBackground);
+                window.removeEventListener('mouseup', handleMouseUpBackground);
+                window.removeEventListener('wheel', handleWheel);
+                window.removeEventListener('mousemove', handleMouseMove);
+                delete components['mouse-interaction'];
+                document.body.style.cursor = 'default';
+                vueComponent.enterToAddScene();
+              }
+              else if (vueComponent.stateChangeIcons.editScene != 0 && !stateObjectsRay.planeHover){
+                const esceneToEdit = vueComponent.universitySelected.listEscenes.find(escene => escene.idEscene === vueComponent.stateChangeIcons.editScene);
+                window.removeEventListener('mousedown', handleMouseDownBackground);
+                window.removeEventListener('mouseup', handleMouseUpBackground);
+                window.removeEventListener('wheel', handleWheel);
+                window.removeEventListener('mousemove', handleMouseMove);
+                delete components['mouse-interaction'];
+                document.body.style.cursor = 'default';
+                vueComponent.enterToEditScene(esceneToEdit);
+              }
+              else if (vueComponent.stateChangeIcons.editNameScene != 0 && !stateObjectsRay.planeHover){
+                
+                vueComponent.enterEditNameScene();
+              }
+              else if (vueComponent.stateChangeIcons.voidScene != 0 && !stateObjectsRay.planeHover){
+                vueComponent.enterToVoidScene();
+              }
+              else if (vueComponent.stateChangeIcons.deleteScene != 0 && !stateObjectsRay.planeHover){
+                vueComponent.enterToDeleteScene();
+              }
+              else if (vueComponent.stateChangeIcons.stateScene != 0 && !stateObjectsRay.planeHover){
+                vueComponent.enterToStateScene();
+              }
+              else if( vueComponent.stateChangeIcons.addInButtonRed != 0){
+                window.removeEventListener('mousedown', handleMouseDownBackground);
+                window.removeEventListener('mouseup', handleMouseUpBackground);
+                window.removeEventListener('wheel', handleWheel);
+                window.removeEventListener('mousemove', handleMouseMove);
+                delete components['mouse-interaction'];
+                document.body.style.cursor = 'default';
+                vueComponent.enterToAddScene();
+                onMoveCamera = false;
+              }
+            };
+            window.addEventListener('wheel', handleWheel);
+        
+            window.addEventListener('mousemove',handleMouseMove);
           }
         });
       },

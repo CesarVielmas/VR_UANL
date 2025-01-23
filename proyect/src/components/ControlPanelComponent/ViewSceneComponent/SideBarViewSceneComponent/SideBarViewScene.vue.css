@@ -1,0 +1,137 @@
+@keyframes slideIn {
+    from {
+        right: -120%;
+    }
+    to {
+        right: 0;
+    }
+    }
+
+@keyframes slideOut {
+    from {
+        right: 0;
+    }
+    to {
+        right: -120%;
+    }
+    }
+@font-face {
+    font-family: 'Poppins-Medium';
+    src: url('../../../../fonts/Poppins/Poppins-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family:'Poppins-Regular';
+    
+    src: url('../../../../fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins-Black';
+    src: url('../../../../fonts/Poppins/Poppins-Black.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins-Thin';
+    src: url('../../../../fonts/Poppins/Poppins-Thin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/*Vista Mobile*/
+@media (max-width: 767px) {
+    
+}
+
+/*Vista Tablets*/
+@media (min-width: 768px) and (max-width: 1024px) {
+
+}
+/*Vista Desktop*/
+@media (min-width: 1025px) {
+    .sideBar{
+        position: fixed;
+        top: 0;
+        z-index: 2;
+        left: 79%;
+        height: 100%;
+        width: 20%;
+    }
+    .sideBar .content{
+        position: relative;
+        top: -1.2%;
+        height: 98%;
+        width: 100%;
+        background-color: white;
+        border-radius: .5vw;
+    }
+    .sideBar .content .tittlePropertys{
+        position: relative;
+        display: block;
+        padding-top: 3%;
+        height: 6%;
+        font-family:'Poppins-Medium', Courier, monospace;
+        color: rgb(255, 255, 255);
+        border-top-left-radius: .3vw;
+        border-top-right-radius: .3vw;
+        text-align: center;
+        font-size: 1.45vw;
+        margin-bottom: 1%;
+    }
+    .sideBar .content .buttonSave,
+    .sideBar .content .buttonCancel{
+        height: 3.5%;
+        width: 40%;
+        border: none;
+        border-radius: .2vw;
+        margin-top: .5%;
+        background-color: rgb(5, 48, 5);
+        font-family: 'Poppins-Regular', Courier, monospace;
+        font-size: .7vw;
+        text-align: center;
+        color: rgb(255, 255, 255);
+        margin-left: 6%;
+    }
+    .sideBar .content .buttonCancel{
+        background-color: rgb(65, 10, 10);
+    }
+    .sideBar .content .buttonSave:hover,
+    .sideBar .content .buttonCancel:hover{
+        cursor: pointer;
+        color: rgb(192, 192, 192);
+    }
+    .sideBar .content .div{
+        display: block;
+        width: 100%;
+    }
+    .sideBar .content .div .tittle {
+        font-family: 'Poppins-Regular', Courier, monospace;
+        font-size: 1.1vw;
+        margin-bottom: 0;
+        margin-top: .5%;
+        color: rgb(78, 78, 78);
+        text-align: center;
+    }
+    .sideBar .content .div .number{
+        display: block;
+        border: thin solid rgb(190, 190, 190);
+        font-family: 'Poppins-Regular', Courier, monospace;
+        font-size: .7vw;
+        text-align: center;
+        color: rgb(145, 145, 145);
+        border-radius: .3vw;
+        margin-left: auto;
+        margin-right: auto;
+        width: 70%;
+    }
+    .sideBar .content .div .bar{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        transition: background-color 0.3s ease;
+        width: 70%;
+    }
+}
