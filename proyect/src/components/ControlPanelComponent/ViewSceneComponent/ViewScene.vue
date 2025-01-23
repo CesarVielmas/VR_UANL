@@ -3,7 +3,7 @@
 
 <template>
     <div style="height: 100%;width: 100%;">
-        <SideBarViewScene v-if="isEditingButton" :background="colorBackground" />
+        <SideBarViewScene v-if="isEditingButton" :background="colorBackground" :cancelPropertysButton="onCancelEditPropertysButton" :savePropertysButton="onSaveEditPropertysButton" :buttonOnEditRed="buttonRedirectEdit" :buttonOnEditInf="buttonInformationEdit" />
         <a-scene v-if="device === 'Desktop'" :key="scene.nameScene" vr-mode-ui="enabled: true" style="position: relative; width: 100%; height: 100%">
         <a-entity id="cameraRig" position="0 0 0">
             <a-camera id="mainCamera" look-controls="enabled:true;" wasd-controls="enabled:false;">
@@ -12,8 +12,8 @@
         </a-entity>
         <a-sky
             id="skyElement"
-            :src="scene.imageScene ? scene.imageScene : null"
-            :color="!scene.imageScene ? '#FFFFFF' : null"
+            :src="scene.imageScene || ''"
+            :color="!scene.imageScene ? '#FFFFFF' : ''"
             rotation="0 0 0"></a-sky>
         <a-image 
             v-if="!scene.imageScene" 
@@ -35,7 +35,7 @@
             :position="`${element.positionX} ${element.positionY} ${element.positionZ}`"
             :rotation="`${element.rotationSideY} ${element.rotationSideX} ${element.rotationSideZ}`"
             class="clickable"
-            v-on:click="() => changeScene(element)"
+            v-on:click="() =>{}"
             @model-loaded="()=>loadModelsButtonsRedirect(index)"
             @mouseenter="onMouseEnterButtonRedirect(index)" 
             @mouseleave="onMouseLeaveButtonRedirect(index)">
@@ -138,6 +138,6 @@
         <VRInformationPanelView v-for="(element,index) in actualScene.listButtonInfo" v-bind:key="index" :scale="`${element.buttonLarge} ${element.buttonHigh} ${element.buttonWidth}`" :position="`${element.positionX} ${element.positionY} ${element.positionZ}`" :rotation="`${element.rotationSideY} ${element.rotationSideX} ${element.rotationSideZ}`" :methodClick="changeInformation" :typeColorOpen="backgroundColorLoader" :typeColorClose="dominantColor" :textInformation="element.textInformation" :imageOptional="element.optionalImage" />
         </a-scene>
 
-        <FooterViewScene :background="colorBackground" />
+        <FooterViewScene :background="colorBackground" :createButtonRedirect="onCreateButtonRedirect" :createButtonInformation="onCreateButtonInformation" :deleteButton="onDeleteButton" :changeBackgroundImage="onChangeImageScene" :changeToPanelControl="()=>{}"  />
     </div>
 </template>

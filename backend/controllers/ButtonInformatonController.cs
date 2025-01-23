@@ -17,6 +17,30 @@ public class ButtonInformationController : ControllerBase
     }
 
     [Authorize(Roles = "Administrador")]
+    [HttpGet("LastId")]
+    public async Task<ActionResult> GetLastIdButtonInformation()
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            var response = await _context.ButtonInformations
+                .OrderByDescending(b => b.IdButtonInformation) 
+                .FirstOrDefaultAsync(); 
+            return StatusCode(200, new { Message= "Ultimo id obtenido con exito", idInformation = response?.IdButtonInformation});
+        }
+        catch (DbUpdateException ex)
+        {
+            return StatusCode(400, $"Error obtener un boton de informacion:{ex.Message}");
+        }
+        catch (System.Exception ex)
+        {
+            return StatusCode(500, $"Error inesperado:{ex.Message}");
+        }
+    }
+    [Authorize(Roles = "Administrador")]
     [HttpPost]
     public async Task<ActionResult> PostButtonInformation([FromBody][Bind("ButtonLarge,ButtonHigh,ButtonWidth,PositionX,PositionY,PositionZ,RotationSideX,RotationSideY,RotationSideZ,OptionalImage,TextInformation")] ButtonInformation buttonInformationPost)
     {

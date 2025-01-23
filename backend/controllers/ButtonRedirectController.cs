@@ -18,6 +18,30 @@ public class ButtonRedirectController : ControllerBase
     }
 
     [Authorize(Roles = "Administrador")]
+    [HttpGet("LastId")]
+    public async Task<ActionResult> GetLastIdButtonRedirect()
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            var response = await _context.ButtonRedirects
+                .OrderByDescending(b => b.IdButtonRedirect) 
+                .FirstOrDefaultAsync(); 
+            return StatusCode(200, new { Message= "Ultimo id obtenido con exito", idRedirect = response?.IdButtonRedirect});
+        }
+        catch (DbUpdateException ex)
+        {
+            return StatusCode(400, $"Error al obtener un boton de redireccion:{ex.Message}");
+        }
+        catch (System.Exception ex)
+        {
+            return StatusCode(500, $"Error inesperado:{ex.Message}");
+        }
+    }
+    [Authorize(Roles = "Administrador")]
     [HttpPost]
     public async Task<ActionResult> PostButtonRedirect([FromBody][Bind("ButtonLarge,ButtonHigh,ButtonWidth,PositionX,PositionY,PositionZ,RotationSideX,RotationSideY,RotationSideZ,HorientationButton")] ButtonRedirect buttonRedirectPost, [FromQuery] int idEscene = 0)
     {

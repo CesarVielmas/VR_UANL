@@ -1,5 +1,6 @@
 import ViewScene from "./ViewSceneComponent/ViewScene.vue";
 import ViewScenes from "./ViewScenesComponent/ViewScenes.vue";
+import axios from "axios";
 
 export default {
   name: 'ControlPanel',
@@ -22,12 +23,36 @@ export default {
         dominantColor:'',
         deviceType:'',
         isEditVR:false,
-        sceneToEdit:{}
+        sceneToEdit:{},
+        lastIdRedirect:0,
+        lastIdInformation:0
     };
   },
   created() {
     this.deviceType = this.detectDevice()
     this.getDominantColor();
+    axios.get(`http://localhost:5028/api/ButtonInformation/LastId`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+    .then(responseInf => {  
+      axios.get(`http://localhost:5028/api/ButtonRedirect/LastId`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(responseRed => {  
+        this.lastIdInformation = responseInf.data.idInformation;
+        this.lastIdRedirect = responseRed.data.idRedirect;
+      })
+      .catch(error=>{
+        console.log(`Error en obtener el id del boton de redireccion ${error}`)
+      });
+    })
+    .catch(error=>{
+      console.log(`Error en obtener el id del boton de informacion ${error}`)
+    });
   },
   methods: {
     getDominantColor() {
@@ -168,6 +193,12 @@ export default {
     changeToEditVR({scene}){
       this.isEditVR = true;
       this.sceneToEdit = scene;
+    },
+    changeLastIdRed(){
+      this.lastIdRedirect +=1;
+    },
+    changeLastIdInfo(){
+      this.lastIdInformation +=1;
     }
   },
   mounted() {
