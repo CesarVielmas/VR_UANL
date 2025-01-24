@@ -1,0 +1,86 @@
+@font-face {
+    font-family: 'Poppins-Medium';
+    src: url('../../../fonts/Poppins/Poppins-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family:'Poppins-Regular';
+    
+    src: url('../../../fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins-Black';
+    src: url('../../../fonts/Poppins/Poppins-Black.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins-Thin';
+    src: url('../../../fonts/Poppins/Poppins-Thin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+/*Vista Mobile*/
+@media (max-width: 767px) {
+    
+}
+
+/*Vista Tablets*/
+@media (min-width: 768px) and (max-width: 1024px) {
+
+}
+
+/*Vista Desktop*/
+@media (min-width: 1025px) {
+
+    .fixedBackground{
+        position: fixed;
+        height: 100vh;
+        width: 100vw;
+        top: 0;
+        z-index: 2;
+        background-color: rgba(0, 0, 0, 0.541);
+    }
+    .fixedBackground .content{
+        display: block;
+        height: 37%;
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: white;
+        margin-top: 15%;
+        border-radius: 1vw;
+    }
+    .fixedBackground .content h2{
+        position: relative;
+        display: block;
+        padding-top: 2%;
+        height: 22%;
+        font-family:'Poppins-Medium', Courier, monospace;
+        color: rgb(255, 255, 255);
+        border-top-left-radius: 1vw;
+        border-top-right-radius: 1vw;
+        text-align: center;
+        font-size: 2.4vw;
+        margin-bottom: 1%;
+    }
+    .fixedBackground .content button{
+        height: 25%;
+        width: 40%;
+        border: none;
+        border-radius: .5vw;
+        margin-top: 8%;
+        background-color: rgb(92, 7, 7);
+        font-family: 'Poppins-Regular', Courier, monospace;
+        font-size: 1.8vw;
+        text-align: center;
+        color: rgb(255, 255, 255);
+        margin-left: 6%;
+    }
+    .fixedBackground .content button:hover{
+        cursor: pointer;
+    }
+}

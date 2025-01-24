@@ -2,6 +2,13 @@
 <style src="./ViewScene.vue.css"></style>
 
 <template>
+    <div v-if="onDeleteButtonBool" class="fixedBackground">
+        <div class="content">
+            <h2 :style="`background-color:${colorBackground};`">¿Esta Seguro De Eliminar El Boton?</h2>
+            <button v-on:click="onDeleteButtonAcept">Eliminar</button>
+            <button v-on:click="onDeleteButtonCancel" style="background-color: rgb(5, 48, 5);">Cancelar</button>
+        </div>
+    </div>
     <div style="height: 100%;width: 100%;">
         <SideBarViewScene v-if="isEditingButton" :background="colorBackground" :cancelPropertysButton="onCancelEditPropertysButton" :savePropertysButton="onSaveEditPropertysButton" :buttonOnEditRed="buttonRedirectEdit" :buttonOnEditInf="buttonInformationEdit" />
         <a-scene v-if="device === 'Desktop'" :key="scene.nameScene" vr-mode-ui="enabled: true" style="position: relative; width: 100%; height: 100%">
@@ -29,13 +36,13 @@
             <a-entity
             v-for="(element, index) in scene.listButtonRed"
             :key="element.idButtonRedirect"
-            :ref="'arrowModel-' + index"
+            :ref="'arrowModel-' + element.idButtonRedirect"
             gltf-model="url(/direction_arrow/scene.gltf)"
             :scale="`${element.buttonLarge} ${element.buttonHigh} ${element.buttonWidth}`"
             :position="`${element.positionX} ${element.positionY} ${element.positionZ}`"
             :rotation="`${element.rotationSideY} ${element.rotationSideX} ${element.rotationSideZ}`"
             class="clickable"
-            v-on:click="() =>{}"
+            v-on:click="() =>onChangePropertysButton(element,true)"
             @model-loaded="()=>loadModelsButtonsRedirect(index)"
             @mouseenter="onMouseEnterButtonRedirect(index)" 
             @mouseleave="onMouseLeaveButtonRedirect(index)">
@@ -138,6 +145,6 @@
         <VRInformationPanelView v-for="(element,index) in actualScene.listButtonInfo" v-bind:key="index" :scale="`${element.buttonLarge} ${element.buttonHigh} ${element.buttonWidth}`" :position="`${element.positionX} ${element.positionY} ${element.positionZ}`" :rotation="`${element.rotationSideY} ${element.rotationSideX} ${element.rotationSideZ}`" :methodClick="changeInformation" :typeColorOpen="backgroundColorLoader" :typeColorClose="dominantColor" :textInformation="element.textInformation" :imageOptional="element.optionalImage" />
         </a-scene>
 
-        <FooterViewScene :background="colorBackground" :createButtonRedirect="onCreateButtonRedirect" :createButtonInformation="onCreateButtonInformation" :deleteButton="onDeleteButton" :changeBackgroundImage="onChangeImageScene" :changeToPanelControl="()=>{}"  />
+        <FooterViewScene :background="colorBackground" :createButtonRedirect="onCreateButtonRedirect" :createButtonInformation="onCreateButtonInformation" :deleteButton="onDeleteButton" :changeBackgroundImage="onChangeImageScene" :changeToPanelControl="changeToControlPanel"  />
     </div>
 </template>

@@ -36,11 +36,11 @@ export default {
     created() {
         if(Object.keys(this.buttonOnEditRed).length === 0 && Object.keys(this.buttonOnEditInf).length !== 0){
             this.isButtonRed = false;
-            this.copyOfButton = this.buttonOnEditInf;
+            this.copyOfButton = { ...this.buttonOnEditInf };
         }
         else if(Object.keys(this.buttonOnEditRed).length !== 0 && Object.keys(this.buttonOnEditInf).length === 0){
             this.isButtonRed = true;
-            this.copyOfButton = this.buttonOnEditRed;
+            this.copyOfButton = { ...this.buttonOnEditRed };
         }
     },
     methods: {

@@ -194,6 +194,9 @@ export default {
       this.isEditVR = true;
       this.sceneToEdit = scene;
     },
+    changeToControlPanel(){
+      this.isEditVR = false;
+    },
     changeLastIdRed(){
       this.lastIdRedirect +=1;
     },
