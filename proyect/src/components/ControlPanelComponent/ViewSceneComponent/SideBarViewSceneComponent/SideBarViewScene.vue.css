@@ -109,7 +109,7 @@
     }
     .sideBar .content .div .tittle {
         font-family: 'Poppins-Regular', Courier, monospace;
-        font-size: 1.1vw;
+        font-size: 1vw;
         margin-bottom: 0;
         margin-top: .5%;
         color: rgb(78, 78, 78);
@@ -133,5 +133,59 @@
         margin-right: auto;
         transition: background-color 0.3s ease;
         width: 70%;
+    }
+    .sideBar .content .div .redirections{
+        display: block;
+        height: 10vh;
+        width: 70%;
+        margin-left: auto;
+        margin-right: auto;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        text-align: center;
+    }
+    .sideBar .content .div .redirections:hover{
+        cursor: pointer;
+    }
+    .sideBar .content .div .redirections img{
+        height: 100%;
+        width: 100%;
+        opacity: .5;
+        background-size:cover;
+    }
+    .sideBar .content .div .redirections p{
+        position: relative;
+        top: -70%;
+        font-family: 'Poppins-Regular', Courier, monospace;
+        font-size: 1vw;
+        margin-bottom: 0;
+        margin-top: .5%;
+        text-align: center;
+    }
+    .sideBar .content .div .optionalImg{
+        height: 19vh;
+        width: 70%;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        border-radius: .5vw;
+    }
+    .sideBar .content .div .optionalImg p{
+        position: relative;
+        top: 30%;
+        font-family: 'Poppins-Regular', Courier, monospace;
+        font-size: 2.5vw;
+        margin-bottom: 0;
+        color: white;
+        margin-top: 0%;
+        text-align: center;
+    }
+    .sideBar .content .div .optionalImg img{
+        height: 100%;
+        width: 100%;
+        background-size: cover;
+    }
+    .sideBar .content .div .optionalImg:hover{
+        cursor: pointer;
     }
 }

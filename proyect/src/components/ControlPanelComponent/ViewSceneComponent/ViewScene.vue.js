@@ -18,6 +18,10 @@ export default {
             type: String, 
             required: true 
         },
+        colorBackgroundSecond:{
+            type:String,
+            required:true
+        },
         device:{
             type:String,
             required: true
@@ -45,6 +49,14 @@ export default {
         changeToControlPanel:{
             type:Function,
             required:true
+        },
+        universitySelected:{
+            type:Object,
+            required:true
+        },
+        positions:{
+            type:Array,
+            required:true
         }
     },
     data() {
@@ -56,7 +68,7 @@ export default {
           idButtonToDelete:0,
           blinkInterval: null,
           buttonRedirectEdit:{},
-          buttonInformationEdit:{}
+          buttonInformationEdit:{},
       };
     },
     created() {
@@ -143,7 +155,7 @@ export default {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const formImage = new FormData();
-                    formImage.append('file', this.base64ToBlob(e.target.result,file.type),`${this.scene.nameScene.toLowerCase().replace(/\s+/g, "_")}.${file.type.split("/")[1]}`);
+                    formImage.append('file', this.base64ToBlob(e.target.result,file.type),`${this.scene.nameScene.toLowerCase()}.${file.type.split("/")[1]}`);
                     axios.post(`http://localhost:5299/api/Images/upload/Escene/${this.facultyName}`, formImage, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -248,7 +260,7 @@ export default {
                 rotationSideX: 10.000,
                 rotationSideY: 0.000,
                 rotationSideZ: 180.000,
-                horientationButton: "Left",
+                horientationButton: "Center",
                 esceneId: this.scene.idEscene,
                 pageToSender: {},
                 targetEsceneId: 0,
@@ -262,7 +274,29 @@ export default {
             this.idButtonToDelete = 0;
         },
         onCreateButtonInformation(){
-
+            this.isEditingButton = true;
+            this.buttonInformationEdit = {
+                idButtonInformation: this.lastIdButtonInf + 1,
+                buttonLarge: 1.500,
+                buttonHigh: 1.200,
+                buttonWidth: 1.000,
+                positionX: -15.000,
+                positionY: -1.560,
+                positionZ: 0.760,
+                rotationSideX: 0.000,
+                rotationSideY: 0.000,
+                rotationSideZ: 0.000,
+                optionalImage: "",
+                textInformation: "",
+                esceneId: this.scene.idEscene,
+            }
+            this.buttonRedirectEdit = {};
+            this.scene.listButtonInfo.push(this.buttonInformationEdit);
+            this.changeLastIdInfo();
+            this.stopBlinkingEntitys();
+            this.isDeleteButton = false;
+            this.onDeleteButtonBool = false;
+            this.idButtonToDelete = 0;
         },
         onCancelEditPropertysButton(copyOfButton,isButtonRed){
             if(isButtonRed){
@@ -277,7 +311,15 @@ export default {
                 }                
             }
             else{
-                console.log("Para el boton de informacion cancelarlo")
+                const buttonToUpdateIndex = this.scene.listButtonInfo.findIndex(
+                    red => red.idButtonInformation === copyOfButton.idButtonInformation
+                );
+                if (buttonToUpdateIndex !== -1) {
+                    this.scene.listButtonInfo[buttonToUpdateIndex] = {
+                        ...this.scene.listButtonInfo[buttonToUpdateIndex],
+                        ...copyOfButton
+                    };
+                }   
             }
             this.isEditingButton = false;
         },
@@ -286,6 +328,7 @@ export default {
         },
         onDeleteButton(){
             this.isDeleteButton = true;
+            this.isEditingButton = false;
             this.startBlinkingEntitys();
         },
         onDeleteButtonAcept(){
@@ -298,11 +341,11 @@ export default {
                 }
             }
             else if(this.onTypeButtonDelete === "Information"){
-                const buttonToDeleteIndex = this.scene.listButtonInf.findIndex(
+                const buttonToDeleteIndex = this.scene.listButtonInfo.findIndex(
                     red => red.idButtonInformation === this.idButtonToDelete
                 );
                 if (buttonToDeleteIndex !== -1) {
-                    this.scene.listButtonInf.splice(buttonToDeleteIndex, 1);
+                    this.scene.listButtonInfo.splice(buttonToDeleteIndex, 1);
                 }
             }
             this.isDeleteButton = false;
@@ -314,56 +357,68 @@ export default {
             this.onDeleteButtonBool = false;
             this.idButtonToDelete = 0;
         },
-        startBlinkingEntitys(){
+        startBlinkingEntitys() {
             if (this.blinkInterval === null) {
                 this.blinkInterval = setInterval(() => {
-                    Object.keys(this.$refs).forEach(refKey => {
-                        if (refKey.startsWith('arrowModel-')) {
-                            const modelRefs = this.$refs[refKey];
-                            if (modelRefs && modelRefs[0]) { // Verificar que la referencia exista
-                                const modelRef = modelRefs[0];
-                                const model = modelRef.getObject3D('mesh');
-                                if (model) {
-                                    model.traverse((node) => {
-                                        if (node.isMesh && node.material) {
-                                            node.material.transparent = true;
-                                            node.material.opacity = node.material.opacity === 1 ? 0 : 1;
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    });
+                    this.toggleModelsOpacity(true);
                 }, 250);
             }
         },
         stopBlinkingEntitys() {
             if (this.blinkInterval) {
-                    clearInterval(this.blinkInterval);
-                    this.blinkInterval = null;
-                    Object.keys(this.$refs).forEach(refKey => {
-                        if (refKey.startsWith('arrowModel-')) {
-                            const modelRef = this.$refs[refKey][0];
-                            if (modelRef) { // Verificar que modelRef esté definido
-                                const model = modelRef.getObject3D('mesh');
-                                if (model) {
-                                    model.traverse((node) => {
-                                        if (node.isMesh && node.material) {
-                                            node.material.opacity = 1;
-                                        }
-                                    });
-                                }
-                            }
-                        }
+                clearInterval(this.blinkInterval);
+                this.blinkInterval = null;
+                this.toggleModelsOpacity(false);
+            }
+        },
+        toggleModelsOpacity(shouldBlink) {
+            this.scene.listButtonRed.forEach(button => {
+                const refKey = `arrowModel-${button.idButtonRedirect}`;
+                const modelRefs = this.$refs[refKey];
+                
+                if (modelRefs) {
+                    const models = Array.isArray(modelRefs) ? modelRefs : [modelRefs];
+                    models.forEach(model => {
+                        if (model?.getObject3D) this.toggleSingleModel(model, shouldBlink);
                     });
                 }
+            });
+            Object.keys(this.$refs).forEach(refKey => {
+                if (refKey.startsWith('infoPanel-')) {
+                    const panelRef = this.$refs[refKey];
+                    
+                    if (panelRef) {
+                        const components = Array.isArray(panelRef) ? panelRef : [panelRef];
+                        
+                        components.forEach(component => {
+                            if (component?.toggleBlink) {
+                                component.toggleBlink(shouldBlink);
+                            } 
+                        });
+                    }
+                }
+            });
+        },
+        toggleSingleModel(modelRef, shouldBlink) {
+            if (!modelRef) return; 
+            const model = modelRef.getObject3D('mesh');
+            if (model) {
+                model.traverse(node => {
+                    if (node.isMesh && node.material) {
+                        node.material.transparent = true;
+                        node.material.opacity = shouldBlink ? 
+                            (node.material.opacity === 1 ? 0 : 1) : 1;
+                        node.material.needsUpdate = true;
+                    }
+                });
             }
+        }
     },
     mounted() {
         
     },
     watch: {
-  
+        
     },
     computed: {
       

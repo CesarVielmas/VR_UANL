@@ -68,6 +68,50 @@
 
 /*Vista Desktop*/
 @media (min-width: 1025px) {
+    .deleteAll{
+        position: fixed;
+        top: 0;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(0, 0, 0, 0.541);
+        z-index: 2;
+    }
+    .deleteAll .content{
+        height: 40%;
+        width: 60%;
+        margin-top: 13%;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: white;
+        border-radius: .3vw;
+    }
+    .deleteAll .content h2{
+        position: relative;
+        display: block;
+        padding-top: 2%;
+        height: 25%;
+        font-family:'Poppins-Medium', Courier, monospace;
+        color: rgb(255, 255, 255);
+        border-top-left-radius: .3vw;
+        border-top-right-radius: .3vw;
+        text-align: center;
+        font-size: 2.4vw;
+    }
+    .deleteAll .content button{
+        height: 30%;
+        width: 30%;
+        margin-left: 13%;
+        margin-top: 3%;
+        border: none;
+        border-radius: .5vw;
+        background-color: rgb(5, 65, 5);
+        font-family:'Poppins-Regular', Courier, monospace;
+        color: rgb(255, 255, 255);
+        font-size: 1.5vw;
+    }
+    .deleteAll .content button:hover{
+        cursor: pointer;
+    }
     .footer{
         position: fixed;
         z-index: 1;

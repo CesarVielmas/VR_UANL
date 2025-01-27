@@ -25,7 +25,11 @@ export default {
         onChangeEditVR:{
           type:Function,
           required:true
-        }
+        },
+        isUnique: {
+          type: Boolean, 
+          required: true 
+        },
     },
     data() {
       return {
@@ -36,17 +40,91 @@ export default {
           isVoidDelete:0,
           isEditNameScene:0,
           newNameScene:'',
-          stateChangeIcons:{ editScene: 0, editNameScene:0, voidScene:0, deleteScene:0, stateScene:0,addInButtonRed:0},
-          positionsScenes:{ idScene:0, position:"0 0 0" }
+          stateChangeIcons:{ editScene: 0, editNameScene:0, voidScene:0, deleteScene:0, stateScene:0,addInButtonRed:0, changeScene:0},
+          positionsScenes:[],
+          scenesKey:0,
+          onChangeScene:false,
+          changeSceneState:0,
+          firstScene:{},
+          secondScene:{}
       };
     },
     created() {
-        console.log(this.universitySelected.listEscenes);
+        console.log(this.universitySelected);
+        this.onEsceneLoaded(this.universitySelected);
     },
     beforeDestroy() {
       this.cleanUpEntity();
     },
-    methods: {
+    methods: { 
+      onSaveChanges(){
+        console.log("Cambios para guardar absolutamente todo");
+      },
+      returnToSelectUniversity(){
+        if(!this.isUnique){
+          window.location.href = this.$router.resolve({ name: 'HomeLogin' }).href;
+        }
+        else{
+          localStorage.clear();
+          window.location.href = this.$router.resolve({ name: 'HomeLogin' }).href;
+        }
+      },  
+      deleteAllScenes(){
+        this.universitySelected.listEscenes = [];
+        this.positionsScenes = [];
+        delete components['mouse-interaction'];
+        this.$nextTick(() => {
+          this.$emit('update:universitySelected', this.universitySelected);
+          this.deleteVoidScene = false;
+        });
+      },
+      onPreviewVR(){
+        window.open(`http://192.168.1.8:8080/VR-${this.universitySelected.nameFaculty}`, '_blank');
+      },
+      onChangeScenes(){
+        this.onChangeScene = !this.onChangeScene;
+        if(!this.onChangeScene){
+          this.changeSceneState = 0;
+          this.firstScene = {};
+          this.secondScene = {};
+        }
+      },
+      onChangeFirstScene(){
+       this.firstScene = this.universitySelected.listEscenes.find(e=>e.idEscene === this.stateChangeIcons.changeScene);
+       this.changeSceneState = 1;
+      },
+      onChangeSecondScene(){
+        this.secondScene = this.universitySelected.listEscenes.find(e=>e.idEscene === this.stateChangeIcons.changeScene);
+        if(this.secondScene.idEscene != this.firstScene.idEscene){
+          const firstSceneIndex = this.universitySelected.listEscenes.findIndex(
+            (e) => e.idEscene === this.firstScene.idEscene
+          );
+          const secondSceneIndex = this.universitySelected.listEscenes.findIndex(
+            (e) => e.idEscene === this.secondScene.idEscene
+          );
+          if (firstSceneIndex > -1 && secondSceneIndex > -1) {
+            const tempName = this.universitySelected.listEscenes[firstSceneIndex].nameScene;
+            const tempImage = this.universitySelected.listEscenes[firstSceneIndex].imageScene;
+            const tempListButtonInfo = this.universitySelected.listEscenes[firstSceneIndex].listButtonInfo;
+
+            this.universitySelected.listEscenes[firstSceneIndex].nameScene =
+              this.universitySelected.listEscenes[secondSceneIndex].nameScene;
+            this.universitySelected.listEscenes[firstSceneIndex].imageScene =
+              this.universitySelected.listEscenes[secondSceneIndex].imageScene;
+            this.universitySelected.listEscenes[firstSceneIndex].listButtonInfo =
+              this.universitySelected.listEscenes[secondSceneIndex].listButtonInfo;
+
+            this.universitySelected.listEscenes[secondSceneIndex].nameScene = tempName;
+            this.universitySelected.listEscenes[secondSceneIndex].imageScene = tempImage;
+            this.universitySelected.listEscenes[secondSceneIndex].listButtonInfo = tempListButtonInfo;
+          }
+          this.changeSceneState = 0;
+          this.scenesKey += 1;
+          this.firstScene = {};
+          this.secondScene = {};
+          this.onChangeScene = false;
+        }
+      },
       incrementCameraY(){
         let cameraView = document.querySelector('#camera');
         let positionCamera = cameraView.getAttribute('position');
@@ -97,7 +175,7 @@ export default {
           this.isEditNameScene = 0;
           this.enterToAddSceneBool = true;
           this.isOnButtonRed = this.stateChangeIcons.addInButtonRed;
-          console.log("Entro para anadir una escena dentro de un button redirect")
+          
         }
         else{
           this.isEditNameScene = 0;
@@ -134,7 +212,7 @@ export default {
             });
             setTimeout(()=>{
               delete components['mouse-interaction'];
-              this.onChangeEditVR({scene:sceneToEdit});
+              this.onChangeEditVR({scene:sceneToEdit,positions:this.positionsScenes});
             },1000)
           } 
           else {
@@ -174,14 +252,16 @@ export default {
               if (index > -1) {
                 this.universitySelected.listEscenes.splice(index, 1);
                 this.universitySelected.listEscenes.forEach(escene => {
-                  escene.listButtonRed.forEach(buttonRed => {
+                  escene.listButtonRed = escene.listButtonRed.filter(buttonRed => {
                     if (buttonRed.pageToSender && buttonRed.pageToSender.idEscene === this.isVoidDelete) {
-                      buttonRed.pageToSender = {};
+                      return false; 
                     }
+                    return true; 
                   });
                 });
                 this.$nextTick(() => {
                   this.$emit('update:universitySelected', this.universitySelected);
+                  this.positionsScenes = this.positionsScenes.filter(scene => scene.idEscene !== this.isVoidDelete);
                   this.deleteVoidScene = false;
                 });
               }
@@ -200,23 +280,34 @@ export default {
       },
       enterToSceneToEdit(){
         if (this.isOnButtonRed != 0) {
-          const lastId = this.universitySelected.listEscenes.length > 0 ? Math.max(...this.universitySelected.listEscenes.map(scene => scene.idEscene)) : 0;
+          // Generar un nuevo ID para la escena
+          const lastId = this.universitySelected.listEscenes.length > 0 
+          ? Math.max(...this.universitySelected.listEscenes.map(scene => scene.idEscene)) 
+          : 0;
+
           const newScene = {
-            idEscene: lastId + 1,
-            nameScene: this.newNameScene,
-            imageScene: "",
-            listButtonInfo: [],
-            listButtonRed: []
+          idEscene: lastId + 1,
+          nameScene: this.newNameScene,
+          imageScene: "",
+          listButtonInfo: [],
+          listButtonRed: []
           };
           this.universitySelected.listEscenes.push(newScene);
-          let buttonRed = this.universitySelected.listEscenes
-            .flatMap(scene => scene.listButtonRed)
-            .find(button => button.idButtonRedirect === this.isOnButtonRed);
-          if (buttonRed) {
-            buttonRed.pageToSender = newScene;
-          }
-          this.$emit('update:universitySelected', this.universitySelected);
+          this.universitySelected.listEscenes.forEach(scene => {
+          scene.listButtonRed = scene.listButtonRed.map(button => {
+              if (button.idButtonRedirect === this.isOnButtonRed) {
+                  return { 
+                      ...button, 
+                      pageToSender: newScene 
+                  };
+              }
+              return button;
+          });
+          });
           this.enterToAddSceneBool = false;
+          this.isOnButtonRed = 0;
+          this.scenesKey += 1;
+          this.onEsceneLoaded(this.universitySelected);
         } 
         else {
           const newScene = {
@@ -237,34 +328,72 @@ export default {
       cancelToAddScene(){
         this.enterToAddSceneBool = false;
       },
-      onEsceneLoaded(escene){
-        if(escene.listButtonRed.length != 0){
-          escene.listButtonRed.forEach(buttonRed => {
-              if(buttonRed.pageToSender && Object.keys(buttonRed.pageToSender).length > 0) {
-                const esceneId = document.querySelector(`#object-scene-${escene.idEscene}`);
-                const positions = esceneId.getAttribute("position");
-                let positionNew = { ...positions }; 
-                switch (buttonRed.horientationButton) {
-                  case "Left":
-                  positionNew.x -= 0.75;
-                  break;
-                  case "Right":
-                  positionNew.x += 0.75;
-                  break;
-                  case "Center":
-                  positionNew.z -= 0.75;
-                  break;
-                  case "Behind":
-                  positionNew.z += 0.75;
-                  break;
-                }
-                this.positionsScenes = {
-                  idScene: buttonRed.pageToSender.idEscene,
-                  position: positionNew
-                };
-              } 
+      onEsceneLoaded(university) {
+        const positionsScenes = [];
+      
+        // Función auxiliar para calcular nuevas posiciones basadas en la orientación
+        const calculatePosition = (basePosition, horientationButton) => {
+          const newPosition = { ...basePosition }; // Copiar la posición base
+      
+          switch (horientationButton) {
+            case "Left":
+              newPosition.x -= 0.75;
+              break;
+            case "Right":
+              newPosition.x += 0.75;
+              break;
+            case "Center":
+              newPosition.z -= 0.5;
+              break;
+            case "Behind":
+              newPosition.z += 0.5;
+              break;
+            default:
+              break; // Sin cambio si no hay orientación válida
+          }
+      
+          return newPosition;
+        };
+      
+        // Recorrer las escenas y calcular posiciones
+        university.listEscenes.forEach(scene => {
+          // Verificar si ya existe la posición de esta escena
+          let scenePosition = positionsScenes.find(pos => pos.idScene === scene.idEscene);
+      
+          if (!scenePosition) {
+            // Si no existe, agregar la posición inicial
+            scenePosition = { idScene: scene.idEscene, position: { x: 0, y: 0, z: 0 } };
+            positionsScenes.push(scenePosition);
+          }
+      
+          // Procesar botones de redirección para calcular nuevas posiciones
+          scene.listButtonRed.forEach(buttonRed => {
+            const pageToSender = buttonRed.pageToSender;
+      
+            if (pageToSender && pageToSender.idEscene) {
+              const targetSceneId = pageToSender.idEscene;
+      
+              // Buscar si la escena de destino ya tiene una posición
+              let targetScenePosition = positionsScenes.find(pos => pos.idScene === targetSceneId);
+      
+              if (!targetScenePosition) {
+                // Si no tiene posición, calcular una nueva basada en la orientación
+                const newPosition = calculatePosition(scenePosition.position, buttonRed.horientationButton);
+      
+                // Agregar la posición de la escena de destino
+                targetScenePosition = { idScene: targetSceneId, position: newPosition };
+                positionsScenes.push(targetScenePosition);
+              }
+            }
           });
-        }
+        });
+      
+        // Actualizar el array global de posiciones
+        this.positionsScenes = positionsScenes;
+      },
+      getScenePosition(idScene) {
+        const found = this.positionsScenes.find(scene => scene.idScene === idScene);
+        return found ? found.position : '0 0 0';
       },
       registerComponentMouseInteraction(vueComponent){
         registerComponent('mouse-interaction',{
@@ -375,7 +504,14 @@ export default {
                     intersection.object.el.id.includes("object")
                     ) {
                     if (!stateObjectsRay.object) {
-                      document.body.style.cursor = "default";
+                      if(vueComponent.onChangeScene){
+                        document.body.style.cursor = "pointer";      
+                        vueComponent.stateChangeIcons.changeScene = parseInt(intersection.object.el.id.split("-")[1],10);
+                      }
+                      else{
+                        document.body.style.cursor = "default";
+                        vueComponent.stateChangeIcons.changeScene = 0;
+                      }
                       stateObjectsRay.object = true;
                       stateObjectsRay.planeNew = false;
                       stateObjectsRay.planeHover = false;
@@ -695,15 +831,16 @@ export default {
                 vueComponent.enterToStateScene();
               }
               else if( vueComponent.stateChangeIcons.addInButtonRed != 0){
-                window.removeEventListener('mousedown', handleMouseDownBackground);
-                window.removeEventListener('mouseup', handleMouseUpBackground);
-                window.removeEventListener('wheel', handleWheel);
-                window.removeEventListener('mousemove', handleMouseMove);
-                delete components['mouse-interaction'];
-                document.body.style.cursor = 'default';
                 vueComponent.enterToAddScene();
                 onMoveCamera = false;
               }
+              else if(vueComponent.onChangeScene && vueComponent.changeSceneState === 0 && vueComponent.stateChangeIcons.changeScene != 0){
+                vueComponent.onChangeFirstScene();
+              }
+              else if(vueComponent.onChangeScene && vueComponent.changeSceneState === 1 && vueComponent.stateChangeIcons.changeScene != 0){
+                vueComponent.onChangeSecondScene();
+              }
+            
             };
             window.addEventListener('wheel', handleWheel);
         
@@ -784,7 +921,9 @@ export default {
       }
     },
     computed: {
-      
+      filteredButtons() {
+        return (scene) => scene.listButtonRed;
+      }
     },
   };
   

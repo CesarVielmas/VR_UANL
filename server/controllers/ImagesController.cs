@@ -86,26 +86,76 @@ public class ImagesController : ControllerBase
     public IActionResult UploadEscene([FromForm] IFormFile file, string FacultyName)
     {
         string[] permittedExtensions = { ".jpg", ".jpeg", ".webp" };
+
         if (file == null)
-            return BadRequest("No hay ningun archivo mandado");
-        if (string.IsNullOrEmpty(FacultyName))
-            return BadRequest("No se ha mandado el nombre de la facultad");
-        var escenePath = Path.Combine(Path.Combine(_imagePath, FacultyName), "Escenes");
-        if (!Directory.Exists(escenePath))
-        {
-            Directory.CreateDirectory(escenePath);
-        }
+            return BadRequest("No se envió ningún archivo");
+
         var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-        if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
+        if (!permittedExtensions.Contains(ext))
+            return BadRequest($"Extensión {ext} no permitida");
+
+        var baseName = Path.GetFileNameWithoutExtension(file.FileName);
+        var escenePath = Path.Combine(_imagePath, FacultyName, "Escenes");
+        Directory.CreateDirectory(escenePath);
+
+        // Eliminar todas las versiones previas
+        foreach (var allowedExt in permittedExtensions)
         {
-            return BadRequest($"El archivo {file.FileName} no es una imagen válida, asegurese de enviar imagenes validas");
+            var oldFile = Path.Combine(escenePath, $"{baseName}{allowedExt}");
+            if (System.IO.File.Exists(oldFile)) System.IO.File.Delete(oldFile);
         }
-        var filePath = Path.Combine(escenePath, file.FileName);
+
+        var fileName = $"{baseName}{ext}";
+        var filePath = Path.Combine(escenePath, fileName);
+
         using (var stream = new FileStream(filePath, FileMode.Create))
         {
             file.CopyTo(stream);
         }
-        return StatusCode(200, new { Message = "El archivo de escena se subio con exito", path = $"http://localhost:5299/images/{FacultyName}/Escenes/{file.FileName}" });
+
+        return Ok(new
+        {
+            Message = "Escena subida exitosamente",
+            Path = $"{Request.Scheme}://{Request.Host}/images/{FacultyName}/Escenes/{fileName}"
+        });
+    }
+    [Authorize(Roles = "Administrador")]
+    [HttpPost("upload/buttonInformation/{FacultyName}")]
+    public IActionResult UploadButtonInformation([FromForm] IFormFile file, string FacultyName)
+    {
+        string[] permittedExtensions = { ".jpg", ".jpeg", ".webp" };
+
+        if (file == null)
+            return BadRequest("No se envió ningún archivo");
+
+        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (!permittedExtensions.Contains(ext))
+            return BadRequest($"Extensión {ext} no permitida");
+
+        var baseName = Path.GetFileNameWithoutExtension(file.FileName);
+        var infoPath = Path.Combine(_imagePath, FacultyName, "Escenes", "InformationImages");
+        Directory.CreateDirectory(infoPath);
+
+        // Eliminar versiones anteriores
+        foreach (var allowedExt in permittedExtensions)
+        {
+            var oldFile = Path.Combine(infoPath, $"{baseName}{allowedExt}");
+            if (System.IO.File.Exists(oldFile)) System.IO.File.Delete(oldFile);
+        }
+
+        var fileName = $"{baseName}{ext}";
+        var filePath = Path.Combine(infoPath, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            file.CopyTo(stream);
+        }
+
+        return Ok(new
+        {
+            Message = "Imagen de información subida exitosamente",
+            Path = $"{Request.Scheme}://{Request.Host}/images/{FacultyName}/Escenes/InformationImages/{fileName}"
+        });
     }
     [Authorize(Roles = "Administrador")]
     [HttpDelete("delete/{FacultyName}")]

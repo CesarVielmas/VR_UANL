@@ -28,8 +28,8 @@
             </div>
             <div class="buttonsResponse">
                 <button class="reset" v-on:click="resetCamera">Resetear Vista</button>
-                <button class="return">Regresar</button>
-                <button class="save">Guardar</button>
+                <button class="return" v-on:click="returnToSelectUniversity">{{ isUnique?"Salir":"Regresar"}}</button>
+                <button class="save" v-on:click="saveChanges">Guardar</button>
             </div>
         </div>
     </div>

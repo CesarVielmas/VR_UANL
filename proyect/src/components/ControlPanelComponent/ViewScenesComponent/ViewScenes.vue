@@ -17,7 +17,7 @@
             <button v-on:click="this.deleteVoidScene = false;" style="background-color: rgb(5, 65, 5);">Cancelar</button>
         </div>
     </div>
-    <HeaderViewScenes :logoUrl="universitySelected.logoFaculty" :nameFaculty="universitySelected.nameFaculty" :aumentVist="incrementCameraY" :dismissVist="decrementCameraY" :aumentDesp="incrementCameraZ" :dismissDesp="decrementCameraZ" :resetCamera="resetCamera" />
+    <HeaderViewScenes :logoUrl="universitySelected.logoFaculty" :nameFaculty="universitySelected.nameFaculty" :aumentVist="incrementCameraY" :dismissVist="decrementCameraY" :aumentDesp="incrementCameraZ" :dismissDesp="decrementCameraZ" :resetCamera="resetCamera" :isUnique="isUnique" :returnToSelectUniversity="returnToSelectUniversity" :saveChanges="onSaveChanges" />
     <a-scene embedded style="width: 100%; height: 100%;">
       <!-- Cámara con vista desde arriba -->
       <a-entity id="cameraRing" rotation="0 0 0" position="0 0 0">
@@ -46,7 +46,7 @@
             </a-plane>
         </a-entity>
 
-        <a-entity v-if="universitySelected.listEscenes.length >= 1" position="0 1 0">
+        <a-entity v-if="universitySelected.listEscenes.length >= 1" position="0 1 0" :key="scenesKey">
             <a-plane
             v-for="escenes in universitySelected.listEscenes"
             :id="`object-scene-${escenes.idEscene}`"
@@ -54,16 +54,19 @@
             :ref="`entityRef-${escenes.idEscene}`"
             color="white"
             rotation="-90 0 0"
-            :position="positionsScenes.idScene === escenes.idEscene?positionsScenes.position:'0 0 0'"
+            :position="getScenePosition(escenes.idEscene)"
             width="0.35"
             height="0.2"
-            @loaded="()=>onEsceneLoaded(escenes)"
             mouse-interaction>
             <a-image
+                :id="`image-scene-${escenes.idEscene}`"
                 :src="escenes.imageScene"
                 width="0.35"
                 height="0.2"
-                position="0 0 0.001">
+                position="0 0 0.001"
+                v-bind="changeSceneState === 1 && escenes.idEscene === firstScene.idEscene 
+                        ? { animation: 'property: material.opacity; from: 1; to: 0; dur: 1000; loop: true; dir: alternate' } 
+                        : { animation: 'property: material.opacity; from: 0; to: 1; dur: 1; loop: false' }">
             </a-image>
             <a-plane
                 :id="`object-${escenes.idEscene}`"
@@ -81,13 +84,16 @@
                 align="center"
                 position="0 0 0.003"
                 width="0.65"
-                class="hover">
+                class="hover"
+                v-bind="changeSceneState === 1 && escenes.idEscene === firstScene.idEscene 
+                        ? { animation: 'property: material.opacity; from: 1; to: 0; dur: 1000; loop: true; dir: alternate' } 
+                        : { animation: 'property: material.opacity; from: 0; to: 1; dur: 1; loop: false' }">
             </a-text>
             <a-entity v-if="escenes.listButtonRed.length >= 1">
                 <a-entity 
                         v-for="buttonRed in escenes.listButtonRed" 
                         :key="`red-${buttonRed.idButtonRedirect}`" 
-                        :position="buttonRed.horientationButton === 'Left'?'-0.9 0 0':buttonRed.horientationButton === 'Right'?'0.56 0 0':buttonRed.horientationButton === 'Center'?'0.5 -0.03 0':buttonRed.horientationButton === 'Behind'?'0.5 -0.03 0':''">
+                        :position="buttonRed.horientationButton === 'Left'?'-0.9 0 0':buttonRed.horientationButton === 'Right'?'-0.25 0 0':buttonRed.horientationButton === 'Center'?'-0.5 0.25 0':buttonRed.horientationButton === 'Behind'?'-0.5 -0.19 0':''">
                     <a-plane
                         color="white"
                         width="0.05"
@@ -100,15 +106,15 @@
                         vertex-a="0 0.1 0"
                         vertex-b="-0.05 0 0"
                         vertex-c="0.05 0 0"
-                        position="0.5 0 0"
-                        :rotation="buttonRed.horientationButton === 'Left'?'0 0 90':buttonRed.horientationButton === 'Right'?'0 0 -90':buttonRed.horientationButton === 'Center'?'0 0 0':buttonRed.horientationButton === 'Behind'?'0 0 0':''">
+                        :position="buttonRed.horientationButton === 'Left'?'0.5 0 0':buttonRed.horientationButton === 'Right'?'0.63 0 0':buttonRed.horientationButton === 'Center'?'0.5 0 0':buttonRed.horientationButton === 'Behind'?'0.5 -0.1 0':''"
+                        :rotation="buttonRed.horientationButton === 'Left'?'0 0 90':buttonRed.horientationButton === 'Right'?'0 0 -90':buttonRed.horientationButton === 'Center'?'0 0 0':buttonRed.horientationButton === 'Behind'?'0 0 180':''">
                     </a-triangle>
                     <a-circle
                         :id="`addInButtonRed-${buttonRed.idButtonRedirect}`"
                         v-if="Object.keys(buttonRed.pageToSender).length === 0"
                         color="rgb(5, 65, 5)"
                         radius="0.05"
-                        position="0.28 -0.004 0"
+                        :position="buttonRed.horientationButton === 'Left'?'0.28 -0.004 0':buttonRed.horientationButton === 'Right'?'0.83 0 0':buttonRed.horientationButton === 'Center'?'0.505 0.2 0':buttonRed.horientationButton === 'Behind'?'0.5 -0.285 0':''"
                         class="clickable">
                         <a-text
                             :id="`addInButtonRed-${buttonRed.idButtonRedirect}`"
@@ -129,7 +135,10 @@
                 width="0.025"
                 height="0.025"
                 position="0.005 -0.005 0"
-                class="clickable">
+                class="clickable"
+                v-bind="changeSceneState === 1 && escenes.idEscene === firstScene.idEscene 
+                        ? { animation: 'property: material.opacity; from: 1; to: 0; dur: 1000; loop: true; dir: alternate' } 
+                        : { animation: 'property: material.opacity; from: 0; to: 1; dur: 1; loop: false' }">
                 </a-image>
                 <a-image
                 :id="`editNameScene-${escenes.idEscene}`"
@@ -138,7 +147,10 @@
                 width="0.027"
                 height="0.027"
                 position="0.045 -0.005 0"
-                class="clickable">
+                class="clickable"
+                v-bind="changeSceneState === 1 && escenes.idEscene === firstScene.idEscene 
+                        ? { animation: 'property: material.opacity; from: 1; to: 0; dur: 1000; loop: true; dir: alternate' } 
+                        : { animation: 'property: material.opacity; from: 0; to: 1; dur: 1; loop: false' }">
                 </a-image>
                 <a-image
                 :id="`voidScene-${escenes.idEscene}`"
@@ -147,7 +159,10 @@
                 width="0.027"
                 height="0.025"
                 position="0.085 -0.005 0"
-                class="clickable">
+                class="clickable"
+                v-bind="changeSceneState === 1 && escenes.idEscene === firstScene.idEscene 
+                        ? { animation: 'property: material.opacity; from: 1; to: 0; dur: 1000; loop: true; dir: alternate' } 
+                        : { animation: 'property: material.opacity; from: 0; to: 1; dur: 1; loop: false' }">
                 </a-image>
                 <a-image
                 :id="`deleteScene-${escenes.idEscene}`"
@@ -156,14 +171,20 @@
                 width="0.025"
                 height="0.025"
                 position="0.127 -0.006 0"
-                class="clickable">
+                class="clickable"
+                v-bind="changeSceneState === 1 && escenes.idEscene === firstScene.idEscene 
+                        ? { animation: 'property: material.opacity; from: 1; to: 0; dur: 1000; loop: true; dir: alternate' } 
+                        : { animation: 'property: material.opacity; from: 0; to: 1; dur: 1; loop: false' }">
                 </a-image>
                 <a-circle
                     :id="`stateScene-${escenes.idEscene}`"
                     :color="escenes.imageScene != '' && escenes.listButtonRed.length != 0 ? 'rgb(88, 255, 88)':escenes.imageScene != ''? 'rgb(255, 251, 41)' : 'rgb(255, 101, 101)'"
                     radius="0.005"
                     position="0.16 0.003 0"
-                    class="clickable">
+                    class="clickable"
+                    v-bind="changeSceneState === 1 && escenes.idEscene === firstScene.idEscene 
+                        ? { animation: 'property: material.opacity; from: 1; to: 0; dur: 1000; loop: true; dir: alternate' } 
+                        : { animation: 'property: material.opacity; from: 0; to: 1; dur: 1; loop: false' }">
                 </a-circle>
             </a-entity>
             </a-plane>
@@ -180,5 +201,5 @@
             mouse-interaction>
         </a-plane>
     </a-scene>
-    <FooterViewScenes :functionMaxRestSee="incrementCameraYMax" :functionMaxPlusSee="decrementCameraYMax"/>
+    <FooterViewScenes :colorBackground="colorBackground" :functionMaxRestSee="incrementCameraYMax" :functionMaxPlusSee="decrementCameraYMax" :functionDeleteAllScenes="deleteAllScenes" :functionOnChangeScenes="onChangeScenes" :functionOnPreview="onPreviewVR"/>
 </template>

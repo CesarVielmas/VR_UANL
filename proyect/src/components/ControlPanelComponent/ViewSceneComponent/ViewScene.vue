@@ -10,7 +10,7 @@
         </div>
     </div>
     <div style="height: 100%;width: 100%;">
-        <SideBarViewScene v-if="isEditingButton" :background="colorBackground" :cancelPropertysButton="onCancelEditPropertysButton" :savePropertysButton="onSaveEditPropertysButton" :buttonOnEditRed="buttonRedirectEdit" :buttonOnEditInf="buttonInformationEdit" />
+        <SideBarViewScene v-if="isEditingButton" :background="colorBackground" :cancelPropertysButton="onCancelEditPropertysButton" :savePropertysButton="onSaveEditPropertysButton" :buttonOnEditRed="buttonRedirectEdit" :buttonOnEditInf="buttonInformationEdit" :listEscenes="universitySelected.listEscenes" :scene="scene" :base64ToBlob="base64ToBlob" :facultyName="facultyName" :scenesPositions="positions" />
         <a-scene v-if="device === 'Desktop'" :key="scene.nameScene" vr-mode-ui="enabled: true" style="position: relative; width: 100%; height: 100%">
         <a-entity id="cameraRig" position="0 0 0">
             <a-camera id="mainCamera" look-controls="enabled:true;" wasd-controls="enabled:false;">
@@ -34,7 +34,7 @@
         <a-entity id="areaButtons" raycaster="objects: .clickable" v-if="scene.listButtonRed.length > 0">
             <a-entity raycaster="objects: .clickable" cursor="fuse: false; rayOrigin: mouse"></a-entity>
             <a-entity
-            v-for="(element, index) in scene.listButtonRed"
+            v-for="(element) in scene.listButtonRed"
             :key="element.idButtonRedirect"
             :ref="'arrowModel-' + element.idButtonRedirect"
             gltf-model="url(/direction_arrow/scene.gltf)"
@@ -43,15 +43,15 @@
             :rotation="`${element.rotationSideY} ${element.rotationSideX} ${element.rotationSideZ}`"
             class="clickable"
             v-on:click="() =>onChangePropertysButton(element,true)"
-            @model-loaded="()=>loadModelsButtonsRedirect(index)"
-            @mouseenter="onMouseEnterButtonRedirect(index)" 
-            @mouseleave="onMouseLeaveButtonRedirect(index)">
+            @model-loaded="()=>loadModelsButtonsRedirect(element.idButtonRedirect)"
+            @mouseenter="onMouseEnterButtonRedirect(element.idButtonRedirect)" 
+            @mouseleave="onMouseLeaveButtonRedirect(element.idButtonRedirect)">
             </a-entity>
 
             <a-image 
-            v-for="(element, index) in scene.listButtonRed" 
+            v-for="(element) in scene.listButtonRed" 
             :key="'tooltip-' + element.idButtonRedirect" 
-            :id="'tooltip-' + index" 
+            :id="'tooltip-' + element.idButtonRedirect" 
             :position="`${element.positionX} ${element.positionY + 1.1} ${element.positionZ}`" 
             :rotation="element.horientationButton === 'Right'?'0 -90 0':element.horientationButton === 'Left'?'0 90 0':element.horientationButton === 'Behind'?'0 -180 0':'0 0 0'"
             v-bind:src="element.pageToSender?.imageScene || require('@/assets/not_found_scene.png')"
@@ -62,9 +62,9 @@
             </a-image>
 
             <a-text 
-            v-for="(element, index) in scene.listButtonRed" 
+            v-for="(element) in scene.listButtonRed" 
             :key="'tooltip-text-' + element.idButtonRedirect" 
-            :id="'tooltip-text-' + index" 
+            :id="'tooltip-text-' + element.idButtonRedirect" 
             :position="`${element.positionX} ${element.positionY + 0.75} ${element.positionZ}`" 
             :rotation="element.horientationButton === 'Right'?'0 -90 0':element.horientationButton === 'Left'?'0 90 0':element.horientationButton === 'Behind'?'0 -180 0':'0 0 0'"
             v-bind:value="element.pageToSender?.nameScene || 'Lo sentimos parece que no existe una escena siguiente aqui'" 
@@ -78,7 +78,7 @@
 
         </a-entity>
         
-        <VRInformationPanelView v-for="(element,index) in scene.listButtonInfo" v-bind:key="index" :scale="`${element.buttonLarge} ${element.buttonHigh} ${element.buttonWidth}`" :position="`${element.positionX} ${element.positionY} ${element.positionZ}`" :rotation="`${element.rotationSideY} ${element.rotationSideX} ${element.rotationSideZ}`" :methodClick="changeInformation" :typeColorOpen="backgroundColorLoader" :typeColorClose="dominantColor" :textInformation="element.textInformation" :imageOptional="element.optionalImage" />
+        <VRInformationPanelView v-for="(element) in scene.listButtonInfo" :key="element.idButtonInformation" :ref="`infoPanel-${element.idButtonInformation}`"  :scale="`${element.buttonLarge} ${element.buttonHigh} ${element.buttonWidth}`" :position="`${element.positionX} ${element.positionY} ${element.positionZ}`" :rotation="`${element.rotationSideY} ${element.rotationSideX} ${element.rotationSideZ}`" :methodClickPropertys="onChangePropertysButton" :typeColorOpen="colorBackgroundSecond" :typeColorClose="colorBackground" :textInformation="element.textInformation" :imageOptional="element.optionalImage" :elementSend="element" :id="element.idButtonInformation" />
         </a-scene>
 
         <a-scene v-if="device === 'Mobile' || device === 'Tablet'" :key="actualScene.nameScene" vr-mode-ui="enabled: false" style="position: relative; width: 100%; height: 100%">
@@ -142,7 +142,7 @@
 
         </a-entity>
         
-        <VRInformationPanelView v-for="(element,index) in actualScene.listButtonInfo" v-bind:key="index" :scale="`${element.buttonLarge} ${element.buttonHigh} ${element.buttonWidth}`" :position="`${element.positionX} ${element.positionY} ${element.positionZ}`" :rotation="`${element.rotationSideY} ${element.rotationSideX} ${element.rotationSideZ}`" :methodClick="changeInformation" :typeColorOpen="backgroundColorLoader" :typeColorClose="dominantColor" :textInformation="element.textInformation" :imageOptional="element.optionalImage" />
+        <VRInformationPanelView v-for="(element,index) in actualScene.listButtonInfo" v-bind:key="index" :scale="`${element.buttonLarge} ${element.buttonHigh} ${element.buttonWidth}`" :position="`${element.positionX} ${element.positionY} ${element.positionZ}`" :rotation="`${element.rotationSideY} ${element.rotationSideX} ${element.rotationSideZ}`" :methodClickPropertys="onChangePropertysButton" :typeColorOpen="backgroundColorLoader" :typeColorClose="dominantColor" :textInformation="element.textInformation" :imageOptional="element.optionalImage" />
         </a-scene>
 
         <FooterViewScene :background="colorBackground" :createButtonRedirect="onCreateButtonRedirect" :createButtonInformation="onCreateButtonInformation" :deleteButton="onDeleteButton" :changeBackgroundImage="onChangeImageScene" :changeToPanelControl="changeToControlPanel"  />

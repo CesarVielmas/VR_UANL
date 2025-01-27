@@ -22,39 +22,38 @@
         gltf-model="url(/picture_frame/scene.gltf)"
         ref="PanelOpen"
         scale="0.001 0.001 0.001"
-        position="-.4 -1 -0.7"
+        position="0 -8 -7"
         @model-loaded="loadModelButtonInformation"
         :animation="`property: scale; to: ${scaleEntityPanelOpen}; dur: 500; easing: easeOutElastic`">
-      </a-entity>
+          <!-- Imagen del panel (si la hay) -->
+          <a-entity 
+            :geometry="`primitive: plane; width: 160; height: 150;`"
+            :material="'src: ' + imageOptional" 
+            rotation="0 90 0"
+            position="10 95 98">
+          </a-entity>
 
-      <!-- Imagen del panel (si la hay) -->
-      <a-entity 
-        :geometry="'primitive: plane; width: 1.1; height: 0.7;'"
-        :material="'src: ' + imageOptional" 
-        rotation="0 90 0"
-        position="-.2 0.25 0.0001">
-      </a-entity>
+          <!-- Texto descriptivo -->
+          <a-entity 
+            :text="`value: ${textInformation}; color: white; align: center; width: 160; wrapCount: 40;`" 
+            rotation="0 90 0"
+            position="10 205 98">
+          </a-entity>
 
-      <!-- Texto descriptivo -->
-      <a-entity 
-        :text="`value: ${textInformation}; color: white; align: center; wrapCount: 30;`" 
-        rotation="0 90 0"
-        position="0 -0.2 0.01">
-      </a-entity>
-
-      <!-- Botón de cerrar -->
-      <a-entity 
-        id="closeButton"
-        geometry="primitive: circle; radius: 0.1;" 
-        material="color: red; opacity: 0.9;" 
-        rotation="0 90 0"
-        position="0.1 0.59 -.54" 
-        class="clickable"
-        v-on:click="closePanel">
-        <a-entity 
-          text="value: X; color: white; align: center; width: 1.5;" 
-          position="0 0 0.01">
-        </a-entity>
+          <!-- Botón de cerrar -->
+          <a-entity 
+            id="closeButton"
+            :geometry="`primitive: circle; radius:15`" 
+            material="color: red; opacity: 1;" 
+            rotation="0 90 0"
+            position="18 245 1" 
+            class="clickable"
+            v-on:click="closePanel">
+            <a-entity 
+              :text="`value: X; color: white; align: center; width:200`" 
+              position="0 0 0.01">
+            </a-entity>
+          </a-entity>
       </a-entity>
     </a-entity>
 </template>

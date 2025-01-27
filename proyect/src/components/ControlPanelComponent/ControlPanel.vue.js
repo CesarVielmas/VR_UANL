@@ -21,9 +21,11 @@ export default {
   data() {
     return {
         dominantColor:'',
+        backgroundSecond:'',
         deviceType:'',
         isEditVR:false,
         sceneToEdit:{},
+        positionsScenes:[],
         lastIdRedirect:0,
         lastIdInformation:0
     };
@@ -53,6 +55,7 @@ export default {
     .catch(error=>{
       console.log(`Error en obtener el id del boton de informacion ${error}`)
     });
+    console.log(this.university);
   },
   methods: {
     getDominantColor() {
@@ -190,8 +193,9 @@ export default {
           return 'Desktop';
         }
     },
-    changeToEditVR({scene}){
+    changeToEditVR({scene,positions}){
       this.isEditVR = true;
+      this.positionsScenes = positions;
       this.sceneToEdit = scene;
     },
     changeToControlPanel(){
@@ -210,6 +214,7 @@ export default {
   watch: {
     dominantColor(){
       this.dominantColor = this.getTone(this.dominantColor,85,60);
+      this.backgroundSecond =  this.getTone(this.dominantColor,85,60);
     }
   },
   computed: {

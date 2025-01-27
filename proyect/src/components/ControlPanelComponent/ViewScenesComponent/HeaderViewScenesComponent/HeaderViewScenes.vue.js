@@ -31,6 +31,18 @@ export default {
       resetCamera:{
         type:Function,
         required:true
+      },
+      isUnique: {
+        type: Boolean, 
+        required: true 
+      },
+      returnToSelectUniversity:{
+        type:Function,
+        required:true
+      },
+      saveChanges:{
+        type:Function,
+        required:true
       }
     },
     data() {
@@ -42,7 +54,7 @@ export default {
         
     },
     methods: {
-
+      
     },
     mounted() {
         

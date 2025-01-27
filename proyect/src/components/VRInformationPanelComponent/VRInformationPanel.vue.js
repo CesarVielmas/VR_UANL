@@ -92,9 +92,16 @@ export default {
           panelCloseEntity.getWorldQuaternion(worldQuaternion);
           this.panelPosition = `${worldPosition.x} ${worldPosition.y} ${worldPosition.z}`;
           const euler = new THREE.Euler().setFromQuaternion(worldQuaternion);
-          this.panelRotation = `${THREE.MathUtils.radToDeg(euler.x)} ${THREE.MathUtils.radToDeg(euler.y)} ${THREE.MathUtils.radToDeg(euler.z)}`;
-        } else {
-          console.error('No se pudo abrir el panel: entidad o cámara no encontrada.');
+          if(this.rotation.split(" ")[1] === "-180")
+            this.panelRotation = 
+              `${THREE.MathUtils.radToDeg(euler.x)} 
+               ${THREE.MathUtils.radToDeg(euler.y)-10} 
+               ${THREE.MathUtils.radToDeg(euler.z)-2}`;
+          else
+            this.panelRotation = 
+                `${THREE.MathUtils.radToDeg(euler.x)} 
+                ${THREE.MathUtils.radToDeg(euler.y)} 
+                ${THREE.MathUtils.radToDeg(euler.z)}`;
         }
         this.isPanelOpen = true;
       }
