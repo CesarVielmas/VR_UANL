@@ -152,16 +152,12 @@ public class UniversityController : ControllerBase
             return StatusCode(500, $"Error inesperado:{ex.Message}");
         }
     }
-    [Authorize(Roles = "Administrador")]
-    [HttpPut("Escenes/{id}")]
-    public async Task<ActionResult> PutUniversityScenes(int id, [FromBody] EscenesRequestListDTO listEscenes)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        try
+    [Authorize(Roles = "Administrador")] 
+    [HttpPut("Escenes/{id}")] public async Task<ActionResult> PutUniversityScenes(int id, [FromBody] EscenesRequestListDTO listEscenes) {
+    if (!ModelState.IsValid) { 
+        return BadRequest(ModelState); 
+    }
+    try
         {
             var university = await _context.Universities
                 .Include(u => u.ListEscenes)
@@ -169,188 +165,292 @@ public class UniversityController : ControllerBase
 
             if (university == null)
             {
-                return BadRequest("La universidad no existe.");
+                return StatusCode(400, "La universidad no existe.");
             }
-
-            var existingScenes = await _context.Escenes
-                .Where(e => e.UniversityId == id)
-                .Include(e => e.ListButtonRed)
-                .Include(e => e.ListButtonInfo)
-                .AsSplitQuery()
+            //Delete Escenes
+            University universitySelect = await _context.Universities.FirstAsync(u=> u.IdUniversity == id);
+            List<ButtonRedirect> buttonsRedirects = await _context.Universities
+                .Where(u => u.IdUniversity == id)
+                .SelectMany(u => u.ListEscenes)         
+                .SelectMany(e => e.ListButtonRed)       
+                .Distinct()                          
                 .ToListAsync();
-
-            var sceneMap = existingScenes.ToDictionary(e => e.IdEscene);
-            var targetEsceneMap = listEscenes.ListEscenes
-                .SelectMany(e => e.ListButtonRed)
-                .Where(b => b.TargetEsceneId.HasValue && b.TargetEsceneId.Value != 0)
-                .ToDictionary(b => b.TargetEsceneId.Value, b => b.EsceneId);
-
-            var updatedScenes = new List<Escene>();
-
-            foreach (var sceneDto in listEscenes.ListEscenes)
+            List<ButtonInformation> buttonsInformation = await _context.Universities
+                .Where(u => u.IdUniversity == id)
+                .SelectMany(u => u.ListEscenes)         
+                .SelectMany(e => e.ListButtonInfo)       
+                .Distinct()                          
+                .ToListAsync();
+            foreach (Escene existingScene in universitySelect.ListEscenes)
             {
-                if (sceneMap.TryGetValue(sceneDto.IdEscene, out var existingScene))
+                bool exists = listEscenes.ListEscenes.Any(s => 
+                    s.NamePositionScene == existingScene.NamePositionScene);
+                if(!exists){
+                    Console.WriteLine("Elimino Escene");
+                    _context.Escenes.Remove(existingScene);
+                }
+            }
+            foreach (ButtonRedirect buttonsRed in buttonsRedirects)
+            {
+                bool existButtonRed = false;
+                foreach (Escene item in listEscenes.ListEscenes)
                 {
-                    existingScene.ImageScene = sceneDto.ImageScene;
-                    existingScene.NameScene = sceneDto.NameScene;
-                    _context.Escenes.Update(existingScene);
+                    foreach (ButtonRedirect item2 in item.ListButtonRed)
+                    {
+                        if(item2.IdButtonRedirect == buttonsRed.IdButtonRedirect)
+                            existButtonRed = true;
+                    }
+                }
+                if(!existButtonRed){
+                    _context.ButtonRedirects.Remove(buttonsRed);
+                }
+            }
+            foreach (ButtonInformation buttonsInfo in buttonsInformation)
+            {
+                bool existButtonInfo = false;
+                foreach (Escene item in listEscenes.ListEscenes)
+                {
+                    foreach (ButtonInformation item2 in item.ListButtonInfo)
+                    {
+                        if(item2.IdButtonInformation == buttonsInfo.IdButtonInformation)
+                            existButtonInfo = true;
+                    }
+                }
+                if(!existButtonInfo){
+                    _context.ButtonInformations.Remove(buttonsInfo);
+                }
+            }
+            await _context.SaveChangesAsync();
+            var targetEsceneMap = new Dictionary<int, string>();
+            foreach (var esceneDto in listEscenes.ListEscenes)
+            {
+                foreach (var buttonRed in esceneDto.ListButtonRed)
+                {
+                    if (buttonRed.TargetEsceneId != 0)
+                    {
+                        targetEsceneMap.Add((int)buttonRed.TargetEsceneId, esceneDto.NamePositionScene);
+                    }
+                }
+            }
+            var insertedEscenes = new List<Escene>();
+            foreach (Escene sceneToPutOrPost in listEscenes.ListEscenes)
+            {
+                bool resultId = await _context.Escenes.AnyAsync(e => e.IdEscene == sceneToPutOrPost.IdEscene && e.NamePositionScene == sceneToPutOrPost.NamePositionScene);
+                if (resultId)
+                {
+                    Escene sceneObtain = await _context.Escenes.FirstAsync(e => e.IdEscene == sceneToPutOrPost.IdEscene);
+                    sceneObtain.ImageScene = sceneToPutOrPost.ImageScene;
+                    sceneObtain.NameScene = sceneToPutOrPost.NameScene;
+                    _context.Escenes.Update(sceneObtain);
+                    insertedEscenes.Add(sceneObtain);
                 }
                 else
                 {
-                    existingScene = new Escene
+                    bool resultNamePosition = await _context.Escenes.AnyAsync(e => e.NamePositionScene == sceneToPutOrPost.NamePositionScene);
+                    if (resultNamePosition)
                     {
-                        ImageScene = sceneDto.ImageScene,
-                        NamePositionScene = sceneDto.NamePositionScene,
-                        NameScene = sceneDto.NameScene,
-                        UniversityId = id
-                    };
-                    _context.Escenes.Add(existingScene);
+                        Escene sceneObtain = await _context.Escenes.FirstAsync(e => e.NamePositionScene == sceneToPutOrPost.NamePositionScene);
+                        sceneObtain.ImageScene = sceneToPutOrPost.ImageScene;
+                        sceneObtain.NameScene = sceneToPutOrPost.NameScene;
+                        _context.Escenes.Update(sceneObtain);
+                        insertedEscenes.Add(sceneObtain);
+                    }
+                    else
+                    {
+                        Escene sceneToPost = new Escene
+                        {
+                            ImageScene = sceneToPutOrPost.ImageScene,
+                            NamePositionScene = sceneToPutOrPost.NamePositionScene,
+                            NameScene = sceneToPutOrPost.NameScene,
+                            UniversityId = id
+                        };
+                        _context.Escenes.Add(sceneToPost);
+                    }
                 }
-                updatedScenes.Add(existingScene);
             }
-
-            // Eliminar escenas que ya no están en la lista
-            var scenesToDelete = existingScenes.Where(e => !listEscenes.ListEscenes.Any(dto => dto.IdEscene == e.IdEscene)).ToList();
-            _context.Escenes.RemoveRange(scenesToDelete);
-
             await _context.SaveChangesAsync();
-
-            foreach (var scene in updatedScenes)
+            foreach (Escene sceneToSearch in listEscenes.ListEscenes)
             {
-                var sceneDto = listEscenes.ListEscenes.FirstOrDefault(e => e.NamePositionScene == scene.NamePositionScene);
-                UpdateButtons(scene, sceneDto, targetEsceneMap.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Value));
-            }
-
-            // Eliminar botones que ya no están en la lista
-            foreach (var scene in existingScenes)
-            {
-                var sceneDto = listEscenes.ListEscenes.FirstOrDefault(dto => dto.IdEscene == scene.IdEscene);
-                if (sceneDto != null)
+                Escene sceneSearched = await _context.Escenes
+                                            .FirstAsync(e => e.NamePositionScene == sceneToSearch.NamePositionScene);
+                if (!insertedEscenes.Any(i => i.NamePositionScene == sceneSearched.NamePositionScene))
                 {
-                    var buttonsToDelete = scene.ListButtonRed.Where(b => !sceneDto.ListButtonRed.Any(dto => dto.IdButtonRedirect == b.IdButtonRedirect)).ToList();
-                    var infoButtonsToDelete = scene.ListButtonInfo.Where(b => !sceneDto.ListButtonInfo.Any(dto => dto.IdButtonInformation == b.IdButtonInformation)).ToList();
+                    insertedEscenes.Add(sceneSearched);
+                }
+            }
+            foreach (Escene sceneToAddButtons in listEscenes.ListEscenes)
+            {
+                // Procesar botones de redirección
+                if (sceneToAddButtons.ListButtonRed.Count != 0)
+                {
+                    foreach (ButtonRedirect buttonRed in sceneToAddButtons.ListButtonRed)
+                    {
+                        bool responseIdRed = await _context.ButtonRedirects.AnyAsync(b => b.IdButtonRedirect == buttonRed.IdButtonRedirect);
 
-                    _context.ButtonRedirects.RemoveRange(buttonsToDelete);
-                    _context.ButtonInformations.RemoveRange(infoButtonsToDelete);
+                        if (responseIdRed)
+                        {
+                            // Actualizar botón existente
+                            ButtonRedirect buttonRedToPut = await _context.ButtonRedirects.FirstAsync(b => b.IdButtonRedirect == buttonRed.IdButtonRedirect);
+
+                            buttonRedToPut.ButtonHigh = buttonRed.ButtonHigh;
+                            buttonRedToPut.ButtonLarge = buttonRed.ButtonLarge;
+                            buttonRedToPut.ButtonWidth = buttonRed.ButtonWidth;
+                            buttonRedToPut.PositionX = buttonRed.PositionX;
+                            buttonRedToPut.PositionY = buttonRed.PositionY;
+                            buttonRedToPut.PositionZ = buttonRed.PositionZ;
+                            buttonRedToPut.RotationSideX = buttonRed.RotationSideX;
+                            buttonRedToPut.RotationSideY = buttonRed.RotationSideY;
+                            buttonRedToPut.RotationSideZ = buttonRed.RotationSideZ;
+                            buttonRedToPut.HorientationButton = buttonRed.HorientationButton;
+
+                            if (await _context.Escenes.AnyAsync(e => e == buttonRed.PageToSender))
+                            {
+                                var pageToSender = buttonRed.PageToSender;
+                                buttonRedToPut.PageToSender = pageToSender;
+                            }
+                            else if (targetEsceneMap.Any(t => t.Key == buttonRed.TargetEsceneId))
+                            {
+                                // Resolver la escena de destino a partir del mapa
+                                var targetName = targetEsceneMap.First(t => t.Key == buttonRed.TargetEsceneId).Value;
+                                var targetEscene = insertedEscenes.FirstOrDefault(i => i.NamePositionScene == targetName);
+
+                                if (targetEscene != null)
+                                {
+                                    var pageToSender = await _context.Escenes.FirstAsync(e => e.IdEscene == targetEscene.IdEscene);
+                                    buttonRedToPut.PageToSender = pageToSender;
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"No se encontró targetEscene para TargetEsceneId={buttonRed.TargetEsceneId}");
+                                }
+                            }
+
+                            _context.Entry(buttonRedToPut).State = EntityState.Modified;
+                            Console.WriteLine($"Actualizó el ButtonRedirect {buttonRedToPut.IdButtonRedirect} con TargetEsceneId={buttonRedToPut.TargetEsceneId}");
+                        }
+                        else
+                        {
+                            // Crear un nuevo botón
+                            int targetIdToSend = 0;
+
+                            if (targetEsceneMap.Any(t => t.Key == buttonRed.TargetEsceneId))
+                            {
+                                var targetName = targetEsceneMap.First(t => t.Key == buttonRed.TargetEsceneId).Value;
+                                var targetEscene = insertedEscenes.FirstOrDefault(i => i.NamePositionScene == targetName);
+                                targetIdToSend = targetEscene?.IdEscene ?? 0;
+                            }
+
+                            if (targetIdToSend == 0)
+                            {
+                                // Crear botón sin escena de destino
+                                ButtonRedirect buttonToPost = new ButtonRedirect
+                                {
+                                    ButtonHigh = buttonRed.ButtonHigh,
+                                    ButtonLarge = buttonRed.ButtonLarge,
+                                    ButtonWidth = buttonRed.ButtonWidth,
+                                    PositionX = buttonRed.PositionX,
+                                    PositionY = buttonRed.PositionY,
+                                    PositionZ = buttonRed.PositionZ,
+                                    RotationSideX = buttonRed.RotationSideX,
+                                    RotationSideY = buttonRed.RotationSideY,
+                                    RotationSideZ = buttonRed.RotationSideZ,
+                                    HorientationButton = buttonRed.HorientationButton,
+                                    EsceneId = insertedEscenes.First(i => i.NamePositionScene == targetEsceneMap.First(t => t.Key == buttonRed.EsceneId).Value).IdEscene
+                                };
+
+                                _context.ButtonRedirects.Add(buttonToPost);
+                            }
+                            else
+                            {
+                                // Crear botón con escena de destino
+                                ButtonRedirect buttonToPost = new ButtonRedirect
+                                {
+                                    ButtonHigh = buttonRed.ButtonHigh,
+                                    ButtonLarge = buttonRed.ButtonLarge,
+                                    ButtonWidth = buttonRed.ButtonWidth,
+                                    PositionX = buttonRed.PositionX,
+                                    PositionY = buttonRed.PositionY,
+                                    PositionZ = buttonRed.PositionZ,
+                                    RotationSideX = buttonRed.RotationSideX,
+                                    RotationSideY = buttonRed.RotationSideY,
+                                    RotationSideZ = buttonRed.RotationSideZ,
+                                    HorientationButton = buttonRed.HorientationButton,
+                                    EsceneId = insertedEscenes.First(i => i.NamePositionScene == targetEsceneMap.First(t => t.Key == buttonRed.EsceneId).Value).IdEscene,
+                                    PageToSender = await _context.Escenes.FirstAsync(e => e.IdEscene == targetIdToSend)
+                                };
+                                _context.ButtonRedirects.Add(buttonToPost);
+                                Console.WriteLine($"Posteó el ButtonRedirect con TargetEsceneId={buttonToPost.TargetEsceneId}");
+                            }
+                        }
+                    }
+                }
+
+                // Procesar botones de información
+                if (sceneToAddButtons.ListButtonInfo.Count != 0)
+                {
+                    foreach (ButtonInformation buttonInfo in sceneToAddButtons.ListButtonInfo)
+                    {
+                        bool responseIdInfo = await _context.ButtonInformations.AnyAsync(b => b.IdButtonInformation == buttonInfo.IdButtonInformation);
+
+                        if (responseIdInfo)
+                        {
+                            // Actualizar botón de información existente
+                            ButtonInformation buttonInfoToPut = await _context.ButtonInformations.FirstAsync(b => b.IdButtonInformation == buttonInfo.IdButtonInformation);
+
+                            buttonInfoToPut.ButtonHigh = buttonInfo.ButtonHigh;
+                            buttonInfoToPut.ButtonLarge = buttonInfo.ButtonLarge;
+                            buttonInfoToPut.ButtonWidth = buttonInfo.ButtonWidth;
+                            buttonInfoToPut.PositionX = buttonInfo.PositionX;
+                            buttonInfoToPut.PositionY = buttonInfo.PositionY;
+                            buttonInfoToPut.PositionZ = buttonInfo.PositionZ;
+                            buttonInfoToPut.RotationSideX = buttonInfo.RotationSideX;
+                            buttonInfoToPut.RotationSideY = buttonInfo.RotationSideY;
+                            buttonInfoToPut.RotationSideZ = buttonInfo.RotationSideZ;
+                            buttonInfoToPut.TextInformation = buttonInfo.TextInformation;
+                            buttonInfoToPut.OptionalImage = buttonInfo.OptionalImage;
+
+                            _context.Entry(buttonInfoToPut).State = EntityState.Modified;
+                        }
+                        else
+                        {
+                            // Crear un nuevo botón de información
+                            ButtonInformation buttonToPost = new ButtonInformation
+                            {
+                                ButtonHigh = buttonInfo.ButtonHigh,
+                                ButtonLarge = buttonInfo.ButtonLarge,
+                                ButtonWidth = buttonInfo.ButtonWidth,
+                                PositionX = buttonInfo.PositionX,
+                                PositionY = buttonInfo.PositionY,
+                                PositionZ = buttonInfo.PositionZ,
+                                RotationSideX = buttonInfo.RotationSideX,
+                                RotationSideY = buttonInfo.RotationSideY,
+                                RotationSideZ = buttonInfo.RotationSideZ,
+                                TextInformation = buttonInfo.TextInformation,
+                                OptionalImage = buttonInfo.OptionalImage,
+                                EsceneId = insertedEscenes.First(i => i.NamePositionScene == targetEsceneMap.First(t => t.Key == buttonInfo.EsceneId).Value).IdEscene
+                            };
+
+                            _context.ButtonInformations.Add(buttonToPost);
+                        }
+                    }
                 }
             }
 
-            await _context.SaveChangesAsync();
+            // Guardar cambios
+            var changes = await _context.SaveChangesAsync();
+            Console.WriteLine($"Cambios aplicados: {changes}");
 
-            return Ok("Universidad y escenas actualizadas con éxito.");
+            return StatusCode(200, "Universidad y escenas actualizadas con éxito.");
         }
-        catch (Exception ex)
+        catch (DbUpdateException ex)
+        {
+            return StatusCode(400, $"Error al actualizar la universidad: {ex.Message}");
+        }
+        catch (System.Exception ex)
         {
             return StatusCode(500, $"Error inesperado: {ex.Message}");
         }
     }
-
-    private void UpdateButtons(Escene scene, Escene sceneDto, Dictionary<int, int> targetEsceneMap)
-    {
-        var existingRedButtons = scene.ListButtonRed.ToDictionary(b => b.IdButtonRedirect);
-        var existingInfoButtons = scene.ListButtonInfo.ToDictionary(b => b.IdButtonInformation);
-
-        foreach (var buttonDto in sceneDto.ListButtonRed)
-        {
-            if (existingRedButtons.TryGetValue(buttonDto.IdButtonRedirect, out var existingButton))
-            {
-                UpdateButtonProperties(existingButton, buttonDto, targetEsceneMap);
-                _context.ButtonRedirects.Update(existingButton);
-            }
-            else
-            {
-                var newButton = CreateButton(buttonDto, scene.IdEscene, targetEsceneMap);
-                _context.ButtonRedirects.Add(newButton);
-            }
-        }
-
-        foreach (var buttonDto in sceneDto.ListButtonInfo)
-        {
-            if (existingInfoButtons.TryGetValue(buttonDto.IdButtonInformation, out var existingButton))
-            {
-                UpdateInfoButtonProperties(existingButton, buttonDto);
-                _context.ButtonInformations.Update(existingButton);
-            }
-            else
-            {
-                var newButton = CreateInfoButton(buttonDto, scene.IdEscene);
-                _context.ButtonInformations.Add(newButton);
-            }
-        }
-    }
-
-    private void UpdateButtonProperties(ButtonRedirect button, ButtonRedirect dto, Dictionary<int, int> targetEsceneMap)
-    {
-        button.ButtonHigh = dto.ButtonHigh;
-        button.ButtonLarge = dto.ButtonLarge;
-        button.ButtonWidth = dto.ButtonWidth;
-        button.PositionX = dto.PositionX;
-        button.PositionY = dto.PositionY;
-        button.PositionZ = dto.PositionZ;
-        button.RotationSideX = dto.RotationSideX;
-        button.RotationSideY = dto.RotationSideY;
-        button.RotationSideZ = dto.RotationSideZ;
-        button.HorientationButton = dto.HorientationButton;
-
-        if (targetEsceneMap.TryGetValue((int)dto.TargetEsceneId, out var targetId))
-        {
-            button.PageToSender = _context.Escenes.Find(targetId);
-        }
-    }
-
-    private ButtonRedirect CreateButton(ButtonRedirect dto, int sceneId, Dictionary<int, int> targetEsceneMap)
-    {
-        return new ButtonRedirect
-        {
-            ButtonHigh = dto.ButtonHigh,
-            ButtonLarge = dto.ButtonLarge,
-            ButtonWidth = dto.ButtonWidth,
-            PositionX = dto.PositionX,
-            PositionY = dto.PositionY,
-            PositionZ = dto.PositionZ,
-            RotationSideX = dto.RotationSideX,
-            RotationSideY = dto.RotationSideY,
-            RotationSideZ = dto.RotationSideZ,
-            HorientationButton = dto.HorientationButton,
-            EsceneId = sceneId,
-            PageToSender = targetEsceneMap.TryGetValue((int)dto.TargetEsceneId, out var targetId) ? _context.Escenes.Find(targetId) : null
-        };
-    }
-
-    private void UpdateInfoButtonProperties(ButtonInformation button, ButtonInformation dto)
-    {
-        button.ButtonHigh = dto.ButtonHigh;
-        button.ButtonLarge = dto.ButtonLarge;
-        button.ButtonWidth = dto.ButtonWidth;
-        button.PositionX = dto.PositionX;
-        button.PositionY = dto.PositionY;
-        button.PositionZ = dto.PositionZ;
-        button.RotationSideX = dto.RotationSideX;
-        button.RotationSideY = dto.RotationSideY;
-        button.RotationSideZ = dto.RotationSideZ;
-        button.TextInformation = dto.TextInformation;
-        button.OptionalImage = dto.OptionalImage;
-    }
-
-    private ButtonInformation CreateInfoButton(ButtonInformation dto, int sceneId)
-    {
-        return new ButtonInformation
-        {
-            ButtonHigh = dto.ButtonHigh,
-            ButtonLarge = dto.ButtonLarge,
-            ButtonWidth = dto.ButtonWidth,
-            PositionX = dto.PositionX,
-            PositionY = dto.PositionY,
-            PositionZ = dto.PositionZ,
-            RotationSideX = dto.RotationSideX,
-            RotationSideY = dto.RotationSideY,
-            RotationSideZ = dto.RotationSideZ,
-            TextInformation = dto.TextInformation,
-            OptionalImage = dto.OptionalImage,
-            EsceneId = sceneId
-        };
-    }
-
     [Authorize(Roles = "Administrador")]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteUniversity(int id)

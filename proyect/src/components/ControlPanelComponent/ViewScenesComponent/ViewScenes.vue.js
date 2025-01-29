@@ -61,7 +61,11 @@ export default {
       onSaveChanges(){
         const updatedUniversity = JSON.parse(JSON.stringify(this.universitySelected));
         updatedUniversity.listEscenes.forEach(escene => {
-          escene.namePositionScene = escene.namePositionScene.replace(" ","_")+`_${updatedUniversity.nameFaculty}`;
+          // Versión mejorada
+          escene.namePositionScene = escene.namePositionScene.replace(/ /g, "_") 
+          + (!escene.namePositionScene.includes(`_${updatedUniversity.nameFaculty}`) 
+              ? `_${updatedUniversity.nameFaculty}` 
+              : "");
           escene.listButtonRed.forEach(button => {
             if (button.pageToSender) {
               button.targetEsceneId = button.pageToSender.idEscene || 0;  
