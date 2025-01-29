@@ -190,6 +190,7 @@ public class UniversityController : ControllerBase
                     _context.Escenes.Remove(existingScene);
                 }
             }
+            //Delete Buttons Redirect
             foreach (ButtonRedirect buttonsRed in buttonsRedirects)
             {
                 bool existButtonRed = false;
@@ -205,6 +206,7 @@ public class UniversityController : ControllerBase
                     _context.ButtonRedirects.Remove(buttonsRed);
                 }
             }
+            //Delete Buttons Information
             foreach (ButtonInformation buttonsInfo in buttonsInformation)
             {
                 bool existButtonInfo = false;
