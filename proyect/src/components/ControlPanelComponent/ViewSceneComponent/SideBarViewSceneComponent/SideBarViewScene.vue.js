@@ -72,6 +72,8 @@ export default {
             this.isOnHidden = true;
             console.log(this.scenesToRedirect);
             if(this.scenesToRedirect.length !== 0 && this.isButtonRed){
+                this.scenesToRedirect[0].escene.listButtonRed = [];
+                this.scenesToRedirect[0].escene.listButtonInfo = [];
                 this.buttonOnEditRed.pageToSender = this.scenesToRedirect[0].escene;
             }
             setTimeout(()=>{

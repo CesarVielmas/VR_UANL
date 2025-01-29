@@ -1,9 +1,12 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using backend.DbContextData;
 using backend.DTO;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +32,13 @@ builder.Services
     });
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+    });
+
+
 builder.Services.AddDbContext<dbContext>();
 
 builder.Services.AddCors(options =>

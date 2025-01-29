@@ -55,6 +55,13 @@ export default {
     .catch(error=>{
       console.log(`Error en obtener el id del boton de informacion ${error}`)
     });
+    this.university.listEscenes.forEach(scene => {
+      scene.listButtonRed.forEach(button => {
+          if (button.pageToSender === null) {
+              button.pageToSender = {}; // Asigna un objeto vacío
+          }
+      });
+    });
     console.log(this.university);
   },
   methods: {

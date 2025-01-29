@@ -1,6 +1,7 @@
 import HeaderViewScenes from "./HeaderViewScenesComponent/HeaderViewScenes.vue";
 import { registerComponent,components } from "aframe";
 import { THREE } from "aframe";
+import axios from "axios";
 import FooterViewScenes from "./FooterViewScenesComponent/FooterViewScenes.vue";
 
 export default {
@@ -58,7 +59,28 @@ export default {
     },
     methods: { 
       onSaveChanges(){
-        console.log("Cambios para guardar absolutamente todo");
+        const updatedUniversity = JSON.parse(JSON.stringify(this.universitySelected));
+        updatedUniversity.listEscenes.forEach(escene => {
+          escene.namePositionScene = escene.namePositionScene.replace(" ","_")+`_${updatedUniversity.nameFaculty}`;
+          escene.listButtonRed.forEach(button => {
+            if (button.pageToSender) {
+              button.targetEsceneId = button.pageToSender.idEscene || 0;  
+              delete button.pageToSender;  
+            }
+          });
+        });
+        console.log(updatedUniversity);
+        axios.put(`http://localhost:5028/api/University/Escenes/${updatedUniversity.idUniversity}`,updatedUniversity,{
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then((response)=>{
+          console.log(response.data);
+        })
+        .catch((error)=>{
+          console.log(error)
+        })
       },
       returnToSelectUniversity(){
         if(!this.isUnique){
@@ -290,7 +312,8 @@ export default {
           nameScene: this.newNameScene,
           imageScene: "",
           listButtonInfo: [],
-          listButtonRed: []
+          listButtonRed: [],
+          namePositionScene: this.newNameScene.toLowerCase().replace(" ","_")
           };
           this.universitySelected.listEscenes.push(newScene);
           this.universitySelected.listEscenes.forEach(scene => {
@@ -315,7 +338,8 @@ export default {
             nameScene: this.newNameScene,
             imageScene: "",
             listButtonInfo: [],
-            listButtonRed: []
+            listButtonRed: [],
+            namePositionScene: this.newNameScene.toLowerCase().replace(" ","_")
           };
           this.universitySelected.listEscenes.push(newScene);
           this.enterToAddSceneBool = false;
