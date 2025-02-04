@@ -7,6 +7,7 @@ using backend.models;
 using backend.DbContextData;
 using Microsoft.AspNetCore.Authorization;
 using backend.DTO;
+using System.Text.Json;
 [Route("api/[controller]")]
 [ApiController]
 public class UniversityController : ControllerBase
@@ -152,12 +153,15 @@ public class UniversityController : ControllerBase
             return StatusCode(500, $"Error inesperado:{ex.Message}");
         }
     }
-    [Authorize(Roles = "Administrador")] 
-    [HttpPut("Escenes/{id}")] public async Task<ActionResult> PutUniversityScenes(int id, [FromBody] EscenesRequestListDTO listEscenes) {
-    if (!ModelState.IsValid) { 
-        return BadRequest(ModelState); 
-    }
-    try
+    [Authorize(Roles = "Administrador")]
+    [HttpPut("Escenes/{id}")]
+    public async Task<ActionResult> PutUniversityScenes(int id, [FromBody] EscenesRequestListDTO listEscenes)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
         {
             var university = await _context.Universities
                 .Include(u => u.ListEscenes)
@@ -167,25 +171,27 @@ public class UniversityController : ControllerBase
             {
                 return StatusCode(400, "La universidad no existe.");
             }
+
             //Delete Escenes
-            University universitySelect = await _context.Universities.FirstAsync(u=> u.IdUniversity == id);
+            University universitySelect = await _context.Universities.FirstAsync(u => u.IdUniversity == id);
             List<ButtonRedirect> buttonsRedirects = await _context.Universities
                 .Where(u => u.IdUniversity == id)
-                .SelectMany(u => u.ListEscenes)         
-                .SelectMany(e => e.ListButtonRed)       
-                .Distinct()                          
+                .SelectMany(u => u.ListEscenes)
+                .SelectMany(e => e.ListButtonRed)
+                .Distinct()
                 .ToListAsync();
             List<ButtonInformation> buttonsInformation = await _context.Universities
                 .Where(u => u.IdUniversity == id)
-                .SelectMany(u => u.ListEscenes)         
-                .SelectMany(e => e.ListButtonInfo)       
-                .Distinct()                          
+                .SelectMany(u => u.ListEscenes)
+                .SelectMany(e => e.ListButtonInfo)
+                .Distinct()
                 .ToListAsync();
             foreach (Escene existingScene in universitySelect.ListEscenes)
             {
-                bool exists = listEscenes.ListEscenes.Any(s => 
+                bool exists = listEscenes.ListEscenes.Any(s =>
                     s.NamePositionScene == existingScene.NamePositionScene);
-                if(!exists){
+                if (!exists)
+                {
                     Console.WriteLine("Elimino Escene");
                     _context.Escenes.Remove(existingScene);
                 }
@@ -198,11 +204,12 @@ public class UniversityController : ControllerBase
                 {
                     foreach (ButtonRedirect item2 in item.ListButtonRed)
                     {
-                        if(item2.IdButtonRedirect == buttonsRed.IdButtonRedirect)
+                        if (item2.IdButtonRedirect == buttonsRed.IdButtonRedirect)
                             existButtonRed = true;
                     }
                 }
-                if(!existButtonRed){
+                if (!existButtonRed)
+                {
                     _context.ButtonRedirects.Remove(buttonsRed);
                 }
             }
@@ -214,27 +221,27 @@ public class UniversityController : ControllerBase
                 {
                     foreach (ButtonInformation item2 in item.ListButtonInfo)
                     {
-                        if(item2.IdButtonInformation == buttonsInfo.IdButtonInformation)
+                        if (item2.IdButtonInformation == buttonsInfo.IdButtonInformation)
                             existButtonInfo = true;
                     }
                 }
-                if(!existButtonInfo){
+                if (!existButtonInfo)
+                {
                     _context.ButtonInformations.Remove(buttonsInfo);
                 }
             }
             await _context.SaveChangesAsync();
+            //Add Or Update Escene And Buttons Information
+            Console.WriteLine("Empieza Peticion");
             var targetEsceneMap = new Dictionary<int, string>();
             foreach (var esceneDto in listEscenes.ListEscenes)
             {
-                foreach (var buttonRed in esceneDto.ListButtonRed)
-                {
-                    if (buttonRed.TargetEsceneId != 0)
-                    {
-                        targetEsceneMap.Add((int)buttonRed.TargetEsceneId, esceneDto.NamePositionScene);
-                    }
-                }
+                Console.WriteLine($"Escena : {esceneDto.NameScene}");
+                Console.WriteLine($"Escena Lista Contada: {esceneDto.ListButtonRed.Count}");
+                targetEsceneMap.Add(esceneDto.IdEscene, esceneDto.NamePositionScene);
             }
             var insertedEscenes = new List<Escene>();
+            //Anadir o updatear escenas
             foreach (Escene sceneToPutOrPost in listEscenes.ListEscenes)
             {
                 bool resultId = await _context.Escenes.AnyAsync(e => e.IdEscene == sceneToPutOrPost.IdEscene && e.NamePositionScene == sceneToPutOrPost.NamePositionScene);
@@ -271,6 +278,7 @@ public class UniversityController : ControllerBase
                 }
             }
             await _context.SaveChangesAsync();
+            //Busca las escenas que se anadieron a la db como nuevas y la guarda
             foreach (Escene sceneToSearch in listEscenes.ListEscenes)
             {
                 Escene sceneSearched = await _context.Escenes
@@ -280,6 +288,8 @@ public class UniversityController : ControllerBase
                     insertedEscenes.Add(sceneSearched);
                 }
             }
+            Console.WriteLine($"Cantidad de escenas agregadas o updateadas {insertedEscenes.Count}");
+            //Parte para botones redirect y botones information
             foreach (Escene sceneToAddButtons in listEscenes.ListEscenes)
             {
                 // Procesar botones de redirección
@@ -305,10 +315,9 @@ public class UniversityController : ControllerBase
                             buttonRedToPut.RotationSideZ = buttonRed.RotationSideZ;
                             buttonRedToPut.HorientationButton = buttonRed.HorientationButton;
 
-                            if (await _context.Escenes.AnyAsync(e => e == buttonRed.PageToSender))
+                            if (await _context.Escenes.AnyAsync(e => e.IdEscene == buttonRed.TargetEsceneId))
                             {
-                                var pageToSender = buttonRed.PageToSender;
-                                buttonRedToPut.PageToSender = pageToSender;
+                                buttonRedToPut.PageToSender = await _context.Escenes.FirstAsync(e => e.IdEscene == buttonRed.TargetEsceneId);
                             }
                             else if (targetEsceneMap.Any(t => t.Key == buttonRed.TargetEsceneId))
                             {
@@ -318,33 +327,38 @@ public class UniversityController : ControllerBase
 
                                 if (targetEscene != null)
                                 {
-                                    var pageToSender = await _context.Escenes.FirstAsync(e => e.IdEscene == targetEscene.IdEscene);
-                                    buttonRedToPut.PageToSender = pageToSender;
+                                    buttonRedToPut.PageToSender = await _context.Escenes.FirstAsync(e => e.IdEscene == targetEscene.IdEscene);
                                 }
                                 else
                                 {
                                     Console.WriteLine($"No se encontró targetEscene para TargetEsceneId={buttonRed.TargetEsceneId}");
                                 }
                             }
-
-                            _context.Entry(buttonRedToPut).State = EntityState.Modified;
-                            Console.WriteLine($"Actualizó el ButtonRedirect {buttonRedToPut.IdButtonRedirect} con TargetEsceneId={buttonRedToPut.TargetEsceneId}");
+                            _context.ButtonRedirects.Entry(buttonRedToPut).State = EntityState.Modified;
                         }
                         else
                         {
                             // Crear un nuevo botón
                             int targetIdToSend = 0;
-
-                            if (targetEsceneMap.Any(t => t.Key == buttonRed.TargetEsceneId))
+                            Console.WriteLine("Entro para verificar las escenas map");
+                            if (targetEsceneMap.Any(t => t.Key == buttonRed.TargetEsceneId) && buttonRed.TargetEsceneId != 0)
                             {
                                 var targetName = targetEsceneMap.First(t => t.Key == buttonRed.TargetEsceneId).Value;
                                 var targetEscene = insertedEscenes.FirstOrDefault(i => i.NamePositionScene == targetName);
                                 targetIdToSend = targetEscene?.IdEscene ?? 0;
                             }
-
+                            Console.WriteLine(targetIdToSend);
                             if (targetIdToSend == 0)
                             {
-                                // Crear botón sin escena de destino
+                                int esceneToId = 0;
+                                if (insertedEscenes.Any(i => i.IdEscene == buttonRed.EsceneId))
+                                {
+                                    esceneToId = insertedEscenes.First(i => i.IdEscene == buttonRed.EsceneId).IdEscene;
+                                }
+                                else
+                                {
+                                    esceneToId = insertedEscenes.First(i => i.NamePositionScene == targetEsceneMap.First(t => t.Key == buttonRed.EsceneId).Value).IdEscene;
+                                }
                                 ButtonRedirect buttonToPost = new ButtonRedirect
                                 {
                                     ButtonHigh = buttonRed.ButtonHigh,
@@ -357,13 +371,22 @@ public class UniversityController : ControllerBase
                                     RotationSideY = buttonRed.RotationSideY,
                                     RotationSideZ = buttonRed.RotationSideZ,
                                     HorientationButton = buttonRed.HorientationButton,
-                                    EsceneId = insertedEscenes.First(i => i.NamePositionScene == targetEsceneMap.First(t => t.Key == buttonRed.EsceneId).Value).IdEscene
+                                    EsceneId = esceneToId,
+                                    PageToSender = { }
                                 };
-
                                 _context.ButtonRedirects.Add(buttonToPost);
                             }
                             else
                             {
+                                int esceneToId = 0;
+                                if (insertedEscenes.Any(i => i.IdEscene == buttonRed.EsceneId))
+                                {
+                                    esceneToId = insertedEscenes.First(i => i.IdEscene == buttonRed.EsceneId).IdEscene;
+                                }
+                                else
+                                {
+                                    esceneToId = insertedEscenes.First(i => i.NamePositionScene == targetEsceneMap.First(t => t.Key == buttonRed.EsceneId).Value).IdEscene;
+                                }
                                 // Crear botón con escena de destino
                                 ButtonRedirect buttonToPost = new ButtonRedirect
                                 {
@@ -377,11 +400,11 @@ public class UniversityController : ControllerBase
                                     RotationSideY = buttonRed.RotationSideY,
                                     RotationSideZ = buttonRed.RotationSideZ,
                                     HorientationButton = buttonRed.HorientationButton,
-                                    EsceneId = insertedEscenes.First(i => i.NamePositionScene == targetEsceneMap.First(t => t.Key == buttonRed.EsceneId).Value).IdEscene,
+                                    EsceneId = esceneToId,
                                     PageToSender = await _context.Escenes.FirstAsync(e => e.IdEscene == targetIdToSend)
                                 };
                                 _context.ButtonRedirects.Add(buttonToPost);
-                                Console.WriteLine($"Posteó el ButtonRedirect con TargetEsceneId={buttonToPost.TargetEsceneId}");
+
                             }
                         }
                     }
