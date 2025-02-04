@@ -192,7 +192,6 @@ public class UniversityController : ControllerBase
                     s.NamePositionScene == existingScene.NamePositionScene);
                 if (!exists)
                 {
-                    Console.WriteLine("Elimino Escene");
                     _context.Escenes.Remove(existingScene);
                 }
             }
@@ -232,12 +231,9 @@ public class UniversityController : ControllerBase
             }
             await _context.SaveChangesAsync();
             //Add Or Update Escene And Buttons Information
-            Console.WriteLine("Empieza Peticion");
             var targetEsceneMap = new Dictionary<int, string>();
             foreach (var esceneDto in listEscenes.ListEscenes)
             {
-                Console.WriteLine($"Escena : {esceneDto.NameScene}");
-                Console.WriteLine($"Escena Lista Contada: {esceneDto.ListButtonRed.Count}");
                 targetEsceneMap.Add(esceneDto.IdEscene, esceneDto.NamePositionScene);
             }
             var insertedEscenes = new List<Escene>();
@@ -288,7 +284,6 @@ public class UniversityController : ControllerBase
                     insertedEscenes.Add(sceneSearched);
                 }
             }
-            Console.WriteLine($"Cantidad de escenas agregadas o updateadas {insertedEscenes.Count}");
             //Parte para botones redirect y botones information
             foreach (Escene sceneToAddButtons in listEscenes.ListEscenes)
             {
@@ -329,10 +324,6 @@ public class UniversityController : ControllerBase
                                 {
                                     buttonRedToPut.PageToSender = await _context.Escenes.FirstAsync(e => e.IdEscene == targetEscene.IdEscene);
                                 }
-                                else
-                                {
-                                    Console.WriteLine($"No se encontró targetEscene para TargetEsceneId={buttonRed.TargetEsceneId}");
-                                }
                             }
                             _context.ButtonRedirects.Entry(buttonRedToPut).State = EntityState.Modified;
                         }
@@ -340,14 +331,12 @@ public class UniversityController : ControllerBase
                         {
                             // Crear un nuevo botón
                             int targetIdToSend = 0;
-                            Console.WriteLine("Entro para verificar las escenas map");
                             if (targetEsceneMap.Any(t => t.Key == buttonRed.TargetEsceneId) && buttonRed.TargetEsceneId != 0)
                             {
                                 var targetName = targetEsceneMap.First(t => t.Key == buttonRed.TargetEsceneId).Value;
                                 var targetEscene = insertedEscenes.FirstOrDefault(i => i.NamePositionScene == targetName);
                                 targetIdToSend = targetEscene?.IdEscene ?? 0;
                             }
-                            Console.WriteLine(targetIdToSend);
                             if (targetIdToSend == 0)
                             {
                                 int esceneToId = 0;
@@ -433,11 +422,25 @@ public class UniversityController : ControllerBase
                             buttonInfoToPut.RotationSideZ = buttonInfo.RotationSideZ;
                             buttonInfoToPut.TextInformation = buttonInfo.TextInformation;
                             buttonInfoToPut.OptionalImage = buttonInfo.OptionalImage;
-
+                            if(buttonInfoToPut.EsceneId != buttonInfo.EsceneId){
+                                if( await _context.Escenes.AnyAsync(e=> e.IdEscene == buttonInfo.EsceneId)){
+                                    buttonInfoToPut.EsceneId = buttonInfo.EsceneId;
+                                }
+                                else if(targetEsceneMap.Any(t => t.Key == buttonInfo.EsceneId)){
+                                    buttonInfoToPut.EsceneId = insertedEscenes.First(i => i.NamePositionScene == targetEsceneMap.First(t => t.Key == buttonInfo.EsceneId).Value).IdEscene;
+                                }
+                            }
                             _context.Entry(buttonInfoToPut).State = EntityState.Modified;
                         }
                         else
                         {
+                            int idEsceneInfo = 0;
+                            if(await _context.Escenes.AnyAsync(e=> e.IdEscene == buttonInfo.EsceneId)){
+                                idEsceneInfo = (int)buttonInfo.EsceneId;
+                            }
+                            else if(targetEsceneMap.Any(t => t.Key == buttonInfo.EsceneId)){
+                                idEsceneInfo = insertedEscenes.First(i => i.NamePositionScene == targetEsceneMap.First(t => t.Key == buttonInfo.EsceneId).Value).IdEscene;
+                            }
                             // Crear un nuevo botón de información
                             ButtonInformation buttonToPost = new ButtonInformation
                             {
@@ -452,9 +455,8 @@ public class UniversityController : ControllerBase
                                 RotationSideZ = buttonInfo.RotationSideZ,
                                 TextInformation = buttonInfo.TextInformation,
                                 OptionalImage = buttonInfo.OptionalImage,
-                                EsceneId = insertedEscenes.First(i => i.NamePositionScene == targetEsceneMap.First(t => t.Key == buttonInfo.EsceneId).Value).IdEscene
+                                EsceneId = idEsceneInfo
                             };
-
                             _context.ButtonInformations.Add(buttonToPost);
                         }
                     }
@@ -463,8 +465,6 @@ public class UniversityController : ControllerBase
 
             // Guardar cambios
             var changes = await _context.SaveChangesAsync();
-            Console.WriteLine($"Cambios aplicados: {changes}");
-
             return StatusCode(200, "Universidad y escenas actualizadas con éxito.");
         }
         catch (DbUpdateException ex)

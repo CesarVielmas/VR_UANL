@@ -37,7 +37,9 @@
 /*Vista Desktop*/
 @media (min-width: 1025px) {
     .addNewScene,
-    .deleteVoidScene{
+    .deleteVoidScene,
+    .updateDataBase,
+    .exitProgram{
         position: fixed;
         top: 0;
         background-color: rgba(0, 0, 0, 0.541);
@@ -46,7 +48,9 @@
         z-index: 2;
     }
     .addNewScene .content,
-    .deleteVoidScene .content{
+    .deleteVoidScene .content,
+    .updateDataBase .content,
+    .exitProgram .content{
         height: 40%;
         width: 60%;
         margin-top: 13%;
@@ -59,7 +63,8 @@
         height: 30%;
     }
     .addNewScene .content h2,
-    .deleteVoidScene .content h2{
+    .deleteVoidScene .content h2,
+    .exitProgram .content h2{
         position: relative;
         display: block;
         font-family:'Poppins-Medium', Courier, monospace;
@@ -68,6 +73,26 @@
         border-top-right-radius: .3vw;
         text-align: center;
         font-size: 2.8vw;
+    }
+    .updateDataBase .content{
+        margin-top: 12%;
+        height: 45%;
+    }
+    .updateDataBase .tittle{
+        padding-top: 2vh;
+        font-family:'Poppins', Courier, monospace;
+        color: #181891;
+        text-align: center;
+        font-size: 4.5vh;
+        margin-bottom: 0;
+    }
+    .updateDataBase .imageUpdate{
+        display: block;
+        height: 45%;
+        width: 16%;
+        margin-top: 1vw;
+        margin-left: auto;
+        margin-right: auto;
     }
     .addNewScene .content input{
         display: block;
@@ -83,7 +108,8 @@
         width: 80%;
     }
     .addNewScene .content button,
-    .deleteVoidScene .content button{
+    .deleteVoidScene .content button,
+    .exitProgram .content button{
         height: 20%;
         width: 30%;
         margin-left: 13%;
@@ -101,7 +127,8 @@
         background-color: rgb(75, 6, 6);
     }
     .addNewScene .content button:hover,
-    .deleteVoidScene .content button:hover{
+    .deleteVoidScene .content button:hover,
+    .exitProgram .content button:hover{
         cursor: pointer;
     }
 }

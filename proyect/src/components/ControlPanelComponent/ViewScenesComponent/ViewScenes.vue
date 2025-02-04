@@ -2,6 +2,19 @@
 <style src="./ViewScenes.vue.css"></style>
 
 <template>
+    <div class="exitProgram" v-if="exitPanelControl">
+        <div class="content">
+            <h2 :style="`background-color:${colorBackground};`">{{ exitPanelControlState === 1?"¿Esta Seguro De Salir Sin Guardar?":"¿Esta Seguro De Salir?" }}</h2>
+            <button v-on:click="exitPanelControlState === 0?onExitSelectUniversity(1):onExitSelectUniversity(0)">{{exitPanelControlState === 1?"Salir y Guardar":"Salir"}}</button>
+            <button v-on:click="exitPanelControlState === 0?onExitSelectUniversity(0):this.exitPanelControl = false" style="background-color: rgb(75, 6, 6);">{{exitPanelControlState === 1?"Salir Sin Guardar":"Cancelar"}}</button>
+        </div>
+    </div>
+    <div class="updateDataBase" v-if="updateInformation">
+        <div class="content">
+            <h2 class="tittle">{{ updateInformationState === 0?"Subiendo Informacion":updateInformationState === 1?"Informacion Subida Con Exito":"Error Al Subir La Informacion" }}</h2>
+            <img class="imageUpdate" :src="updateInformationState === 0?require('@/assets/loader_icon.gif'):updateInformationState === 1?require('@/assets/sucess_icon.png') : require('@/assets/cross_icon.png')" />
+        </div>
+    </div>
     <div class="addNewScene" v-if="enterToAddSceneBool">
         <div class="content">
             <h2 :style="`background-color:${colorBackground};`">{{ isEditNameScene!=0?"Nuevo Nombre De Escena":"Nombre De La Escena" }}</h2>

@@ -23,6 +23,10 @@ export default {
           type:Object,
           required:true
         },
+        universityCopy:{
+          type:Object,
+          required:true
+        },
         onChangeEditVR:{
           type:Function,
           required:true
@@ -37,6 +41,10 @@ export default {
           enterToAddSceneBool:false,
           isOnButtonRed:0,
           deleteVoidScene:false,
+          updateInformation:false,
+          exitPanelControl:false,
+          exitPanelControlState:0,
+          updateInformationState:0,
           stateVoidDelete:0,
           isVoidDelete:0,
           isEditNameScene:0,
@@ -59,6 +67,8 @@ export default {
     },
     methods: { 
       onSaveChanges(){
+        this.updateInformation = true;
+        this.updateInformationState = 0;
         const updatedUniversity = JSON.parse(JSON.stringify(this.universitySelected));
         updatedUniversity.listEscenes.forEach(escene => {
           // Versión mejorada
@@ -80,21 +90,43 @@ export default {
           }
         })
         .then((response)=>{
-          console.log(response.data);
+          console.log(response);
+          this.updateInformationState = 1;
+          setTimeout(()=>{
+            this.updateInformation = false;
+          },1000)
         })
         .catch((error)=>{
           console.log(error)
+          this.updateInformationState = 2;
+          setTimeout(()=>{
+            this.updateInformation = false;
+          },1000)
         })
       },
       returnToSelectUniversity(){
-        if(!this.isUnique){
-          window.location.href = this.$router.resolve({ name: 'HomeLogin' }).href;
-        }
-        else{
-          localStorage.clear();
-          window.location.href = this.$router.resolve({ name: 'HomeLogin' }).href;
+        this.exitPanelControl = true;
+        if(this.universityCopy !== this.universitySelected){
+            this.exitPanelControlState = 1;
         }
       },  
+      onExitSelectUniversity(stateSave){
+        if(stateSave === 0){
+          this.exitPanelControl = false;
+          if(!this.isUnique){
+            window.location.href = this.$router.resolve({ name: 'HomeLogin' }).href;
+          }
+          else{
+            localStorage.clear();
+            window.location.href = this.$router.resolve({ name: 'HomeLogin' }).href;
+          }
+        }
+        else{
+
+
+          this.exitPanelControl = false;
+        }
+      },
       deleteAllScenes(){
         this.universitySelected.listEscenes = [];
         this.positionsScenes = [];

@@ -27,6 +27,7 @@ export default {
         sceneToEdit:{},
         positionsScenes:[],
         lastIdRedirect:0,
+        copyUniversity:{},
         lastIdInformation:0
     };
   },
@@ -62,6 +63,7 @@ export default {
           }
       });
     });
+    this.copyUniversity = JSON.parse(JSON.stringify(this.university));
     console.log(this.university);
   },
   methods: {
