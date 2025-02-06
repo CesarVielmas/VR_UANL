@@ -5,8 +5,8 @@
     <div class="exitProgram" v-if="exitPanelControl">
         <div class="content">
             <h2 :style="`background-color:${colorBackground};`">{{ exitPanelControlState === 1?"¿Esta Seguro De Salir Sin Guardar?":"¿Esta Seguro De Salir?" }}</h2>
-            <button v-on:click="exitPanelControlState === 0?onExitSelectUniversity(1):onExitSelectUniversity(0)">{{exitPanelControlState === 1?"Salir y Guardar":"Salir"}}</button>
-            <button v-on:click="exitPanelControlState === 0?onExitSelectUniversity(0):this.exitPanelControl = false" style="background-color: rgb(75, 6, 6);">{{exitPanelControlState === 1?"Salir Sin Guardar":"Cancelar"}}</button>
+            <button v-on:click="exitPanelControlState !== 0?onExitSelectUniversity(1):onExitSelectUniversity(0)">{{exitPanelControlState === 1?"Salir y Guardar":"Salir"}}</button>
+            <button v-on:click="exitPanelControlState !== 0?onExitSelectUniversity(0):this.exitPanelControl = false" style="background-color: rgb(75, 6, 6);">{{exitPanelControlState === 1?"Salir Sin Guardar":"Cancelar"}}</button>
         </div>
     </div>
     <div class="updateDataBase" v-if="updateInformation">

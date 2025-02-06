@@ -66,7 +66,7 @@ export default {
       this.cleanUpEntity();
     },
     methods: { 
-      onSaveChanges(){
+      async onSaveChanges(){
         this.updateInformation = true;
         this.updateInformationState = 0;
         const updatedUniversity = JSON.parse(JSON.stringify(this.universitySelected));
@@ -106,12 +106,25 @@ export default {
       },
       returnToSelectUniversity(){
         this.exitPanelControl = true;
-        if(this.universityCopy !== this.universitySelected){
+        if(JSON.stringify(this.universityCopy) !== JSON.stringify(this.universitySelected)){
             this.exitPanelControlState = 1;
         }
       },  
-      onExitSelectUniversity(stateSave){
-        if(stateSave === 0){
+      async onExitSelectUniversity(stateSave){
+        if(stateSave !== 0){
+          await this.onSaveChanges();
+          setTimeout(()=>{
+            this.exitPanelControl = false;
+            if(!this.isUnique){
+              window.location.href = this.$router.resolve({ name: 'HomeLogin' }).href;
+            }
+            else{
+              localStorage.clear();
+              window.location.href = this.$router.resolve({ name: 'HomeLogin' }).href;
+            }
+          },1500)
+        }
+        else{
           this.exitPanelControl = false;
           if(!this.isUnique){
             window.location.href = this.$router.resolve({ name: 'HomeLogin' }).href;
@@ -120,11 +133,6 @@ export default {
             localStorage.clear();
             window.location.href = this.$router.resolve({ name: 'HomeLogin' }).href;
           }
-        }
-        else{
-
-
-          this.exitPanelControl = false;
         }
       },
       deleteAllScenes(){
