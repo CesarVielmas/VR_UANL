@@ -146,7 +146,7 @@ export default {
                 reader.onload = (e) => {
                     const formImage = new FormData();
                     formImage.append('file', this.base64ToBlob(e.target.result,file.type),`${this.scene.nameScene.toLowerCase()+" button information "+this.buttonOnEditInf.idButtonInformation}.${file.type.split("/")[1]}`);
-                    axios.post(`https://images-server-production.up.railway.app//api/Images/upload/buttonInformation/${this.facultyName}`, formImage, {
+                    axios.post(`https://images-server-production.up.railway.app/api/Images/upload/buttonInformation/${this.facultyName}`, formImage, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`,
                         'Content-Type': 'multipart/form-data'
