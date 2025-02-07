@@ -84,7 +84,7 @@ export default {
           });
         });
         console.log(updatedUniversity);
-        axios.put(`http://localhost:5028/api/University/Escenes/${updatedUniversity.idUniversity}`,updatedUniversity,{
+        axios.put(`https://backend-production-1da7.up.railway.app/api/University/Escenes/${updatedUniversity.idUniversity}`,updatedUniversity,{
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }

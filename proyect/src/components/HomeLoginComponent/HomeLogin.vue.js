@@ -49,7 +49,7 @@ export default {
         let token = localStorage.getItem('token');
         let userId = localStorage.getItem('userId');
         if(token != null && userId != null){
-          axios.get(`http://localhost:5028/api/AuthUser/${userId}`, {
+          axios.get(`https://backend-production-1da7.up.railway.app/api/AuthUser/${userId}`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -116,13 +116,13 @@ export default {
   methods: {
     onClickCheckSesion(){
         this.checkSesion = true;
-        axios.post('http://localhost:5028/api/AuthUser/VerifyUser',{userName:this.userName,userPassword:this.userPassword})
+        axios.post('https://backend-production-1da7.up.railway.app/api/AuthUser/VerifyUser',{userName:this.userName,userPassword:this.userPassword})
         .then(response => {
           this.textValidUser = "Cargando Informacion";
           this.statusSesion = 1;
           localStorage.setItem('token', response.data.token);
           localStorage.setItem('userId', response.data.id);
-          axios.get(`http://localhost:5028/api/AuthUser/${response.data.id}`, {
+          axios.get(`https://backend-production-1da7.up.railway.app/api/AuthUser/${response.data.id}`, {
             headers: {
               'Authorization': `Bearer ${response.data.token}`
             }
@@ -320,13 +320,13 @@ export default {
         },3000)
     },
     onClickDeleteVR({timerWait,toneBackground,university}){
-      axios.delete(`http://localhost:5028/api/University/${university.idUniversity}`,{
+      axios.delete(`https://backend-production-1da7.up.railway.app/api/University/${university.idUniversity}`,{
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       })
       .then((response) => {
-        axios.delete(`http://localhost:5299/api/Images/delete/${university.nameFaculty}`,{
+        axios.delete(`https://images-server-production.up.railway.app//api/Images/delete/${university.nameFaculty}`,{
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -448,20 +448,20 @@ export default {
         formImages.append('files', this.base64ToBlob(this.addNewLogoFaculty[0],this.addNewLogoFaculty[1]),'LogoFaculty.png');
         formImages.append('files', this.base64ToBlob(this.addNewImageFaculty[0],this.addNewImageFaculty[1]),'ImageFaculty.jpg');
 
-        axios.post(`http://localhost:5299/api/Images/upload/${this.addNewNameFaculty}`, formImages, {
+        axios.post(`https://images-server-production.up.railway.app//api/Images/upload/${this.addNewNameFaculty}`, formImages, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
             'Content-Type': 'multipart/form-data'
           }
         })
         .then(responsePaths => {
-          axios.post('http://localhost:5028/api/University',{NameFaculty:this.addNewNameFaculty,NameCompleteFaculty:this.addNewNameCompleteFaculty,LogoFaculty:responsePaths.data.paths[0],ImageFaculty:responsePaths.data.paths[1]},{
+          axios.post('https://backend-production-1da7.up.railway.app/api/University',{NameFaculty:this.addNewNameFaculty,NameCompleteFaculty:this.addNewNameCompleteFaculty,LogoFaculty:responsePaths.data.paths[0],ImageFaculty:responsePaths.data.paths[1]},{
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('token')}`,
             }
           })
           .then(responseUniversity => {
-            axios.put(`http://localhost:5028/api/AuthUser/AddUniversitys/${localStorage.getItem('userId')}?namesUniversitys=${this.addNewNameFaculty}`,{},{
+            axios.put(`https://backend-production-1da7.up.railway.app/api/AuthUser/AddUniversitys/${localStorage.getItem('userId')}?namesUniversitys=${this.addNewNameFaculty}`,{},{
               headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
               }
@@ -546,14 +546,14 @@ export default {
             console.log(this.addNewImageFaculty)
             formImages.append('files', this.base64ToBlob(this.addNewLogoFaculty[0],this.addNewLogoFaculty[1]),'LogoFaculty.png');
             formImages.append('files', this.base64ToBlob(this.addNewImageFaculty[0],this.addNewImageFaculty[1]),'ImageFaculty.jpg');
-            axios.post(`http://localhost:5299/api/Images/upload/${this.addNewNameFaculty}`, formImages, {
+            axios.post(`https://images-server-production.up.railway.app//api/Images/upload/${this.addNewNameFaculty}`, formImages, {
               headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 'Content-Type': 'multipart/form-data'
               }
             })
         .then(response => {
-          axios.put(`http://localhost:5028/api/University/${this.elementEdit.idUniversity}`,{IdUniversity:this.elementEdit.idUniversity,NameFaculty:this.addNewNameFaculty,NameCompleteFaculty:this.addNewNameCompleteFaculty,LogoFaculty:response.data.paths[0],ImageFaculty:response.data.paths[1]},{
+          axios.put(`https://backend-production-1da7.up.railway.app/api/University/${this.elementEdit.idUniversity}`,{IdUniversity:this.elementEdit.idUniversity,NameFaculty:this.addNewNameFaculty,NameCompleteFaculty:this.addNewNameCompleteFaculty,LogoFaculty:response.data.paths[0],ImageFaculty:response.data.paths[1]},{
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('token')}`,
             }

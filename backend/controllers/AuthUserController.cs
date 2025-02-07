@@ -55,7 +55,7 @@ public class AuthUserController : ControllerBase
             return StatusCode(400, $"Hubo un error inesperado: {ex.Message}");
         }
     }
-    //http://localhost:5028/api/AuthUser?namesUniversitys=Universidad1&namesUniversitys=Universidad2&namesUniversitys=Universidad3
+    //https://backend-production-1da7.up.railway.app/api/AuthUser?namesUniversitys=Universidad1&namesUniversitys=Universidad2&namesUniversitys=Universidad3
     [Authorize(Roles = "Administrador")]
     [HttpPost]
     public async Task<ActionResult> PostAuthUser([FromBody][Bind("UserName,UserPassword,UserLevel")] AuthUserPostDTO user, [FromQuery] string[] namesUniversitys)

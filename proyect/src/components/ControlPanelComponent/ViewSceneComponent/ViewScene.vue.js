@@ -156,7 +156,7 @@ export default {
                 reader.onload = (e) => {
                     const formImage = new FormData();
                     formImage.append('file', this.base64ToBlob(e.target.result,file.type),`${this.scene.nameScene.toLowerCase()}.${file.type.split("/")[1]}`);
-                    axios.post(`http://localhost:5299/api/Images/upload/Escene/${this.facultyName}`, formImage, {
+                    axios.post(`https://images-server-production.up.railway.app//api/Images/upload/Escene/${this.facultyName}`, formImage, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`,
                         'Content-Type': 'multipart/form-data'

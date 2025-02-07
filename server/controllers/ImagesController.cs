@@ -34,7 +34,7 @@ public class ImagesController : ControllerBase
         {
             return BadRequest("La facultad a la que se le intenta obtener las imagenes no existe");
         }
-        var baseUrl = $"http://localhost:5299/images/{FacultyName}/";
+        var baseUrl = $"https://images-server-production.up.railway.app//images/{FacultyName}/";
         var files = Directory.GetFiles(facultyPath)
                     .Select(file => baseUrl + Path.GetFileName(file))
                     .ToList();
@@ -77,7 +77,7 @@ public class ImagesController : ControllerBase
             {
                 file.CopyTo(stream);
             }
-            filesPaths.Add($"http://localhost:5299/images/{FacultyName}/{file.FileName}");
+            filesPaths.Add($"https://images-server-production.up.railway.app//images/{FacultyName}/{file.FileName}");
         }
         return StatusCode(200, new { Message = "Los archivos se subieron con exito", paths = filesPaths });
     }

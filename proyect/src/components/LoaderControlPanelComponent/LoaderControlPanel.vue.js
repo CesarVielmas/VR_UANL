@@ -28,7 +28,7 @@ export default {
       };
     },
     created() {
-      axios.get(`http://localhost:5028/api/AuthUser/${localStorage.getItem("userId")}`,{
+      axios.get(`https://backend-production-1da7.up.railway.app/api/AuthUser/${localStorage.getItem("userId")}`,{
         headers: {
           'Authorization': `Bearer ${localStorage.getItem("token")}`
         }

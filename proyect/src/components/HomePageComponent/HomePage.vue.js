@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     initializeDataEscene() {
-      axios.get('http://localhost:5028/api/University')
+      axios.get('https://backend-production-1da7.up.railway.app/api/University')
       .then(response => {
         this.data = response.data;
         this.completeInformationLoading = true

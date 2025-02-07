@@ -34,13 +34,13 @@ export default {
   created() {
     this.deviceType = this.detectDevice()
     this.getDominantColor();
-    axios.get(`http://localhost:5028/api/ButtonInformation/LastId`, {
+    axios.get(`https://backend-production-1da7.up.railway.app/api/ButtonInformation/LastId`, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
     .then(responseInf => {  
-      axios.get(`http://localhost:5028/api/ButtonRedirect/LastId`, {
+      axios.get(`https://backend-production-1da7.up.railway.app/api/ButtonRedirect/LastId`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

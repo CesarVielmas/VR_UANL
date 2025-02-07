@@ -191,7 +191,7 @@ export default {
       return temp1;
     },
     initializeDataEscene() {
-      axios.get(`http://localhost:5028/api/University/${this.facultyAbbreviation}`)
+      axios.get(`https://backend-production-1da7.up.railway.app/api/University/${this.facultyAbbreviation}`)
       .then(response => {
         this.$store.commit('setUniversitySelect',response.data);
         this.completeInformationLoading = true;
