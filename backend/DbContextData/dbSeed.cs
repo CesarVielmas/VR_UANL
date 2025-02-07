@@ -7,14 +7,14 @@ public static class DbSeed
     public static async Task InitializeAsync(dbContext context)
     {
         await context.Database.MigrateAsync();
-        var requiredUniversityNames = new[] { "FIME", "FFYL" };
+        var requiredUniversityNames = new[] { "Ejemplo_1", "Ejemplo_2" };
         var requiredUniversities = new List<University>
         {
             new University
             {
                 IdUniversity = 1,
-                NameFaculty = "FIME",
-                NameCompleteFaculty = "Facultad de Ingeniería Mecánica y Eléctrica",
+                NameFaculty = "Ejemplo_1",
+                NameCompleteFaculty = "Esto es un ejemplo 1",
                 ImageFaculty = "https://www.fime.uanl.mx/wp-content/uploads/2023/05/IMG_5415-scaled.jpg",
                 ListEscenes = new List<Escene>(),
                 LogoFaculty = "https://w7.pngwing.com/pngs/826/982/png-transparent-chicago-bears-nfl-wall-decal-chicago-bears-mammal-face-cat-like-mammal.png"
@@ -22,8 +22,8 @@ public static class DbSeed
             new University
             {
                 IdUniversity = 2,
-                NameFaculty = "FFYL",
-                NameCompleteFaculty = "Facultad de Filosofía y Letras",
+                NameFaculty = "Ejemplo_2",
+                NameCompleteFaculty = "Esto es un ejemplo 2",
                 ImageFaculty = "https://filosofia.uanl.mx/wp-content/uploads/2023/11/fachada-filo-egrsdos.jpg",
                 ListEscenes = new List<Escene>(),
                 LogoFaculty = "https://filosofia.uanl.mx/wp-content/uploads/2023/11/FFyLescudo.png"
