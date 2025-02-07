@@ -1,0 +1,7 @@
+bin/
+obj/
+images/
+*.user
+*.vs
+*.vscode
+DockerFile

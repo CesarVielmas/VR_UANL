@@ -19,7 +19,12 @@ namespace backend.DbContextData
         public dbContext() { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySQL("Server=localhost;Database=vr_uanl;User=root;Password=vielmas@salais;");
+            var connectionString = Environment.GetEnvironmentVariable("ConnectionString__MySQLConnection");
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new InvalidOperationException("La cadena de conexión con mysql no está configurada correctamente.");
+            }
+            optionsBuilder.UseMySQL(connectionString);
             optionsBuilder.ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning));
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

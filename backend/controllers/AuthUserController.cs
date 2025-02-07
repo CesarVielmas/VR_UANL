@@ -56,8 +56,7 @@ public class AuthUserController : ControllerBase
         }
     }
     //http://localhost:5028/api/AuthUser?namesUniversitys=Universidad1&namesUniversitys=Universidad2&namesUniversitys=Universidad3
-    //[Authorize(Roles = "Administrador")]
-    [AllowAnonymous]
+    [Authorize(Roles = "Administrador")]
     [HttpPost]
     public async Task<ActionResult> PostAuthUser([FromBody][Bind("UserName,UserPassword,UserLevel")] AuthUserPostDTO user, [FromQuery] string[] namesUniversitys)
     {

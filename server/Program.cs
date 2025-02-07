@@ -51,6 +51,11 @@ app.Use(async (context, next) =>
     context.Response.Headers.Append("Access-Control-Allow-Origin", "*");
     await next();
 });
+var imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "images");
+if (!Directory.Exists(imagesPath))
+{
+    Directory.CreateDirectory(imagesPath);
+}
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "images")),

@@ -52,12 +52,26 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var dbContext = services.GetRequiredService<dbContext>();
+        await DbSeed.InitializeAsync(dbContext);
+        Console.WriteLine("Migraciones aplicadas exitosamente.");
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "¡Error al inicializar migraciones!");
+    }
+}
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseCors("AllowAllOrigins");
 
 app.UseHttpsRedirection();
