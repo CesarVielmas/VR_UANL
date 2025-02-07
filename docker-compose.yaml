@@ -9,6 +9,8 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
     networks:
       - backend-network
     volumes:
@@ -22,7 +24,7 @@ services:
       dockerfile: Dockerfile
     container_name: backend
     environment:
-      - ConnectionString__MySQLConnection=Server=mysql;Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
+      - ConnectionString__MySQLConnection=Server=${MYSQL_HOST};Port=${MYSQL_PORT};Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
     networks:
       - backend-network
     ports:
