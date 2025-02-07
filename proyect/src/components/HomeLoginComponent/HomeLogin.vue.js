@@ -448,7 +448,7 @@ export default {
         formImages.append('files', this.base64ToBlob(this.addNewLogoFaculty[0],this.addNewLogoFaculty[1]),'LogoFaculty.png');
         formImages.append('files', this.base64ToBlob(this.addNewImageFaculty[0],this.addNewImageFaculty[1]),'ImageFaculty.jpg');
 
-        axios.post(`https://images-server-production.up.railway.app//api/Images/upload/${this.addNewNameFaculty}`, formImages, {
+        axios.post(`https://images-server-production.up.railway.app/api/Images/upload/${this.addNewNameFaculty}`, formImages, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
             'Content-Type': 'multipart/form-data'
