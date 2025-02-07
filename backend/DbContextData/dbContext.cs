@@ -22,7 +22,7 @@ namespace backend.DbContextData
             var connectionString = Environment.GetEnvironmentVariable("ConnectionString__MySQLConnection");
             if (string.IsNullOrEmpty(connectionString))
             {
-                throw new InvalidOperationException("La cadena de conexión con mysql no está configurada correctamente.");
+                throw new InvalidOperationException($"La cadena de conexión con mysql no está configurada correctamente.\n{connectionString}");
             }
             optionsBuilder.UseMySQL(connectionString);
             optionsBuilder.ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning));
