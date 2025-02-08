@@ -116,7 +116,7 @@ public class ImagesController : ControllerBase
         return Ok(new
         {
             Message = "Escena subida exitosamente",
-            Path = $"{Request.Scheme}://{Request.Host}/images/{FacultyName}/Escenes/{fileName}"
+            Path = $"{Request.Scheme}s://{Request.Host}/images/{FacultyName}/Escenes/{fileName}"
         });
     }
     [Authorize(Roles = "Administrador")]
@@ -154,7 +154,7 @@ public class ImagesController : ControllerBase
         return Ok(new
         {
             Message = "Imagen de información subida exitosamente",
-            Path = $"{Request.Scheme}://{Request.Host}/images/{FacultyName}/Escenes/InformationImages/{fileName}"
+            Path = $"{Request.Scheme}s://{Request.Host}/images/{FacultyName}/Escenes/InformationImages/{fileName}"
         });
     }
     [Authorize(Roles = "Administrador")]
