@@ -77,7 +77,7 @@ namespace backend.DbContextData
                         .HasOne<Escene>()
                         .WithMany()
                         .HasForeignKey(br => br.TargetEsceneId)
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
