@@ -422,11 +422,14 @@ public class UniversityController : ControllerBase
                             buttonInfoToPut.RotationSideZ = buttonInfo.RotationSideZ;
                             buttonInfoToPut.TextInformation = buttonInfo.TextInformation;
                             buttonInfoToPut.OptionalImage = buttonInfo.OptionalImage;
-                            if(buttonInfoToPut.EsceneId != buttonInfo.EsceneId){
-                                if( await _context.Escenes.AnyAsync(e=> e.IdEscene == buttonInfo.EsceneId)){
+                            if (buttonInfoToPut.EsceneId != buttonInfo.EsceneId)
+                            {
+                                if (await _context.Escenes.AnyAsync(e => e.IdEscene == buttonInfo.EsceneId))
+                                {
                                     buttonInfoToPut.EsceneId = buttonInfo.EsceneId;
                                 }
-                                else if(targetEsceneMap.Any(t => t.Key == buttonInfo.EsceneId)){
+                                else if (targetEsceneMap.Any(t => t.Key == buttonInfo.EsceneId))
+                                {
                                     buttonInfoToPut.EsceneId = insertedEscenes.First(i => i.NamePositionScene == targetEsceneMap.First(t => t.Key == buttonInfo.EsceneId).Value).IdEscene;
                                 }
                             }
@@ -435,10 +438,12 @@ public class UniversityController : ControllerBase
                         else
                         {
                             int idEsceneInfo = 0;
-                            if(await _context.Escenes.AnyAsync(e=> e.IdEscene == buttonInfo.EsceneId)){
+                            if (await _context.Escenes.AnyAsync(e => e.IdEscene == buttonInfo.EsceneId))
+                            {
                                 idEsceneInfo = (int)buttonInfo.EsceneId;
                             }
-                            else if(targetEsceneMap.Any(t => t.Key == buttonInfo.EsceneId)){
+                            else if (targetEsceneMap.Any(t => t.Key == buttonInfo.EsceneId))
+                            {
                                 idEsceneInfo = insertedEscenes.First(i => i.NamePositionScene == targetEsceneMap.First(t => t.Key == buttonInfo.EsceneId).Value).IdEscene;
                             }
                             // Crear un nuevo botón de información
