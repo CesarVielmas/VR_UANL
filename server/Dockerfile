@@ -11,5 +11,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /out .
 RUN mkdir -p /app/images
+VOLUME ["/app/images"]
 EXPOSE 8080
 ENTRYPOINT ["dotnet", "server.dll"]
