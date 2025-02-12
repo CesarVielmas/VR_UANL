@@ -76,7 +76,7 @@ namespace backend.DbContextData
             modelBuilder.Entity<ButtonRedirect>()
                 .HasOne<Escene>()
                 .WithMany()
-                .HasForeignKey(br => br.PageToSender.IdEscene)
+                .HasForeignKey(br => br.PageToSender)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
