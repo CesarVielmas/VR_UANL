@@ -493,6 +493,7 @@ public class UniversityController : ControllerBase
         try
         {
             var university = await _context.Universities
+             .AsSplitQuery()
              .Include(u => u.ListEscenes)
                  .ThenInclude(e => e.ListButtonRed)
              .FirstAsync(u => u.IdUniversity == id);
