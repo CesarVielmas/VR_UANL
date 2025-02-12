@@ -492,7 +492,18 @@ public class UniversityController : ControllerBase
         }
         try
         {
-            var university = await _context.Universities.FirstAsync(u => u.IdUniversity == id);
+            var university = await _context.Universities
+             .Include(u => u.ListEscenes)
+                 .ThenInclude(e => e.ListButtonRed)
+             .FirstAsync(u => u.IdUniversity == id);
+            foreach (var scene in university.ListEscenes)
+            {
+                foreach (var button in scene.ListButtonRed)
+                {
+                    button.TargetEsceneId = null;
+                    button.PageToSender = null;
+                }
+            }
             _context.Universities.Remove(university);
             await _context.SaveChangesAsync();
             return StatusCode(200, "Universidad Eliminada Con Exito");
