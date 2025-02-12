@@ -145,7 +145,7 @@ export default {
         });
       },
       onPreviewVR(){
-        window.open(`http://192.168.1.8:8080/VR-${this.universitySelected.nameFaculty}`, '_blank');
+        window.open(`https://deluxe-cendol-0495b3.netlify.app/VR-${this.universitySelected.nameFaculty}`, '_blank');
       },
       onChangeScenes(){
         this.onChangeScene = !this.onChangeScene;
