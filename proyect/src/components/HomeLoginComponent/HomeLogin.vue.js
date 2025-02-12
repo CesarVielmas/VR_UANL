@@ -326,7 +326,7 @@ export default {
         }
       })
       .then((response) => {
-        axios.delete(`https://images-server-production.up.railway.app//api/Images/delete/${university.nameFaculty}`,{
+        axios.delete(`https://images-server-production.up.railway.app/api/Images/delete/${university.nameFaculty}`,{
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
